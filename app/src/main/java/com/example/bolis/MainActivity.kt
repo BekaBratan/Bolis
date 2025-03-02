@@ -7,6 +7,13 @@ import androidx.activity.enableEdgeToEdge
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.bolis.data.CodeState
+import com.example.bolis.data.PasswordRecoveryState
+import com.example.bolis.presentation.ConfirmationCodePage
+import com.example.bolis.presentation.HomePage
+import com.example.bolis.presentation.LogInPage
+import com.example.bolis.presentation.PasswordRecoveryPage
+import com.example.bolis.presentation.SignUpPage
 import com.example.bolis.ui.theme.BolisTheme
 import kotlinx.serialization.Serializable
 
@@ -19,12 +26,31 @@ class MainActivity : ComponentActivity() {
                 val navController = rememberNavController()
                 NavHost(
                     navController = navController,
-                    startDestination = FirstScreen
+                    startDestination = LogInScreen
                 ) {
-                    composable<FirstScreen> {
+                    composable<LogInScreen> {
+                        LogInPage(navController = navController)
                     }
-
-                    composable<SecondScreen>{
+                    composable<SignUpScreen>{
+                        SignUpPage(navController = navController)
+                    }
+                    composable<RegCodeScreen>{
+                        ConfirmationCodePage(codeState = CodeState.REGISTRATION, navController = navController)
+                    }
+                    composable<RecPassScreen>{
+                        PasswordRecoveryPage(isSetNewPassword = PasswordRecoveryState.PHONE_NUMBER, navController = navController)
+                    }
+                    composable<PassCodeScreen>{
+                        ConfirmationCodePage(codeState = CodeState.PASSWORD, navController = navController)
+                    }
+                    composable<NewPassScreen>{
+                        PasswordRecoveryPage(isSetNewPassword = PasswordRecoveryState.NEW_PASSWORD, navController = navController)
+                    }
+                    composable<SuccessPassScreen>{
+                        PasswordRecoveryPage(isSetNewPassword = PasswordRecoveryState.SUCCESS, navController = navController)
+                    }
+                    composable<HomeScreen>{
+                        HomePage()
                     }
                 }
             }
@@ -33,10 +59,26 @@ class MainActivity : ComponentActivity() {
 }
 
 @Serializable
-object FirstScreen
+object LogInScreen
 
 @Serializable
-data class SecondScreen(
-    val id: Int,
-    val name: String?
-)
+object SignUpScreen
+
+@Serializable
+object RegCodeScreen
+
+@Serializable
+object RecPassScreen
+
+@Serializable
+object PassCodeScreen
+
+@Serializable
+object NewPassScreen
+
+@Serializable
+object SuccessPassScreen
+
+@Serializable
+object HomeScreen
+

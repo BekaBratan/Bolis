@@ -21,13 +21,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.bolis.data.CodeState
-import com.example.bolis.data.PasswordRecoveryState
-import com.example.bolis.presentation.ConfirmationCodePage
 import com.example.bolis.presentation.HomePage
-import com.example.bolis.presentation.LogInPage
-import com.example.bolis.presentation.PasswordRecoveryPage
-import com.example.bolis.presentation.SignUpPage
 import com.example.bolis.ui.theme.BolisTheme
 import kotlinx.serialization.Serializable
 
@@ -39,8 +33,6 @@ class HomeActivity : ComponentActivity() {
 
             val navController = rememberNavController()
             val items = listOf(
-                LogInScreen,
-                SignUpScreen,
                 HomeScreen
             )
             var selectedIndex by remember { mutableIntStateOf(0) }

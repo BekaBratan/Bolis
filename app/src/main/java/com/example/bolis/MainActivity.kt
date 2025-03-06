@@ -1,5 +1,6 @@
 package com.example.bolis
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -39,6 +40,11 @@ class MainActivity : ComponentActivity() {
 
             val navController = rememberNavController()
 
+            fun navigateToHomeActivity() {
+                val intent = Intent(this, HomeActivity::class.java)
+                startActivity(intent)
+            }
+
             BolisTheme {
                 Scaffold { innerPadding ->
                     NavHost(
@@ -47,25 +53,52 @@ class MainActivity : ComponentActivity() {
                         modifier = Modifier.padding(innerPadding)
                     ) {
                         composable<LogInScreen> { backStackEntry ->
-                            LogInPage(navController = navController)
+                            LogInPage(
+                                createButtonClicked = { navController.navigate(SignUpScreen) },
+                                forgotButtonClicked = { navController.navigate(RecPassScreen) },
+                                nextButtonClicked = { navigateToHomeActivity() }
+                            )
                         }
                         composable<SignUpScreen>{ backStackEntry ->
-                            SignUpPage(navController = navController)
+                            SignUpPage(
+                                backButtonClicked = { navController.popBackStack() },
+                                nextButtonClicked = { navController.navigate(RegCodeScreen) }
+                            )
                         }
                         composable<RegCodeScreen>{ backStackEntry ->
-                            ConfirmationCodePage(codeState = CodeState.REGISTRATION, navController = navController)
+                            ConfirmationCodePage(
+                                codeState = CodeState.REGISTRATION,
+                                backButtonClicked = { navController.popBackStack() },
+                                nextButtonClicked = { navigateToHomeActivity() }
+                            )
                         }
                         composable<RecPassScreen>{ backStackEntry ->
-                            PasswordRecoveryPage(isSetNewPassword = PasswordRecoveryState.PHONE_NUMBER, navController = navController)
+                            PasswordRecoveryPage(
+                                isSetNewPassword = PasswordRecoveryState.PHONE_NUMBER,
+                                backButtonClicked = { navController.popBackStack() },
+                                nextButtonClicked = { navController.navigate(PassCodeScreen) },
+                            )
                         }
                         composable<PassCodeScreen>{ backStackEntry ->
-                            ConfirmationCodePage(codeState = CodeState.PASSWORD, navController = navController)
+                            ConfirmationCodePage(
+                                codeState = CodeState.PASSWORD,
+                                backButtonClicked = { navController.popBackStack() },
+                                nextButtonClicked = { navController.navigate(NewPassScreen) }
+                            )
                         }
                         composable<NewPassScreen>{ backStackEntry ->
-                            PasswordRecoveryPage(isSetNewPassword = PasswordRecoveryState.NEW_PASSWORD, navController = navController)
+                            PasswordRecoveryPage(
+                                isSetNewPassword = PasswordRecoveryState.NEW_PASSWORD,
+                                backButtonClicked = { navController.popBackStack() },
+                                nextButtonClicked = { navController.navigate(SuccessPassScreen) },
+                            )
                         }
                         composable<SuccessPassScreen>{ backStackEntry ->
-                            PasswordRecoveryPage(isSetNewPassword = PasswordRecoveryState.SUCCESS, navController = navController)
+                            PasswordRecoveryPage(
+                                isSetNewPassword = PasswordRecoveryState.SUCCESS,
+                                backButtonClicked = { navController.popBackStack() },
+                                nextButtonClicked = { navController.navigate(LogInScreen) },
+                            )
                         }
                     }
                 }
@@ -73,6 +106,8 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
+
+
 
 @Serializable
 object LogInScreen

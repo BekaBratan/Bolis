@@ -28,9 +28,8 @@ import com.example.bolis.ui.theme.Blue50
 import com.example.bolis.ui.theme.Red50
 import com.example.bolis.ui.theme.fontFamily
 
-@Preview(device = Devices.DEFAULT, widthDp = 400, heightDp = 800, backgroundColor = 0xFFFFFF)
 @Composable
-fun LogInPage(navController: NavHostController = rememberNavController()) {
+fun LogInPage(createButtonClicked:() -> Unit, forgotButtonClicked:() -> Unit, nextButtonClicked:() -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -63,7 +62,7 @@ fun LogInPage(navController: NavHostController = rememberNavController()) {
                 fontWeight = FontWeight(600),
                 fontFamily = fontFamily,
                 color = Blue50,
-                modifier = Modifier.clickable { navController.navigate(SignUpScreen) }
+                modifier = Modifier.clickable { createButtonClicked() }
             )
             Text(
                 text = "FORGOT YOUR PASSWORD ?",
@@ -71,11 +70,11 @@ fun LogInPage(navController: NavHostController = rememberNavController()) {
                 fontWeight = FontWeight(600),
                 fontFamily = fontFamily,
                 color = Red50,
-                modifier = Modifier.clickable { navController.navigate(RecPassScreen) }
+                modifier = Modifier.clickable { forgotButtonClicked() }
             )
         }
 
         Spacer(Modifier.size(42.dp))
-        CustomButton(name = "Log In", onClick = { navController.navigate(HomeScreen) })
+        CustomButton(name = "Log In", onClick = { nextButtonClicked() })
     }
 }

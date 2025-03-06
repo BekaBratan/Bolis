@@ -22,15 +22,14 @@ import com.example.bolis.RegCodeScreen
 import com.example.bolis.ui.theme.Black20
 import com.example.bolis.ui.theme.fontFamily
 
-@Preview(device = Devices.DEFAULT, widthDp = 400, heightDp = 800, backgroundColor = 0xFFFFFF)
 @Composable
-fun SignUpPage(navController: NavHostController = rememberNavController()) {
+fun SignUpPage(backButtonClicked:() -> Unit, nextButtonClicked:() -> Unit) {
     Box(Modifier.fillMaxSize()) {
         CustomBackButton(
             modifier = Modifier
                 .padding(top = 28.dp, start = 24.dp),
-            name = "Log In", { navController.navigate(LogInScreen) }
-        )
+            name = "Log In"
+        ) { backButtonClicked() }
 
         Column(
             modifier = Modifier
@@ -62,7 +61,7 @@ fun SignUpPage(navController: NavHostController = rememberNavController()) {
             PasswordTextFieldWithToggle(name = "Password", true)
             Spacer(Modifier.size(32.dp))
 
-            CustomButton(name = "Register now", { navController.navigate(RegCodeScreen) })
+            CustomButton(name = "Register now") { nextButtonClicked() }
         }
     }
 }

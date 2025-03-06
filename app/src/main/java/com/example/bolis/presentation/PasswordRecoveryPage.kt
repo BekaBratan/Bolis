@@ -30,26 +30,16 @@ import com.example.bolis.ui.theme.Black50
 import com.example.bolis.ui.theme.Red50
 import com.example.bolis.ui.theme.fontFamily
 
-@Preview(device = Devices.DEFAULT, widthDp = 400, heightDp = 800, backgroundColor = 0xFFFFFF)
 @Composable
-fun PasswordRecoveryPage(isSetNewPassword: PasswordRecoveryState = PasswordRecoveryState.PHONE_NUMBER, navController: NavHostController = rememberNavController()) {
+fun PasswordRecoveryPage(isSetNewPassword: PasswordRecoveryState = PasswordRecoveryState.PHONE_NUMBER, backButtonClicked:() -> Unit, nextButtonClicked:() -> Unit) {
     val isSetNewPassword = isSetNewPassword
 
     Box(Modifier.fillMaxSize()) {
         CustomBackButton(
             modifier = Modifier
                 .padding(top = 28.dp, start = 24.dp),
-            name = "Back",
-            {
-                if (isSetNewPassword == PasswordRecoveryState.PHONE_NUMBER) {
-                    navController.navigate(LogInScreen)
-                } else if (isSetNewPassword == PasswordRecoveryState.NEW_PASSWORD) {
-                    navController.navigate(PassCodeScreen)
-                } else {
-                    navController.navigate(NewPassScreen)
-                }
-            }
-        )
+            name = "Back"
+        ) { backButtonClicked() }
 
         Column(
             modifier = Modifier
@@ -89,15 +79,7 @@ fun PasswordRecoveryPage(isSetNewPassword: PasswordRecoveryState = PasswordRecov
 
             CustomButton(
                 name = if (isSetNewPassword == PasswordRecoveryState.PHONE_NUMBER) "Confirm" else if (isSetNewPassword == PasswordRecoveryState.NEW_PASSWORD) "Submit" else "Log In"
-            ) {
-                if (isSetNewPassword == PasswordRecoveryState.PHONE_NUMBER) {
-                    navController.navigate(PassCodeScreen)
-                } else if (isSetNewPassword == PasswordRecoveryState.NEW_PASSWORD) {
-                    navController.navigate(SuccessPassScreen)
-                } else {
-                    navController.navigate(LogInScreen)
-                }
-            }
+            ) { nextButtonClicked()}
         }
     }
 }

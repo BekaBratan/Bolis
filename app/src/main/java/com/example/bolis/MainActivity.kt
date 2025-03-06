@@ -4,6 +4,20 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material3.Icon
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.runtime.*
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -22,35 +36,37 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
+
+            val navController = rememberNavController()
+
             BolisTheme {
-                val navController = rememberNavController()
-                NavHost(
-                    navController = navController,
-                    startDestination = LogInScreen
-                ) {
-                    composable<LogInScreen> {
-                        LogInPage(navController = navController)
-                    }
-                    composable<SignUpScreen>{
-                        SignUpPage(navController = navController)
-                    }
-                    composable<RegCodeScreen>{
-                        ConfirmationCodePage(codeState = CodeState.REGISTRATION, navController = navController)
-                    }
-                    composable<RecPassScreen>{
-                        PasswordRecoveryPage(isSetNewPassword = PasswordRecoveryState.PHONE_NUMBER, navController = navController)
-                    }
-                    composable<PassCodeScreen>{
-                        ConfirmationCodePage(codeState = CodeState.PASSWORD, navController = navController)
-                    }
-                    composable<NewPassScreen>{
-                        PasswordRecoveryPage(isSetNewPassword = PasswordRecoveryState.NEW_PASSWORD, navController = navController)
-                    }
-                    composable<SuccessPassScreen>{
-                        PasswordRecoveryPage(isSetNewPassword = PasswordRecoveryState.SUCCESS, navController = navController)
-                    }
-                    composable<HomeScreen>{
-                        HomePage()
+                Scaffold { innerPadding ->
+                    NavHost(
+                        navController = navController,
+                        startDestination = LogInScreen,
+                        modifier = Modifier.padding(innerPadding)
+                    ) {
+                        composable<LogInScreen> { backStackEntry ->
+                            LogInPage(navController = navController)
+                        }
+                        composable<SignUpScreen>{ backStackEntry ->
+                            SignUpPage(navController = navController)
+                        }
+                        composable<RegCodeScreen>{ backStackEntry ->
+                            ConfirmationCodePage(codeState = CodeState.REGISTRATION, navController = navController)
+                        }
+                        composable<RecPassScreen>{ backStackEntry ->
+                            PasswordRecoveryPage(isSetNewPassword = PasswordRecoveryState.PHONE_NUMBER, navController = navController)
+                        }
+                        composable<PassCodeScreen>{ backStackEntry ->
+                            ConfirmationCodePage(codeState = CodeState.PASSWORD, navController = navController)
+                        }
+                        composable<NewPassScreen>{ backStackEntry ->
+                            PasswordRecoveryPage(isSetNewPassword = PasswordRecoveryState.NEW_PASSWORD, navController = navController)
+                        }
+                        composable<SuccessPassScreen>{ backStackEntry ->
+                            PasswordRecoveryPage(isSetNewPassword = PasswordRecoveryState.SUCCESS, navController = navController)
+                        }
                     }
                 }
             }
@@ -78,7 +94,4 @@ object NewPassScreen
 
 @Serializable
 object SuccessPassScreen
-
-@Serializable
-object HomeScreen
 

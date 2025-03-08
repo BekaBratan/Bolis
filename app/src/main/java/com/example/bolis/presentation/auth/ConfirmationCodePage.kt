@@ -1,4 +1,4 @@
-package com.example.bolis.presentation
+package com.example.bolis.presentation.auth
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,6 +15,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.bolis.data.CodeState
+import com.example.bolis.presentation.CustomBackButton
+import com.example.bolis.presentation.CustomCodeTextField
+import com.example.bolis.presentation.HugeCustomButton
 import com.example.bolis.ui.theme.Black50
 import com.example.bolis.ui.theme.fontFamily
 
@@ -59,7 +62,8 @@ fun ConfirmationCodePage(codeState: CodeState = CodeState.PASSWORD, backButtonCl
             )
             Spacer(Modifier.size(35.dp))
 
-            HugeCustomButton(name = if (codeState == CodeState.PASSWORD) "Recover password" else "Log In"
+            HugeCustomButton(
+                name = if (codeState == CodeState.PASSWORD) "Recover password" else "Log In"
             ) { nextButtonClicked() }
         }
     }

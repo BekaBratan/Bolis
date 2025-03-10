@@ -25,3 +25,9 @@ val Black10 = Color(0xFF9E9E9E)
 val Dark50 = Color(0xFF021F18)
 val Dark20 = Color(0xFF0D2C24)
 val Dark10 = Color(0xFF1A3A2F)
+
+val White50 = Color(0xFFFFFFFF)
+
+val Grey50 = Color(0xFF535353)
+val Grey20 = Color(0xFFA6A6A6)
+val Grey10 = Color(0xFFF2F2F2)

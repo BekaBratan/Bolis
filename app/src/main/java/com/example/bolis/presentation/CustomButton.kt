@@ -49,11 +49,14 @@ import com.example.bolis.R
 import com.example.bolis.ui.theme.Black20
 import com.example.bolis.ui.theme.Dark50
 import com.example.bolis.ui.theme.Green50
+import com.example.bolis.ui.theme.Grey10
+import com.example.bolis.ui.theme.Grey50
 import com.example.bolis.ui.theme.fontFamily
 import kotlin.text.forEach
 
+@Preview
 @Composable
-fun CustomButton(name: String, onClick: () -> Unit) {
+fun CustomButton(name: String = "Button", onClick: () -> Unit = {}) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -74,8 +77,9 @@ fun CustomButton(name: String, onClick: () -> Unit) {
     }
 }
 
+@Preview
 @Composable
-fun HugeCustomButton(name: String, onClick: () -> Unit) {
+fun HugeCustomButton(name: String = "Button", onClick: () -> Unit = {}) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -96,8 +100,9 @@ fun HugeCustomButton(name: String, onClick: () -> Unit) {
     }
 }
 
+@Preview
 @Composable
-fun CustomTextField(name: String, isRequired: Boolean = false) {
+fun CustomTextField(name: String = "TextField", isRequired: Boolean = false) {
     val (text, setText) = remember { mutableStateOf("") }
     val isRequired = isRequired
 
@@ -197,9 +202,9 @@ fun CustomCodeTextField() {
     }
 }
 
-
+@Preview
 @Composable
-fun PasswordTextFieldWithToggle(name: String, isRequired: Boolean = false) {
+fun PasswordTextFieldWithToggle(name: String = "PassTextField", isRequired: Boolean = false) {
     val (password, setPassword) = remember { mutableStateOf("") }
     val (passwordVisible, setPasswordVisible) = remember { mutableStateOf(false) }
     val isRequired = isRequired
@@ -258,8 +263,9 @@ fun PasswordTextFieldWithToggle(name: String, isRequired: Boolean = false) {
     }
 }
 
+@Preview
 @Composable
-fun CustomBackButton(modifier: Modifier, name: String, onClick: () -> Unit) {
+fun CustomBackButton(modifier: Modifier = Modifier, name: String = "Back", onClick: () -> Unit = {}) {
     Row (
         modifier = modifier
             .height(24.dp)
@@ -290,4 +296,55 @@ fun Logo () {
         contentDescription = "show",
         Modifier.height(100.dp)
     )
+}
+
+@Preview
+@Composable
+fun ProfileButton(name: String = "Button", onClick: () -> Unit = {}, icon: Int = R.drawable.ic_lock) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(53.dp)
+            .border(2.dp, Green50, RoundedCornerShape(15.dp))
+            .clip(shape = RoundedCornerShape(15.dp))
+            .background(Grey10)
+            .clickable(onClick = { onClick() })
+            .padding(horizontal = 16.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Image(
+            painter = painterResource(icon),
+            contentScale = ContentScale.Fit,
+            contentDescription = "show",
+            modifier = Modifier
+                .size(20.dp)
+                .clip(CircleShape)
+                .clickable(onClick = {
+                })
+        )
+        Box(
+            Modifier
+                .weight(1f)
+                .padding(horizontal = 16.dp)
+        ) {
+            Text(
+                text = name,
+                fontSize = 14.sp,
+                fontWeight = FontWeight(500),
+                textAlign = TextAlign.Center,
+                fontFamily = fontFamily,
+                color = Grey50
+            )
+        }
+        Image(
+            painter = painterResource(R.drawable.ic_arrow_right),
+            contentScale = ContentScale.Fit,
+            contentDescription = "show",
+            modifier = Modifier
+                .size(20.dp)
+                .clip(CircleShape)
+                .clickable(onClick = {
+                })
+        )
+    }
 }

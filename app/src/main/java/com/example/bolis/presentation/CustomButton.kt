@@ -7,6 +7,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -300,7 +301,66 @@ fun Logo () {
 
 @Preview
 @Composable
-fun ProfileButton(name: String = "Button", onClick: () -> Unit = {}, icon: Int = R.drawable.ic_lock) {
+fun ProfileButton(name: String = "Button", onClick: () -> Unit = {}) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(67.dp)
+            .border(2.dp, Green50, RoundedCornerShape(15.dp))
+            .clip(shape = RoundedCornerShape(15.dp))
+            .background(Grey10)
+            .clickable(onClick = { onClick() })
+            .padding(horizontal = 16.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Image(
+            painter = painterResource(R.drawable.ic_profile_stroke),
+            contentScale = ContentScale.Fit,
+            contentDescription = "show",
+            modifier = Modifier
+                .size(20.dp)
+                .clickable(onClick = {
+                })
+        )
+        Column(
+            Modifier
+                .weight(1f)
+                .padding(horizontal = 16.dp),
+            verticalArrangement = Arrangement.spacedBy(3.dp)
+        ) {
+            Text(
+                text = name,
+                fontSize = 14.sp,
+                fontWeight = FontWeight(600),
+                textAlign = TextAlign.Center,
+                fontFamily = fontFamily,
+                color = Grey50
+            )
+            Text(
+                text = "Show profile",
+                fontSize = 12.sp,
+                fontWeight = FontWeight(500),
+                textAlign = TextAlign.Center,
+                fontFamily = fontFamily,
+                color = Grey50
+            )
+        }
+        Image(
+            painter = painterResource(R.drawable.ic_arrow_right),
+            contentScale = ContentScale.Fit,
+            contentDescription = "show",
+            modifier = Modifier
+                .size(20.dp)
+                .clip(CircleShape)
+                .clickable(onClick = {
+                })
+        )
+    }
+}
+
+@Preview
+@Composable
+fun SettingsButton(name: String = "Button", onClick: () -> Unit = {}, icon: Int = R.drawable.ic_lock) {
     Row(
         modifier = Modifier
             .fillMaxWidth()

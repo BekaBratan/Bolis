@@ -7,14 +7,12 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
@@ -35,8 +33,7 @@ import com.example.bolis.presentation.home.ChatPage
 import com.example.bolis.presentation.home.FavouritePage
 import com.example.bolis.presentation.home.GivePage
 import com.example.bolis.presentation.home.MarketPage
-import com.example.bolis.presentation.home.ProfilePage
-import com.example.bolis.ui.theme.Black20
+import com.example.bolis.presentation.profile.ProfilePage
 import com.example.bolis.ui.theme.BolisTheme
 import com.example.bolis.ui.theme.Green50
 import kotlinx.serialization.Serializable

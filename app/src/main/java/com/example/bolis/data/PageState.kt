@@ -10,3 +10,9 @@ enum class CodeState {
     PASSWORD,
     REGISTRATION
 }
+
+enum class ConfirmedState {
+    PASSWORD,
+    DELETE,
+    SUPPORT
+}

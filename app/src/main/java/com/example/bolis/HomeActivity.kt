@@ -29,11 +29,21 @@ import com.example.bolis.NavDestination.FavouriteScreen
 import com.example.bolis.NavDestination.GiveScreen
 import com.example.bolis.NavDestination.MarketScreen
 import com.example.bolis.NavDestination.ProfileScreen
+import com.example.bolis.ProfileDestination.ChangePasswordScreen
+import com.example.bolis.ProfileDestination.ConfirmedScreen
+import com.example.bolis.ProfileDestination.DeleteAccountScreen
+import com.example.bolis.ProfileDestination.EditProfileScreen
+import com.example.bolis.ProfileDestination.SupportScreen
 import com.example.bolis.presentation.home.ChatPage
 import com.example.bolis.presentation.home.FavouritePage
 import com.example.bolis.presentation.home.GivePage
 import com.example.bolis.presentation.home.MarketPage
+import com.example.bolis.presentation.profile.ChangePasswordPage
+import com.example.bolis.presentation.profile.ConfirmedPage
+import com.example.bolis.presentation.profile.DeleteAccountPage
+import com.example.bolis.presentation.profile.ProfileEditPage
 import com.example.bolis.presentation.profile.ProfilePage
+import com.example.bolis.presentation.profile.SupportPage
 import com.example.bolis.ui.theme.BolisTheme
 import com.example.bolis.ui.theme.Green50
 import kotlinx.serialization.Serializable
@@ -109,7 +119,37 @@ class HomeActivity : ComponentActivity() {
                             ChatPage()
                         }
                         composable<ProfileScreen>{ backStackEntry ->
-                            ProfilePage()
+                            ProfilePage(
+                                profileButtonClicked = { navController.navigate(EditProfileScreen) },
+                                changePassButtonClicked = { navController.navigate(ChangePasswordScreen) },
+                                supportButtonClicked = { navController.navigate(SupportScreen) },
+                                deleteButtonClicked = { navController.navigate(DeleteAccountScreen) }
+                            )
+                        }
+                        composable<EditProfileScreen>{ backStackEntry ->
+                            ProfileEditPage(
+                                backButtonClicked = { navController.popBackStack() }
+                            )
+                        }
+                        composable<ChangePasswordScreen>{ backStackEntry ->
+                            ChangePasswordPage(
+                                backButtonClicked = { navController.popBackStack() }
+                            )
+                        }
+                        composable<SupportScreen>{ backStackEntry ->
+                            SupportPage(
+                                backButtonClicked = { navController.popBackStack() }
+                            )
+                        }
+                        composable<DeleteAccountScreen>{ backStackEntry ->
+                            DeleteAccountPage(
+                                backButtonClicked = { navController.popBackStack() }
+                            )
+                        }
+                        composable<ConfirmedScreen>{ backStackEntry ->
+                            ConfirmedPage(
+                                backButtonClicked = { navController.popBackStack() }
+                            )
                         }
                     }
                 }
@@ -130,4 +170,18 @@ sealed class NavDestination(val title: String, val icon: Int) {
     object ChatScreen : NavDestination(title = "Chat", icon = R.drawable.ic_chat)
     @Serializable
     object ProfileScreen : NavDestination(title = "Profile", icon = R.drawable.ic_profile)
+}
+
+@Serializable
+sealed class ProfileDestination() {
+    @Serializable
+    object EditProfileScreen: ProfileDestination()
+    @Serializable
+    object ChangePasswordScreen: ProfileDestination()
+    @Serializable
+    object SupportScreen: ProfileDestination()
+    @Serializable
+    object DeleteAccountScreen: ProfileDestination()
+    @Serializable
+    object ConfirmedScreen: ProfileDestination()
 }

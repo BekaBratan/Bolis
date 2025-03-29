@@ -1,4 +1,4 @@
-package com.example.unihub.data.api
+package com.example.bolis.data.api
 
 import com.example.bolis.utils.Constants.Companion.BASE_URL
 import okhttp3.OkHttpClient

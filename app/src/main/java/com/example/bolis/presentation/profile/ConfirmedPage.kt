@@ -22,8 +22,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.bolis.R
 import com.example.bolis.data.ConfirmedState
-import com.example.bolis.presentation.CustomBackButton
-import com.example.bolis.presentation.CustomButton
+import com.example.bolis.ui.Elements.CustomBackButton
+import com.example.bolis.ui.Elements.CustomButton
 import com.example.bolis.ui.theme.Black40
 import com.example.bolis.ui.theme.fontFamily
 

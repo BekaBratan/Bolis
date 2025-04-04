@@ -21,14 +21,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.bolis.R
 import com.example.bolis.data.PasswordRecoveryState
-import com.example.bolis.presentation.CustomBackButton
-import com.example.bolis.presentation.CustomButton
-import com.example.bolis.presentation.CustomTextField
-import com.example.bolis.presentation.PasswordTextFieldWithToggle
-import com.example.bolis.ui.theme.Black20
+import com.example.bolis.ui.Elements.CustomBackButton
+import com.example.bolis.ui.Elements.CustomButton
+import com.example.bolis.ui.Elements.CustomTextField
+import com.example.bolis.ui.Elements.CustomPasswordTextField
 import com.example.bolis.ui.theme.Black40
 import com.example.bolis.ui.theme.Black50
-import com.example.bolis.ui.theme.Grey50
 import com.example.bolis.ui.theme.Red50
 import com.example.bolis.ui.theme.fontFamily
 
@@ -94,7 +92,7 @@ fun PasswordRecoveryPage(
                 CustomTextField(name = "Phone number")
                 Spacer(Modifier.size(32.dp))
             } else if (isSetNewPassword == PasswordRecoveryState.NEW_PASSWORD) {
-                PasswordTextFieldWithToggle(name = "Enter a new password")
+                CustomPasswordTextField(name = "Enter a new password")
                 Spacer(Modifier.size(32.dp))
             }
 

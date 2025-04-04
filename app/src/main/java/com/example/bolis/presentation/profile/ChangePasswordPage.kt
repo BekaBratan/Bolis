@@ -15,9 +15,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.bolis.presentation.CustomBackButton
-import com.example.bolis.presentation.CustomButton
-import com.example.bolis.presentation.PasswordTextFieldWithToggle
+import com.example.bolis.ui.Elements.CustomBackButton
+import com.example.bolis.ui.Elements.CustomButton
+import com.example.bolis.ui.Elements.CustomPasswordTextField
 import com.example.bolis.ui.theme.Black50
 import com.example.bolis.ui.theme.fontFamily
 
@@ -49,8 +49,8 @@ fun ChangePasswordPage(
             color = Black50
         )
         Spacer(Modifier.size(4.dp))
-        PasswordTextFieldWithToggle(name = "Your current password")
-        PasswordTextFieldWithToggle(name = "Your new password")
+        CustomPasswordTextField(name = "Your current password")
+        CustomPasswordTextField(name = "Your new password")
         Spacer(Modifier.size(4.dp))
         CustomButton(name = "Change")
     }

@@ -13,11 +13,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.bolis.presentation.CustomBackButton
-import com.example.bolis.presentation.CustomButton
-import com.example.bolis.presentation.CustomTextField
-import com.example.bolis.presentation.Logo
-import com.example.bolis.presentation.PasswordTextFieldWithToggle
+import com.example.bolis.ui.Elements.CustomBackButton
+import com.example.bolis.ui.Elements.CustomButton
+import com.example.bolis.ui.Elements.CustomTextField
+import com.example.bolis.ui.Elements.Logo
+import com.example.bolis.ui.Elements.CustomPasswordTextField
 import com.example.bolis.ui.theme.Black20
 import com.example.bolis.ui.theme.fontFamily
 
@@ -57,7 +57,7 @@ fun SignUpPage(backButtonClicked:() -> Unit, nextButtonClicked:() -> Unit) {
             CustomTextField(name = "Phone number", true)
             Spacer(Modifier.size(16.dp))
 
-            PasswordTextFieldWithToggle(name = "Password", true)
+            CustomPasswordTextField(name = "Password", true)
             Spacer(Modifier.size(32.dp))
 
             CustomButton(name = "Register now") { nextButtonClicked() }

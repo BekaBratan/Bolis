@@ -16,9 +16,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.bolis.presentation.CustomBackButton
-import com.example.bolis.presentation.CustomButton
-import com.example.bolis.presentation.CustomTextField
+import com.example.bolis.ui.Elements.CustomBackButton
+import com.example.bolis.ui.Elements.CustomButton
+import com.example.bolis.ui.Elements.CustomTextField
 import com.example.bolis.ui.theme.Black40
 import com.example.bolis.ui.theme.Black50
 import com.example.bolis.ui.theme.fontFamily

@@ -16,10 +16,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.bolis.presentation.CustomButton
-import com.example.bolis.presentation.CustomTextField
-import com.example.bolis.presentation.Logo
-import com.example.bolis.presentation.PasswordTextFieldWithToggle
+import com.example.bolis.ui.Elements.CustomButton
+import com.example.bolis.ui.Elements.CustomTextField
+import com.example.bolis.ui.Elements.Logo
+import com.example.bolis.ui.Elements.CustomPasswordTextField
 import com.example.bolis.ui.theme.Black20
 import com.example.bolis.ui.theme.Blue50
 import com.example.bolis.ui.theme.Red50
@@ -45,7 +45,7 @@ fun LogInPage(createButtonClicked:() -> Unit, forgotButtonClicked:() -> Unit, ne
         Spacer(Modifier.size(80.dp))
         CustomTextField(name = "Phone number")
         Spacer(Modifier.size(24.dp))
-        PasswordTextFieldWithToggle(name = "Password")
+        CustomPasswordTextField(name = "Password")
         Spacer(Modifier.size(12.dp))
 
         Row(

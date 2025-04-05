@@ -97,8 +97,9 @@ fun PasswordRecoveryPage(
             }
 
             CustomButton(
-                name = if (isSetNewPassword == PasswordRecoveryState.PHONE_NUMBER) "Confirm" else if (isSetNewPassword == PasswordRecoveryState.NEW_PASSWORD) "Submit" else "Log In"
-            ) { nextButtonClicked() }
+                name = if (isSetNewPassword == PasswordRecoveryState.PHONE_NUMBER) "Confirm" else if (isSetNewPassword == PasswordRecoveryState.NEW_PASSWORD) "Submit" else "Log In",
+                onClick = { nextButtonClicked() }
+            )
         }
     }
 }

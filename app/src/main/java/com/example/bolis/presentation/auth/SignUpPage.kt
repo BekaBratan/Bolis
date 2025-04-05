@@ -60,7 +60,10 @@ fun SignUpPage(backButtonClicked:() -> Unit, nextButtonClicked:() -> Unit) {
             CustomPasswordTextField(name = "Password", true)
             Spacer(Modifier.size(32.dp))
 
-            CustomButton(name = "Register now") { nextButtonClicked() }
+            CustomButton(
+                name = "Register now",
+                onClick = { nextButtonClicked() }
+            )
         }
     }
 }

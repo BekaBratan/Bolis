@@ -34,6 +34,7 @@ import com.example.bolis.ProfileDestination.ConfirmedScreen
 import com.example.bolis.ProfileDestination.DeleteAccountScreen
 import com.example.bolis.ProfileDestination.EditProfileScreen
 import com.example.bolis.ProfileDestination.SupportScreen
+import com.example.bolis.presentation.donate.AddItemPage
 import com.example.bolis.presentation.home.ChatPage
 import com.example.bolis.presentation.home.FavouritePage
 import com.example.bolis.presentation.home.GivePage
@@ -113,7 +114,7 @@ class HomeActivity : ComponentActivity() {
                             FavouritePage()
                         }
                         composable<GiveScreen>{ backStackEntry ->
-                            GivePage()
+                            AddItemPage()
                         }
                         composable<ChatScreen>{ backStackEntry ->
                             ChatPage()

@@ -1,5 +1,9 @@
 package com.example.bolis.presentation.donate
 
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -34,20 +38,29 @@ import com.example.bolis.ui.theme.fontFamily
 fun AddItemPage(
     backButtonClicked:() -> Unit = {}
 ) {
-    Box(Modifier.fillMaxSize()) {
-        CustomBackButton(
-            modifier = Modifier
-                .padding(top = 28.dp, start = 24.dp),
-            name = "Back"
-        ) { backButtonClicked() }
-    }
+    var nameError by remember { mutableStateOf(false) }
+    var selectedButton by remember { mutableStateOf("") }
+    var descriptionError by remember { mutableStateOf(false) }
+    var listImages by remember { mutableStateOf<List<Uri>>(emptyList()) }
+    var uploadError by remember { mutableStateOf(false) }
+
+    val photoPickerLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.PickMultipleVisualMedia(),
+        onResult = { uris -> listImages = uris }
+    )
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(top = 74.dp, start = 24.dp, end = 24.dp),
+            .padding(start = 24.dp, end = 24.dp),
         verticalArrangement = Arrangement.spacedBy(20.dp)
     ) {
+        CustomBackButton(
+            modifier = Modifier
+                .padding(top = 58.dp),
+            name = "Back"
+        ) { backButtonClicked() }
+
         Text(
             text = "Fill in the information",
             fontSize = 20.sp,
@@ -57,7 +70,6 @@ fun AddItemPage(
             color = Black50
         )
 
-        var nameError by remember { mutableStateOf(false) }
         AddItemTextField(name = "Product name", isRequired = true, isError = nameError, placeholder = "Fill")
 
         AddItemDropdown(name = "Category", placeholder = "Choose")
@@ -74,7 +86,6 @@ fun AddItemPage(
                 fontFamily = fontFamily,
                 color = Black40
             )
-            var selectedButton by remember { mutableStateOf("") }
             Row(horizontalArrangement = Arrangement.spacedBy(15.dp)) {
                 AddItemButton(
                     name = "New",
@@ -87,11 +98,17 @@ fun AddItemPage(
             }
         }
 
-        var descriptionError by remember { mutableStateOf(false) }
         AddItemTextField(name = "Description", isRequired = true, placeholder = "Tell about your product", isError = descriptionError, multiLine = true)
 
-        var uploadError by remember { mutableStateOf(false) }
-        UploadImageButton(isError = uploadError, onClick = {})
+        UploadImageButton(
+            isError = uploadError,
+            listImages = listImages,
+            onClick = {
+                photoPickerLauncher.launch(
+                    PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                )
+            }
+        )
 
         CustomButton(name = "Confirm")
     }

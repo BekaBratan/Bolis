@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -49,67 +50,97 @@ fun AddItemPage(
         onResult = { uris -> listImages = uris }
     )
 
-    Column(
+    LazyColumn(
         modifier = Modifier
             .fillMaxSize()
             .padding(start = 24.dp, end = 24.dp),
         verticalArrangement = Arrangement.spacedBy(20.dp)
     ) {
-        CustomBackButton(
-            modifier = Modifier
-                .padding(top = 58.dp),
-            name = "Back"
-        ) { backButtonClicked() }
+        item {
+            CustomBackButton(
+                modifier = Modifier
+                    .padding(top = 58.dp),
+                name = "Back"
+            ) { backButtonClicked() }
+        }
 
-        Text(
-            text = "Fill in the information",
-            fontSize = 20.sp,
-            fontWeight = FontWeight(500),
-            textAlign = TextAlign.Center,
-            fontFamily = fontFamily,
-            color = Black50
-        )
-
-        AddItemTextField(name = "Product name", isRequired = true, isError = nameError, placeholder = "Fill")
-
-        AddItemDropdown(name = "Category", placeholder = "Choose")
-
-        Column(
-            modifier = Modifier.fillMaxWidth(),
-            verticalArrangement = Arrangement.spacedBy(7.dp)
-        ) {
+        item {
             Text(
-                modifier = Modifier.padding(start = 4.dp),
-                text = "Status",
-                fontSize = 15.sp,
-                fontWeight = FontWeight(600),
+                text = "Fill in the information",
+                fontSize = 20.sp,
+                fontWeight = FontWeight(500),
+                textAlign = TextAlign.Center,
                 fontFamily = fontFamily,
-                color = Black40
+                color = Black50
             )
-            Row(horizontalArrangement = Arrangement.spacedBy(15.dp)) {
-                AddItemButton(
-                    name = "New",
-                    isSelected = selectedButton == "New",
-                    onClick = { selectedButton = "New" })
-                AddItemButton(
-                    name = "Used",
-                    isSelected = selectedButton == "Used",
-                    onClick = { selectedButton = "Used" })
+        }
+
+        item {
+            AddItemTextField(
+                name = "Product name",
+                isRequired = true,
+                isError = nameError,
+                placeholder = "Fill"
+            )
+        }
+
+        item {
+            AddItemDropdown(
+                name = "Category",
+                placeholder = "Choose"
+            )
+        }
+
+        item {
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(7.dp)
+            ) {
+                Text(
+                    modifier = Modifier.padding(start = 4.dp),
+                    text = "Status",
+                    fontSize = 15.sp,
+                    fontWeight = FontWeight(600),
+                    fontFamily = fontFamily,
+                    color = Black40
+                )
+                Row(horizontalArrangement = Arrangement.spacedBy(15.dp)) {
+                    AddItemButton(
+                        name = "New",
+                        isSelected = selectedButton == "New",
+                        onClick = { selectedButton = "New" })
+                    AddItemButton(
+                        name = "Used",
+                        isSelected = selectedButton == "Used",
+                        onClick = { selectedButton = "Used" })
+                }
             }
         }
 
-        AddItemTextField(name = "Description", isRequired = true, placeholder = "Tell about your product", isError = descriptionError, multiLine = true)
+        item {
+            AddItemTextField(
+                name = "Description",
+                isRequired = true,
+                placeholder = "Tell about your product",
+                isError = descriptionError,
+                multiLine = true
+            )
+        }
 
-        UploadImageButton(
-            isError = uploadError,
-            listImages = listImages,
-            onClick = {
-                photoPickerLauncher.launch(
-                    PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
-                )
-            }
-        )
+        item {
+            UploadImageButton(
+                isError = uploadError,
+                listImages = listImages,
+                onClick = {
+                    photoPickerLauncher.launch(
+                        PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                    )
+                }
+            )
+        }
 
-        CustomButton(name = "Confirm")
+        item {
+            CustomButton(name = "Confirm")
+        }
     }
 }

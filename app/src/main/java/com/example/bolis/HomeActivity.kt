@@ -4,7 +4,14 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
@@ -47,6 +54,7 @@ import com.example.bolis.presentation.profile.ProfilePage
 import com.example.bolis.presentation.profile.SupportPage
 import com.example.bolis.ui.theme.BolisTheme
 import com.example.bolis.ui.theme.Green50
+import com.example.bolis.ui.theme.White50
 import kotlinx.serialization.Serializable
 
 class HomeActivity : ComponentActivity() {
@@ -67,6 +75,7 @@ class HomeActivity : ComponentActivity() {
 
             BolisTheme {
                 Scaffold(
+                    containerColor = White50,
                     bottomBar = {
                         NavigationBar(
                             contentColor = Green50,
@@ -103,9 +112,12 @@ class HomeActivity : ComponentActivity() {
                     }
                 ) { innerPadding ->
                     NavHost(
+                        enterTransition = { fadeIn() },
+                        exitTransition = { slideOutVertically() + shrinkVertically() + fadeOut() },
                         navController = navController,
                         startDestination = MarketScreen,
-                        modifier = Modifier.padding(innerPadding)
+                        modifier = Modifier
+                            .padding(innerPadding)
                     ) {
                         composable<MarketScreen>{ backStackEntry ->
                             MarketPage()

@@ -5,6 +5,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
@@ -18,6 +19,7 @@ import com.example.bolis.presentation.auth.LogInPage
 import com.example.bolis.presentation.auth.PasswordRecoveryPage
 import com.example.bolis.presentation.auth.SignUpPage
 import com.example.bolis.ui.theme.BolisTheme
+import com.example.bolis.ui.theme.White50
 import kotlinx.serialization.Serializable
 
 class MainActivity : ComponentActivity() {
@@ -34,11 +36,14 @@ class MainActivity : ComponentActivity() {
             }
 
             BolisTheme {
-                Scaffold { innerPadding ->
+                Scaffold(
+                    containerColor = White50
+                ) { innerPadding ->
                     NavHost(
                         navController = navController,
                         startDestination = LogInScreen,
-                        modifier = Modifier.padding(innerPadding)
+                        modifier = Modifier
+                            .padding(innerPadding),
                     ) {
                         composable<LogInScreen> { backStackEntry ->
                             LogInPage(

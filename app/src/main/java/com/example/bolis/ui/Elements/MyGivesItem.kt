@@ -16,6 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -28,6 +29,7 @@ import com.example.bolis.data.models.Product
 import com.example.bolis.ui.theme.Black40
 import com.example.bolis.ui.theme.Black50
 import com.example.bolis.ui.theme.Blue50
+import com.example.bolis.ui.theme.Red40
 import com.example.bolis.ui.theme.White50
 import com.example.bolis.ui.theme.fontFamily
 
@@ -36,7 +38,8 @@ import com.example.bolis.ui.theme.fontFamily
 fun MyGivesItem(
     product: Product = Product(name = "Iphone ProMaxMaxMaxPlus"),
     onEditButtonClick: () -> Unit = {},
-    onDeleteButtonClick: () -> Unit = {}
+    onDeleteButtonClick: () -> Unit = {},
+    onReasonButtonClick: () -> Unit = {}
 ) {
     Row(
         verticalAlignment = Alignment.Bottom
@@ -74,22 +77,37 @@ fun MyGivesItem(
             modifier = Modifier
                 .fillMaxWidth()
         ) {
-            CustomButton(
-                name = "Edit",
-                onClick = {
-                    onEditButtonClick()
-                },
-                cornerSize = 12.dp
-            )
-            Spacer(Modifier.size(14.dp))
-            CustomButton(
-                name = "Delete",
-                onClick = {
-                    onDeleteButtonClick()
-                },
-                isCancel = true,
-                cornerSize = 12.dp
-            )
+            if (product.status == 0) {
+                CustomButton(
+                    name = "Edit",
+                    onClick = {
+                        onEditButtonClick()
+                    },
+                    cornerSize = 12.dp
+                )
+                Spacer(Modifier.size(14.dp))
+                CustomButton(
+                    name = "Delete",
+                    onClick = {
+                        onDeleteButtonClick()
+                    },
+                    cornerSize = 12.dp,
+                    strokeColor = Black40,
+                    backgroundColor = Color.Transparent,
+                    textColor = Red40
+                )
+            } else if (product.status == 1) {
+                CustomButton(
+                    name = "Reason for cancellation",
+                    onClick = {
+                        onReasonButtonClick()
+                    },
+                    cornerSize = 12.dp,
+                    strokeColor = Red40,
+                    backgroundColor = Color.Transparent,
+                    textColor = Red40
+                )
+            }
         }
     }
 }

@@ -30,11 +30,14 @@ import androidx.compose.ui.zIndex
 import com.example.bolis.data.models.Product
 import com.example.bolis.ui.Elements.CustomBackButton
 import com.example.bolis.ui.Elements.CustomButton
+import com.example.bolis.ui.Elements.CustomDialog
 import com.example.bolis.ui.Elements.MyGivesItem
 import com.example.bolis.ui.Elements.OptionsButton
 import com.example.bolis.ui.theme.Black50
 import com.example.bolis.ui.theme.Blue50
+import com.example.bolis.ui.theme.Green20
 import com.example.bolis.ui.theme.Grey30
+import com.example.bolis.ui.theme.Red40
 import com.example.bolis.ui.theme.fontFamily
 
 @Preview
@@ -44,13 +47,26 @@ fun MyGivesPage(
     addButtonClick:() -> Unit = {}
 ) {
     var currentIndex by remember { mutableIntStateOf(0) }
+    var isDelete by remember { mutableStateOf(false) }
+    var isReason by remember { mutableStateOf(false) }
 
     var listProduct = listOf(
         Product(name = "Iphone ProMaxMaxMaxPlus"),
+        Product(name = "Sofa with armchair", status = 1),
         Product(name = "Sofa with armchair"),
+        Product(name = "Sofa with armchair", status = 2),
         Product(name = "Sofa with armchair"),
         Product(name = "Dongelek")
     )
+
+    var listFilteredProduct = listProduct.filter {
+        when (currentIndex) {
+            0 -> it.status == 0
+            1 -> it.status == 1
+            2 -> it.status == 2
+            else -> true
+        }
+    }
 
     LazyColumn(
         modifier = Modifier
@@ -88,8 +104,8 @@ fun MyGivesPage(
             Spacer(Modifier.size(38.dp))
         }
 
-        items(listProduct.size) { index ->
-            MyGivesItem(listProduct[index])
+        items(listFilteredProduct.size) { index ->
+            MyGivesItem(listFilteredProduct[index], onDeleteButtonClick = { isDelete = true }, onReasonButtonClick = { isReason = true })
             Spacer(
                 modifier = Modifier
                     .padding(vertical = 16.dp)
@@ -107,5 +123,29 @@ fun MyGivesPage(
             )
             Spacer(Modifier.size(28.dp))
         }
+    }
+
+    if (isDelete) {
+        CustomDialog(
+            onDismissRequest = { isDelete = false },
+            title = "Delete",
+            description = "Are you sure you want to delete product? ",
+            dismissText = "No",
+            confirmText = "Yes, delete",
+            strokeColor = Red40,
+            titleColor = Red40
+        )
+    }
+
+    if (isReason) {
+        CustomDialog(
+            onDismissRequest = { isReason = false },
+            title = "Reason",
+            description = "The product is too outdated",
+            confirmText = "Ok",
+            strokeColor = Red40,
+            titleColor = Red40,
+            isOnlyDismiss = true
+        )
     }
 }

@@ -4,14 +4,11 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
-import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
@@ -31,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.bolis.GiveDestination.AddItemScreen
 import com.example.bolis.NavDestination.ChatScreen
 import com.example.bolis.NavDestination.FavouriteScreen
 import com.example.bolis.NavDestination.GiveScreen
@@ -42,9 +40,9 @@ import com.example.bolis.ProfileDestination.DeleteAccountScreen
 import com.example.bolis.ProfileDestination.EditProfileScreen
 import com.example.bolis.ProfileDestination.SupportScreen
 import com.example.bolis.presentation.donate.AddItemPage
+import com.example.bolis.presentation.donate.MyGivesPage
 import com.example.bolis.presentation.home.ChatPage
 import com.example.bolis.presentation.home.FavouritePage
-import com.example.bolis.presentation.home.GivePage
 import com.example.bolis.presentation.home.MarketPage
 import com.example.bolis.presentation.profile.ChangePasswordPage
 import com.example.bolis.presentation.profile.ConfirmedPage
@@ -126,7 +124,9 @@ class HomeActivity : ComponentActivity() {
                             FavouritePage()
                         }
                         composable<GiveScreen>{ backStackEntry ->
-                            AddItemPage()
+                            MyGivesPage(
+                                addButtonClick = { navController.navigate(AddItemScreen) },
+                            )
                         }
                         composable<ChatScreen>{ backStackEntry ->
                             ChatPage()
@@ -164,6 +164,11 @@ class HomeActivity : ComponentActivity() {
                                 backButtonClicked = { navController.popBackStack() }
                             )
                         }
+                        composable<AddItemScreen> { backStackEntry ->
+                            AddItemPage(
+                                backButtonClicked = { navController.popBackStack() }
+                            )
+                        }
                     }
                 }
             }
@@ -197,4 +202,10 @@ sealed class ProfileDestination() {
     object DeleteAccountScreen: ProfileDestination()
     @Serializable
     object ConfirmedScreen: ProfileDestination()
+}
+
+@Serializable
+sealed class GiveDestination() {
+    @Serializable
+    object AddItemScreen: GiveDestination()
 }

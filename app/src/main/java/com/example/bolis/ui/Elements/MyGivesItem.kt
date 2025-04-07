@@ -107,6 +107,17 @@ fun MyGivesItem(
                     backgroundColor = Color.Transparent,
                     textColor = Red40
                 )
+            } else {
+                CustomButton(
+                    name = "Reason for cancellation",
+                    onClick = {
+                        onReasonButtonClick()
+                    },
+                    cornerSize = 12.dp,
+                    strokeColor = Red40,
+                    backgroundColor = Color.Transparent,
+                    textColor = Red40
+                )
             }
         }
     }

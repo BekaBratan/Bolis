@@ -36,6 +36,7 @@ import com.example.bolis.ui.theme.fontFamily
 @Composable
 fun CustomDialog(
     onDismissRequest: () -> Unit = {},
+    onConfirmRequest: () -> Unit = {},
     cornerSize: Dp = 0.dp,
     strokeColor: Color = Color.Transparent,
     backgrounColor: Color = Color.White,
@@ -115,7 +116,7 @@ fun CustomDialog(
                             text = confirmText,
                             modifier = Modifier
                                 .background(Green50)
-                                .clickable(onClick = { })
+                                .clickable(onClick = onConfirmRequest)
                                 .padding(horizontal = 8.dp, vertical = 4.dp),
                             fontSize = 13.sp,
                             fontWeight = FontWeight(500),

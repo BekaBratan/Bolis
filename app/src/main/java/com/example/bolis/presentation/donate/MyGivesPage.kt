@@ -3,8 +3,6 @@ package com.example.bolis.presentation.donate
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.scrollable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -26,7 +24,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.zIndex
 import com.example.bolis.data.models.Product
 import com.example.bolis.ui.Elements.CustomBackButton
 import com.example.bolis.ui.Elements.CustomButton
@@ -34,8 +31,6 @@ import com.example.bolis.ui.Elements.CustomDialog
 import com.example.bolis.ui.Elements.MyGivesItem
 import com.example.bolis.ui.Elements.OptionsButton
 import com.example.bolis.ui.theme.Black50
-import com.example.bolis.ui.theme.Blue50
-import com.example.bolis.ui.theme.Green20
 import com.example.bolis.ui.theme.Grey30
 import com.example.bolis.ui.theme.Red40
 import com.example.bolis.ui.theme.fontFamily
@@ -46,21 +41,27 @@ fun MyGivesPage(
     backButtonClicked:() -> Unit = {},
     addButtonClick:() -> Unit = {}
 ) {
-    var currentIndex by remember { mutableIntStateOf(0) }
+    var statusIndex by remember { mutableIntStateOf(0) }
+    var itemIndex by remember { mutableIntStateOf(0) }
     var isDelete by remember { mutableStateOf(false) }
     var isReason by remember { mutableStateOf(false) }
 
-    var listProduct = listOf(
-        Product(name = "Iphone ProMaxMaxMaxPlus"),
-        Product(name = "Sofa with armchair", status = 1),
-        Product(name = "Sofa with armchair"),
-        Product(name = "Sofa with armchair", status = 2),
-        Product(name = "Sofa with armchair"),
-        Product(name = "Dongelek")
-    )
+    var listProduct by remember {
+        mutableStateOf(
+            listOf(
+                Product(name = "Iphone ProMaxMaxMaxPlus"),
+                Product(name = "Sofa with armchair", status = 1),
+                Product(name = "Sofa with armchair"),
+                Product(name = "Sofa with armchair", status = 2),
+                Product(name = "Sofa with armchair"),
+                Product(name = "Dongelek")
+            )
+        )
+    }
 
-    var listFilteredProduct = listProduct.filter {
-        when (currentIndex) {
+    var listFilteredProduct by remember { mutableStateOf<List<Product>>(emptyList()) }
+    listFilteredProduct = listProduct.filter {
+        when (statusIndex) {
             0 -> it.status == 0
             1 -> it.status == 1
             2 -> it.status == 2
@@ -96,16 +97,20 @@ fun MyGivesPage(
             Spacer(Modifier.size(10.dp))
             OptionsButton(
                 listOf("Completed", "Pending", "Canceled"),
-                currentIndex,
+                statusIndex,
                 onClick = {
-                    currentIndex = it
+                    statusIndex = it
                 }
             )
             Spacer(Modifier.size(38.dp))
         }
 
         items(listFilteredProduct.size) { index ->
-            MyGivesItem(listFilteredProduct[index], onDeleteButtonClick = { isDelete = true }, onReasonButtonClick = { isReason = true })
+            MyGivesItem(
+                listFilteredProduct[index],
+                onDeleteButtonClick = { isDelete = true; itemIndex = index },
+                onReasonButtonClick = { isReason = true }
+            )
             Spacer(
                 modifier = Modifier
                     .padding(vertical = 16.dp)
@@ -128,8 +133,12 @@ fun MyGivesPage(
     if (isDelete) {
         CustomDialog(
             onDismissRequest = { isDelete = false },
+            onConfirmRequest = { isDelete = false;
+                listProduct = listProduct.toMutableList().apply {
+                remove(listFilteredProduct[itemIndex])
+            } },
             title = "Delete",
-            description = "Are you sure you want to delete product? ",
+            description = "Are you sure you want to delete product?",
             dismissText = "No",
             confirmText = "Yes, delete",
             strokeColor = Red40,

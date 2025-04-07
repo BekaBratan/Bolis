@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
 import com.example.bolis.GiveDestination.AddItemScreen
 import com.example.bolis.NavDestination.ChatScreen
 import com.example.bolis.NavDestination.FavouriteScreen
@@ -35,7 +36,6 @@ import com.example.bolis.NavDestination.GiveScreen
 import com.example.bolis.NavDestination.MarketScreen
 import com.example.bolis.NavDestination.ProfileScreen
 import com.example.bolis.ProfileDestination.ChangePasswordScreen
-import com.example.bolis.ProfileDestination.ConfirmedScreen
 import com.example.bolis.ProfileDestination.DeleteAccountScreen
 import com.example.bolis.ProfileDestination.EditProfileScreen
 import com.example.bolis.ProfileDestination.SupportScreen
@@ -95,6 +95,7 @@ class HomeActivity : ComponentActivity() {
                                         navController.navigate(screen) {
                                             popUpTo(navController.graph.startDestinationId)
                                             launchSingleTop = true
+                                            restoreState = true
                                         }
                                     },
                                     colors = NavigationBarItemDefaults.colors(
@@ -146,27 +147,67 @@ class HomeActivity : ComponentActivity() {
                         }
                         composable<ChangePasswordScreen>{ backStackEntry ->
                             ChangePasswordPage(
-                                backButtonClicked = { navController.popBackStack() }
+                                backButtonClicked = { navController.popBackStack() },
+                                confirmButtonClicked = {
+                                    navController.navigate(
+                                        ConfirmedScreen(
+                                            title = "Your password has\n been changed",
+                                            description = "Now you can log in to my profile with a new password.",
+                                            buttonText = "Back to Profile"
+                                        )
+                                    )
+                                }
                             )
                         }
                         composable<SupportScreen>{ backStackEntry ->
                             SupportPage(
-                                backButtonClicked = { navController.popBackStack() }
+                                backButtonClicked = { navController.popBackStack() },
+                                confirmButtonClicked = {
+                                    navController.navigate(
+                                        ConfirmedScreen(
+                                            title = "Your complaint has been successfully sent to technical support",
+                                            description = "We are already looking into your problem",
+                                            buttonText = "Back to Profile"
+                                        )
+                                    )
+                                }
                             )
                         }
                         composable<DeleteAccountScreen>{ backStackEntry ->
                             DeleteAccountPage(
-                                backButtonClicked = { navController.popBackStack() }
+                                backButtonClicked = { navController.popBackStack() },
+                                confirmButtonClicked = { navController.navigate(ConfirmedScreen(
+                                    title = "Delete account",
+                                    description = "Are you sure you want to delete your account?",
+                                    buttonText = "Delete"
+                                )) }
                             )
                         }
                         composable<ConfirmedScreen>{ backStackEntry ->
+                            val args = backStackEntry.toRoute<ConfirmedScreen>()
                             ConfirmedPage(
-                                backButtonClicked = { navController.popBackStack() }
+                                title = args.title,
+                                description = args.description,
+                                buttonText = args.buttonText,
+                                onConfirmButtonClicked = {
+                                    navController.navigate(items[selectedIndex]) {
+                                        popUpTo(navController.graph.startDestinationId)
+                                        launchSingleTop = true
+                                } }
                             )
                         }
                         composable<AddItemScreen> { backStackEntry ->
                             AddItemPage(
-                                backButtonClicked = { navController.popBackStack() }
+                                backButtonClicked = { navController.popBackStack() },
+                                onConfirmButtonClick = {
+                                    navController.navigate(
+                                        ConfirmedScreen(
+                                            title = "Your application has been successfully submitted for review.",
+                                            description = "",
+                                            buttonText = "Back to Gives"
+                                        )
+                                    )
+                                }
                             )
                         }
                     }
@@ -200,9 +241,14 @@ sealed class ProfileDestination() {
     object SupportScreen: ProfileDestination()
     @Serializable
     object DeleteAccountScreen: ProfileDestination()
-    @Serializable
-    object ConfirmedScreen: ProfileDestination()
 }
+
+@Serializable
+data class ConfirmedScreen(
+    val title: String,
+    val description: String,
+    val buttonText: String
+)
 
 @Serializable
 sealed class GiveDestination() {

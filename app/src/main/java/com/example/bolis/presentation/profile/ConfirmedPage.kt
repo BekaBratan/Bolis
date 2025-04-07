@@ -30,17 +30,11 @@ import com.example.bolis.ui.theme.fontFamily
 @Preview
 @Composable
 fun ConfirmedPage(
-    pageState: ConfirmedState = ConfirmedState.PASSWORD,
-    backButtonClicked:() -> Unit = {}
+    title: String = "",
+    description: String = "",
+    buttonText: String = "",
+    onConfirmButtonClicked:() -> Unit = {}
 ) {
-    Box(Modifier.fillMaxSize()) {
-        CustomBackButton(
-            modifier = Modifier
-                .padding(top = 28.dp, start = 24.dp),
-            name = "Back"
-        ) { backButtonClicked() }
-    }
-
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -58,13 +52,13 @@ fun ConfirmedPage(
         )
 
         Text(
-            text =
-                if (pageState == ConfirmedState.PASSWORD)
-                    "Your password has been changed"
-                else  if (pageState == ConfirmedState.DELETE)
-                    "Your account has been deleted"
-                else
-                    "Your complaint has been successfully sent to technical support",
+            text = title,
+//                if (pageState == ConfirmedState.PASSWORD)
+//                    "Your password has been changed"
+//                else  if (pageState == ConfirmedState.DELETE)
+//                    "Your account has been deleted"
+//                else
+//                    "Your complaint has been successfully sent to technical support",
             fontSize = 22.sp,
             textAlign = TextAlign.Center,
             fontWeight = FontWeight(700),
@@ -73,13 +67,13 @@ fun ConfirmedPage(
         )
 
         Text(
-            text =
-                if (pageState == ConfirmedState.PASSWORD)
-                    "Now you can log in to my profile with a new password"
-                else  if (pageState == ConfirmedState.DELETE)
-                    "Your account has been archived, and you can restore your account within 3 months"
-                else
-                    "We are already looking into your problem",
+            text = description,
+//                if (pageState == ConfirmedState.PASSWORD)
+//                    "Now you can log in to my profile with a new password"
+//                else  if (pageState == ConfirmedState.DELETE)
+//                    "Your account has been archived, and you can restore your account within 3 months"
+//                else
+//                    "We are already looking into your problem",
             fontSize = 18.sp,
             textAlign = TextAlign.Center,
             fontWeight = FontWeight(500),
@@ -90,12 +84,12 @@ fun ConfirmedPage(
         Spacer(Modifier.size(4.dp))
 
         CustomButton(
-            name =
-                if (pageState == ConfirmedState.PASSWORD || pageState == ConfirmedState.DELETE)
-                    "Log In"
-                else
-                    "Back to profile",
-            onClick = { }
+            name = buttonText,
+//                if (pageState == ConfirmedState.PASSWORD || pageState == ConfirmedState.DELETE)
+//                    "Log In"
+//                else
+//                    "Back to profile",
+            onClick = onConfirmButtonClicked
             )
     }
 }

@@ -26,7 +26,8 @@ import com.example.bolis.ui.theme.fontFamily
 @Preview
 @Composable
 fun DeleteAccountPage(
-    backButtonClicked:() -> Unit = {}
+    backButtonClicked:() -> Unit = {},
+    confirmButtonClicked:() -> Unit = {}
 ) {
     Box(Modifier.fillMaxSize()) {
         CustomBackButton(
@@ -66,6 +67,6 @@ fun DeleteAccountPage(
         CustomTextField(name = "Enter the password from the SMS", placeholder = "Enter the password from the SMS")
         Spacer(Modifier.size(4.dp))
 
-        CustomButton(name = "Confirm", onClick = {})
+        CustomButton(name = "Confirm", onClick = confirmButtonClicked)
     }
 }

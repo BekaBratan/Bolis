@@ -14,7 +14,6 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -37,7 +36,11 @@ import com.example.bolis.ui.theme.fontFamily
 
 @Preview
 @Composable
-fun UploadImageButton(isError: Boolean = false, listImages: List<Uri> = listOf(), onClick: () -> Unit = {}) {
+fun UploadImageButton(
+    isError: Boolean = false,
+    listImages: List<Uri> = listOf(),
+    onUploadImage: () -> Unit = {}
+) {
     Column(
         modifier = Modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(7.dp)
@@ -104,7 +107,7 @@ fun UploadImageButton(isError: Boolean = false, listImages: List<Uri> = listOf()
                     }
                 }
             }
-            CustomButton(name = "Upload image", onClick = { onClick() })
+            CustomButton(name = if (listImages.isEmpty()) "Upload image" else "Change image", onClick = { onUploadImage() })
         }
     }
 }

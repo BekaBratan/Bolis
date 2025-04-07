@@ -38,7 +38,6 @@ import com.example.bolis.ui.theme.fontFamily
 @Preview
 @Composable
 fun MyGivesPage(
-    backButtonClicked:() -> Unit = {},
     addButtonClick:() -> Unit = {}
 ) {
     var statusIndex by remember { mutableIntStateOf(0) }
@@ -80,12 +79,7 @@ fun MyGivesPage(
             .padding(start = 24.dp, end = 24.dp),
     ) {
         item {
-            CustomBackButton(
-                modifier = Modifier
-                    .padding(top = 58.dp),
-                name = "Back"
-            ) { backButtonClicked() }
-            Spacer(Modifier.size(20.dp))
+            Spacer(Modifier.size(78.dp))
             Text(
                 text = "My gives",
                 fontSize = 20.sp,

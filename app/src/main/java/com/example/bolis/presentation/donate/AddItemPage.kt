@@ -5,7 +5,6 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -37,7 +36,8 @@ import com.example.bolis.ui.theme.fontFamily
 @Preview
 @Composable
 fun AddItemPage(
-    backButtonClicked:() -> Unit = {}
+    backButtonClicked:() -> Unit = {},
+    onConfirmButtonClick:() -> Unit = {}
 ) {
     var nameError by remember { mutableStateOf(false) }
     var selectedButton by remember { mutableStateOf("") }
@@ -53,7 +53,7 @@ fun AddItemPage(
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
-            .padding(start = 24.dp, end = 24.dp),
+            .padding(start = 24.dp, end = 24.dp, bottom = 30.dp),
         verticalArrangement = Arrangement.spacedBy(20.dp)
     ) {
         item {
@@ -131,7 +131,7 @@ fun AddItemPage(
             UploadImageButton(
                 isError = uploadError,
                 listImages = listImages,
-                onClick = {
+                onUploadImage = {
                     photoPickerLauncher.launch(
                         PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
                     )
@@ -140,7 +140,7 @@ fun AddItemPage(
         }
 
         item {
-            CustomButton(name = "Confirm")
+            CustomButton(name = "Confirm", onClick = onConfirmButtonClick)
         }
     }
 }

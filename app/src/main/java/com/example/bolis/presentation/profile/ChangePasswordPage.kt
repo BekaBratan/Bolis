@@ -24,7 +24,8 @@ import com.example.bolis.ui.theme.fontFamily
 @Preview
 @Composable
 fun ChangePasswordPage(
-    backButtonClicked:() -> Unit = {}
+    backButtonClicked:() -> Unit = {},
+    confirmButtonClicked:() -> Unit = {}
 ) {
     Box(Modifier.fillMaxSize()) {
         CustomBackButton(
@@ -52,6 +53,6 @@ fun ChangePasswordPage(
         CustomPasswordTextField(name = "Your current password")
         CustomPasswordTextField(name = "Your new password")
         Spacer(Modifier.size(4.dp))
-        CustomButton(name = "Change")
+        CustomButton(name = "Change", onClick = confirmButtonClicked)
     }
 }

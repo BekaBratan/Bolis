@@ -26,7 +26,8 @@ import com.example.bolis.ui.theme.fontFamily
 @Preview
 @Composable
 fun SupportPage(
-    backButtonClicked:() -> Unit = {}
+    backButtonClicked:() -> Unit = {},
+    confirmButtonClicked:() -> Unit = {}
 ) {
     Box(Modifier.fillMaxSize()) {
         CustomBackButton(
@@ -65,6 +66,6 @@ fun SupportPage(
         CustomHugeTextField(placeholder = "How can we help you?")
         Spacer(Modifier.size(4.dp))
 
-        CustomButton(name = "Send", onClick = {})
+        CustomButton(name = "Send", onClick = confirmButtonClicked)
     }
 }

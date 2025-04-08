@@ -9,11 +9,14 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.bolis.data.CodeState
 import com.example.bolis.data.PasswordRecoveryState
+import com.example.bolis.data.api.AppLocaleManager
+import com.example.bolis.data.api.ObserveLanguageChange
 import com.example.bolis.presentation.auth.ConfirmationCodePage
 import com.example.bolis.presentation.auth.LogInPage
 import com.example.bolis.presentation.auth.PasswordRecoveryPage
@@ -39,6 +42,7 @@ class MainActivity : ComponentActivity() {
                 Scaffold(
                     containerColor = White50
                 ) { innerPadding ->
+                    ObserveLanguageChange(context = LocalContext.current, appLocaleManager = AppLocaleManager())
                     NavHost(
                         navController = navController,
                         startDestination = LogInScreen,

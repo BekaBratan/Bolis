@@ -1,11 +1,6 @@
 package com.example.bolis.presentation.auth
 
-import android.app.LocaleManager
-import android.content.Context
-import android.content.res.Configuration
-import android.os.Build
-import android.os.LocaleList
-import androidx.appcompat.app.AppCompatDelegate
+import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -29,22 +24,18 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.os.LocaleListCompat
 import com.example.bolis.R
-import com.example.bolis.data.api.AppLocaleManager
-import com.example.bolis.data.api.Language
-import com.example.bolis.data.api.SettingState
+import com.example.bolis.data.api.appLanguages
+import com.example.bolis.data.api.languageState
 import com.example.bolis.ui.Elements.CustomButton
+import com.example.bolis.ui.Elements.CustomPasswordTextField
 import com.example.bolis.ui.Elements.CustomTextField
 import com.example.bolis.ui.Elements.Logo
-import com.example.bolis.ui.Elements.CustomPasswordTextField
 import com.example.bolis.ui.Elements.OptionsButton
 import com.example.bolis.ui.theme.Black20
 import com.example.bolis.ui.theme.Blue50
 import com.example.bolis.ui.theme.Red50
 import com.example.bolis.ui.theme.fontFamily
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import java.util.Locale
 
 @Preview
@@ -54,7 +45,7 @@ fun LogInPage(
     forgotButtonClicked: () -> Unit = {},
     nextButtonClicked: () -> Unit = {}
 ) {
-    var languageIndex by remember { mutableIntStateOf(2) }
+    var languageIndex by remember { mutableIntStateOf(appLanguages.indexOf(languageState)) }
 
     Row(
         modifier = Modifier
@@ -67,12 +58,13 @@ fun LogInPage(
             languageIndex,
             onClick = {
                 languageIndex = it
-                val locale = when (languageIndex) {
-                    0 -> Locale("kk")
-                    1 -> Locale("ru")
-                    2 -> Locale("en")
-                    else -> Locale.getDefault()
+                var langCode = when (languageIndex) {
+                    0 -> "kk"
+                    1 -> "ru"
+                    2 -> "en"
+                    else -> ""
                 }
+                languageState = appLanguages.find { it.code == langCode }!!
             }
         )
     }
@@ -86,7 +78,7 @@ fun LogInPage(
         Logo()
         Spacer(Modifier.size(12.dp))
         Text(
-            text = stringResource(R.string.app_name),
+            text = stringResource(R.string.name),
             fontSize = 28.sp,
             fontWeight = FontWeight(600),
             fontFamily = fontFamily,

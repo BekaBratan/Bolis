@@ -26,7 +26,11 @@ import com.example.bolis.ui.theme.fontFamily
 
 @Preview
 @Composable
-fun CustomHugeTextField(name: String = "", isRequired: Boolean = false, placeholder: String = "") {
+fun CustomHugeTextField(
+    name: String = "",
+    isRequired: Boolean = false,
+    placeholder: String = ""
+) {
     val (text, setText) = remember { mutableStateOf("") }
     val isRequired = isRequired
 

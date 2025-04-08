@@ -5,6 +5,11 @@ import android.content.Context
 import android.os.Build
 import android.os.LocaleList
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.core.os.LocaleListCompat
 
 data class Language(
@@ -13,11 +18,26 @@ data class Language(
 )
 
 val appLanguages = listOf(
-    Language("en", "English"), // default language
     Language("kk", "Kazakh"),
-    Language("ru", "Russian")
+    Language("ru", "Russian"),
+    Language("en", "English"), // default language
 )
 
+var languageState by mutableStateOf(appLanguages[0])
+var isLanguageChanged by mutableStateOf(false)
+
+@Composable
+fun ObserveLanguageChange(context: Context, appLocaleManager: AppLocaleManager) {
+    if (!isLanguageChanged) {
+        val currentLanguageCode = appLocaleManager.getLanguageCode(context)
+        languageState = appLanguages.find { it.code == currentLanguageCode } ?: appLanguages[0]
+        isLanguageChanged = true
+    }
+
+    LaunchedEffect(languageState) {
+        appLocaleManager.changeLanguage(context, languageState.code)
+    }
+}
 
 class AppLocaleManager {
 
@@ -45,7 +65,3 @@ class AppLocaleManager {
         return appLanguages.first().toString()
     }
 }
-
-data class SettingState(
-    val selectedLanguage: String = ""
-)

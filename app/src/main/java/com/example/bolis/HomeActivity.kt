@@ -23,6 +23,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
@@ -36,6 +37,8 @@ import com.example.bolis.NavDestination.GiveScreen
 import com.example.bolis.NavDestination.MarketScreen
 import com.example.bolis.NavDestination.ProfileScreen
 import com.example.bolis.ProfileDestination.*
+import com.example.bolis.data.api.AppLocaleManager
+import com.example.bolis.data.api.ObserveLanguageChange
 import com.example.bolis.presentation.donate.AddItemPage
 import com.example.bolis.presentation.donate.MyGivesPage
 import com.example.bolis.presentation.home.ChatPage
@@ -108,6 +111,7 @@ class HomeActivity : ComponentActivity() {
                         }
                     }
                 ) { innerPadding ->
+                    ObserveLanguageChange(context = LocalContext.current, appLocaleManager = AppLocaleManager())
                     NavHost(
                         enterTransition = { fadeIn() },
                         exitTransition = { slideOutVertically() + shrinkVertically() + fadeOut() },

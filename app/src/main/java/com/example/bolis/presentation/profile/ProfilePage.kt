@@ -13,6 +13,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -55,7 +56,7 @@ fun ProfilePage(
             color = Black50
         )
         Spacer(Modifier.size(22.dp))
-        ProfileButton(name = "Bekarys", onClick = profileButtonClicked)
+        ProfileButton(name = stringResource(R.string.name), onClick = profileButtonClicked)
         SettingsButton(name = "My budget", onClick = myBudgetButtonClicked, icon = R.drawable.ic_star)
         SettingsButton(name = "Postamat", onClick = postamatButtonClicked, icon = R.drawable.ic_box)
         Spacer(Modifier.size(24.dp))

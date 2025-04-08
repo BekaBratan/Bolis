@@ -31,8 +31,11 @@ import com.example.bolis.ui.theme.fontFamily
 @Composable
 fun ProfilePage(
     profileButtonClicked: () -> Unit = {},
+    myBudgetButtonClicked: () -> Unit = {},
+    postamatButtonClicked: () -> Unit = {},
     changePassButtonClicked: () -> Unit = {},
     supportButtonClicked: () -> Unit = {},
+    languageButtonClicked: () -> Unit = {},
     deleteButtonClicked: () -> Unit = {},
 ) {
     var isLogout by remember { mutableStateOf(false) }
@@ -53,6 +56,8 @@ fun ProfilePage(
         )
         Spacer(Modifier.size(22.dp))
         ProfileButton(name = "Bekarys", onClick = profileButtonClicked)
+        SettingsButton(name = "My budget", onClick = myBudgetButtonClicked, icon = R.drawable.ic_star)
+        SettingsButton(name = "Postamat", onClick = postamatButtonClicked, icon = R.drawable.ic_box)
         Spacer(Modifier.size(24.dp))
         Text(
             text = "Settings",
@@ -65,6 +70,7 @@ fun ProfilePage(
         SettingsButton(name = "Change Password", onClick = changePassButtonClicked, icon = R.drawable.ic_lock)
         SettingsButton(name = "Help and Support", onClick = supportButtonClicked, icon = R.drawable.ic_headphone)
         SettingsButton(name = "Delete Account", onClick = deleteButtonClicked, icon = R.drawable.ic_trash)
+        SettingsButton(name = "Language", onClick = languageButtonClicked, icon = R.drawable.ic_language)
         SettingsButton(name = "Logout", onClick = { isLogout = true }, icon = R.drawable.ic_logout)
     }
 

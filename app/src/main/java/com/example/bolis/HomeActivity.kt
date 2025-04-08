@@ -35,15 +35,13 @@ import com.example.bolis.NavDestination.FavouriteScreen
 import com.example.bolis.NavDestination.GiveScreen
 import com.example.bolis.NavDestination.MarketScreen
 import com.example.bolis.NavDestination.ProfileScreen
-import com.example.bolis.ProfileDestination.ChangePasswordScreen
-import com.example.bolis.ProfileDestination.DeleteAccountScreen
-import com.example.bolis.ProfileDestination.EditProfileScreen
-import com.example.bolis.ProfileDestination.SupportScreen
+import com.example.bolis.ProfileDestination.*
 import com.example.bolis.presentation.donate.AddItemPage
 import com.example.bolis.presentation.donate.MyGivesPage
 import com.example.bolis.presentation.home.ChatPage
 import com.example.bolis.presentation.home.FavouritePage
 import com.example.bolis.presentation.home.MarketPage
+import com.example.bolis.presentation.profile.ChangeLanguagePage
 import com.example.bolis.presentation.profile.ChangePasswordPage
 import com.example.bolis.presentation.profile.ConfirmedPage
 import com.example.bolis.presentation.profile.DeleteAccountPage
@@ -135,8 +133,11 @@ class HomeActivity : ComponentActivity() {
                         composable<ProfileScreen>{ backStackEntry ->
                             ProfilePage(
                                 profileButtonClicked = { navController.navigate(EditProfileScreen) },
+                                myBudgetButtonClicked = {  },
+                                postamatButtonClicked = {  },
                                 changePassButtonClicked = { navController.navigate(ChangePasswordScreen) },
                                 supportButtonClicked = { navController.navigate(SupportScreen) },
+                                languageButtonClicked = { navController.navigate(ChangeLanguageScreen) },
                                 deleteButtonClicked = { navController.navigate(DeleteAccountScreen) }
                             )
                         }
@@ -181,6 +182,11 @@ class HomeActivity : ComponentActivity() {
                                     description = "Are you sure you want to delete your account?",
                                     buttonText = "Delete"
                                 )) }
+                            )
+                        }
+                        composable<ChangeLanguageScreen>{ backStackEntry ->
+                            ChangeLanguagePage(
+                                backButtonClicked = { navController.popBackStack() }
                             )
                         }
                         composable<ConfirmedScreen>{ backStackEntry ->
@@ -241,6 +247,8 @@ sealed class ProfileDestination() {
     object SupportScreen: ProfileDestination()
     @Serializable
     object DeleteAccountScreen: ProfileDestination()
+    @Serializable
+    object ChangeLanguageScreen: ProfileDestination()
 }
 
 @Serializable

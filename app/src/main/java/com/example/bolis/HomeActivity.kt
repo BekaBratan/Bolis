@@ -36,9 +36,12 @@ import com.example.bolis.NavDestination.FavouriteScreen
 import com.example.bolis.NavDestination.GiveScreen
 import com.example.bolis.NavDestination.MarketScreen
 import com.example.bolis.NavDestination.ProfileScreen
-import com.example.bolis.ProfileDestination.*
-import com.example.bolis.data.api.AppLocaleManager
-import com.example.bolis.data.api.ObserveLanguageChange
+import com.example.bolis.ProfileDestination.ChangeLanguageScreen
+import com.example.bolis.ProfileDestination.ChangePasswordScreen
+import com.example.bolis.ProfileDestination.DeleteAccountScreen
+import com.example.bolis.ProfileDestination.EditProfileScreen
+import com.example.bolis.ProfileDestination.SupportScreen
+import com.example.bolis.data.api.systemLanguageChange
 import com.example.bolis.presentation.donate.AddItemPage
 import com.example.bolis.presentation.donate.MyGivesPage
 import com.example.bolis.presentation.home.ChatPage
@@ -54,6 +57,7 @@ import com.example.bolis.presentation.profile.SupportPage
 import com.example.bolis.ui.theme.BolisTheme
 import com.example.bolis.ui.theme.Green50
 import com.example.bolis.ui.theme.White50
+import com.example.bolis.utils.SharedProvider
 import kotlinx.serialization.Serializable
 
 class HomeActivity : ComponentActivity() {
@@ -111,7 +115,7 @@ class HomeActivity : ComponentActivity() {
                         }
                     }
                 ) { innerPadding ->
-                    ObserveLanguageChange(context = LocalContext.current, appLocaleManager = AppLocaleManager())
+                    systemLanguageChange(LocalContext.current, SharedProvider(LocalContext.current).getLanguage())
                     NavHost(
                         enterTransition = { fadeIn() },
                         exitTransition = { slideOutVertically() + shrinkVertically() + fadeOut() },

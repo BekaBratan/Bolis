@@ -1,5 +1,7 @@
 package com.example.bolis.presentation.auth
 
+import android.content.Context
+import android.content.res.Configuration
 import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -27,6 +29,7 @@ import androidx.compose.ui.unit.sp
 import com.example.bolis.R
 import com.example.bolis.data.api.appLanguages
 import com.example.bolis.data.api.languageState
+import com.example.bolis.data.api.systemLanguageChange
 import com.example.bolis.ui.Elements.CustomButton
 import com.example.bolis.ui.Elements.CustomPasswordTextField
 import com.example.bolis.ui.Elements.CustomTextField
@@ -36,6 +39,7 @@ import com.example.bolis.ui.theme.Black20
 import com.example.bolis.ui.theme.Blue50
 import com.example.bolis.ui.theme.Red50
 import com.example.bolis.ui.theme.fontFamily
+import com.example.bolis.utils.SharedProvider
 import java.util.Locale
 
 @Preview
@@ -46,6 +50,8 @@ fun LogInPage(
     nextButtonClicked: () -> Unit = {}
 ) {
     var languageIndex by remember { mutableIntStateOf(appLanguages.indexOf(languageState)) }
+    val context = LocalContext.current
+    val selectedLanguage = languageState
 
     Row(
         modifier = Modifier
@@ -65,6 +71,7 @@ fun LogInPage(
                     else -> ""
                 }
                 languageState = appLanguages.find { it.code == langCode }!!
+                systemLanguageChange(context, langCode)
             }
         )
     }

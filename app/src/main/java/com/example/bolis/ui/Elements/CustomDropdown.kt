@@ -39,10 +39,11 @@ import com.example.bolis.ui.theme.fontFamily
 @Composable
 fun CustomDropdown(
     name: String = "City",
+    text: String = "",
+    setText: (String) -> Unit = {},
     isRequired: Boolean = false,
     options: List<String> = listOf<String>("Almaty", "Astana", "Shymkent"),
 ) {
-    var text by remember { mutableStateOf("") }
     var expanded by remember { mutableStateOf(false) }
     var tempOptions by remember { mutableStateOf(options) }
 
@@ -61,8 +62,8 @@ fun CustomDropdown(
 
         BasicTextField(
             value = text,
-            onValueChange = {
-                text = it
+            onValueChange = { value ->
+                setText(value)
                 tempOptions = options.filter { option -> option.contains(text, ignoreCase = true) }
             },
             singleLine = true,
@@ -109,7 +110,7 @@ fun CustomDropdown(
                 DropdownMenuItem(
                     text = { Text(option) },
                     onClick = {
-                        text = option
+                        setText(option)
                         expanded = false
                     }
                 )

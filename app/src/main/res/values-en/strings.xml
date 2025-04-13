@@ -7,4 +7,9 @@
     <string name="create_new_account">CREATE NEW ACCOUNT</string>
     <string name="forgot_password">FORGOT YOUR PASSWORD?</string>
     <string name="login">Log In</string>
+    <string name="back">Back</string>
+    <string name="catalog">Catalog</string>
+    <string name="chat">Chat</string>
+    <string name="profile">Profile</string>
+    <string name="welcome">Welcome</string>
 </resources>

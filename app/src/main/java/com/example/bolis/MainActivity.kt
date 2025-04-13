@@ -34,6 +34,7 @@ class MainActivity : ComponentActivity() {
 
             fun navigateToHomeActivity() {
                 val intent = Intent(this, HomeActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 startActivity(intent)
             }
 
@@ -41,7 +42,13 @@ class MainActivity : ComponentActivity() {
                 Scaffold(
                     containerColor = White50
                 ) { innerPadding ->
-                    systemLanguageChange(LocalContext.current, SharedProvider(LocalContext.current).getLanguage())
+                    val context = LocalContext.current
+                    val sharedProvider = SharedProvider(context)
+                    systemLanguageChange(context, sharedProvider.getLanguage())
+
+                    if (sharedProvider.isAuthorized())
+                        navigateToHomeActivity()
+
                     NavHost(
                         navController = navController,
                         startDestination = LogInScreen,

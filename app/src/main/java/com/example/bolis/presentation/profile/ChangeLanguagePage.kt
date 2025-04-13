@@ -55,16 +55,8 @@ fun ChangeLanguagePage(
     CustomBackButton(
         modifier = Modifier
             .padding(top = 28.dp, start = 24.dp),
-        name = "Back"
+        name = stringResource(R.string.back)
     ) { backButtonClicked() }
-
-    Text(
-        text = stringResource(R.string.name),
-        fontSize = 28.sp,
-        fontWeight = FontWeight(600),
-        fontFamily = fontFamily,
-        color = Black50,
-    )
 
     LazyColumn(
         modifier = Modifier

@@ -7,4 +7,9 @@
     <string name="create_new_account">ЖАҢА АККАУНТ ҚҰРУ</string>
     <string name="forgot_password">ҚҰРПИЯ СӨЗДІ ҰМЫТТЫМ</string>
     <string name="login">Кіру</string>
+    <string name="back">Артқа</string>
+    <string name="catalog">Сөре</string>
+    <string name="chat">Чат</string>
+    <string name="profile">Профиль</string>
+    <string name="welcome">Қош келдіңіз</string>
 </resources>

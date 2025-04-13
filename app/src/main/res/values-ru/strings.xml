@@ -7,4 +7,9 @@
     <string name="create_new_account">СОЗДАТЬ НОВЫЙ АККАУНТ</string>
     <string name="forgot_password">ЗАБЫЛИ ПОРОЛЬ?</string>
     <string name="login">Войти</string>
+    <string name="back">Назад</string>
+    <string name="catalog">Каталог</string>
+    <string name="chat">Чат</string>
+    <string name="profile">Профиль</string>
+    <string name="welcome">Добро пожаловать</string>
 </resources>

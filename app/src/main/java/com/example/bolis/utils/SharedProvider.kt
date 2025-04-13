@@ -13,6 +13,7 @@ class SharedProvider(private val context: Context) {
     private val _password = "Password"
     private val _email = "Email"
     private val _phoneNumber = "PhoneNumber"
+    private val _city = "City"
     private val _tokenType = "TokenType"
     private val _isAuthorized = "isAuthorized"
 
@@ -32,6 +33,54 @@ class SharedProvider(private val context: Context) {
             putString(_lastName, lastName) }
     }
 
+    fun getFirstName(): String {
+        return "${preferences.getString(_firstName, "no_first_name")}"
+    }
+
+    fun getLastName(): String {
+        return "${preferences.getString(_lastName, "no_last_name")}"
+    }
+
+    fun getEmail(): String {
+        return "${preferences.getString(_email, "no_email")}"
+    }
+
+    fun getPassword(): String {
+        return "${preferences.getString(_password, "no_password")}"
+    }
+
+    fun getPhoneNumber(): String {
+        return "${preferences.getString(_phoneNumber, "no_phone_number")}"
+    }
+
+    fun getCity(): String {
+        return "${preferences.getString(_city, "no_city")}"
+    }
+
+    fun setFirstName(firstName: String) {
+        preferences.edit() { putString(_firstName, firstName) }
+    }
+
+    fun setLastName(lastName: String) {
+        preferences.edit() { putString(_lastName, lastName) }
+    }
+
+    fun setEmail(email: String) {
+        preferences.edit() { putString(_email, email) }
+    }
+
+    fun setPassword(password: String) {
+        preferences.edit() { putString(_password, password) }
+    }
+
+    fun setPhoneNumber(phoneNumber: String) {
+        preferences.edit() { putString(_phoneNumber, phoneNumber) }
+    }
+
+    fun setCity(city: String) {
+        preferences.edit() { putString(_city, city) }
+    }
+
     fun isAuthorized(): Boolean {
         return preferences.getBoolean(_isAuthorized, false)
     }
@@ -41,7 +90,7 @@ class SharedProvider(private val context: Context) {
     }
 
     fun getToken():String {
-        return "${preferences.getString(_tokenType, "without_token_type")} ${preferences.getString(_sharedToken, "without_token")}"
+        return "${preferences.getString(_tokenType, "no_token_type")} ${preferences.getString(_sharedToken, "no_token")}"
     }
 
     fun setToken(token: String) {

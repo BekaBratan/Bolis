@@ -1,5 +1,6 @@
 package com.example.bolis
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -25,6 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -41,6 +43,7 @@ import com.example.bolis.ProfileDestination.ChangePasswordScreen
 import com.example.bolis.ProfileDestination.DeleteAccountScreen
 import com.example.bolis.ProfileDestination.EditProfileScreen
 import com.example.bolis.ProfileDestination.SupportScreen
+import com.example.bolis.data.api.languageState
 import com.example.bolis.data.api.systemLanguageChange
 import com.example.bolis.presentation.chat.ChatPage
 import com.example.bolis.presentation.donate.AddItemPage
@@ -65,8 +68,12 @@ class HomeActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-
+            val selectedLanguage = languageState
             val navController = rememberNavController()
+            MarketScreen.title = stringResource(R.string.catalog)
+            ChatScreen.title = stringResource(R.string.chat)
+            ProfileScreen.title = stringResource(R.string.profile)
+
             val items = listOf(
                 MarketScreen,
                 QRScreen,
@@ -74,7 +81,14 @@ class HomeActivity : ComponentActivity() {
                 ChatScreen,
                 ProfileScreen
             )
+
             var selectedIndex by remember { mutableIntStateOf(0) }
+
+            fun navigateToMainActivity() {
+                val intent = Intent(this, MainActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                startActivity(intent)
+            }
 
             BolisTheme {
                 Scaffold(
@@ -146,7 +160,8 @@ class HomeActivity : ComponentActivity() {
                                 changePassButtonClicked = { navController.navigate(ChangePasswordScreen) },
                                 supportButtonClicked = { navController.navigate(SupportScreen) },
                                 languageButtonClicked = { navController.navigate(ChangeLanguageScreen) },
-                                deleteButtonClicked = { navController.navigate(DeleteAccountScreen) }
+                                deleteButtonClicked = { navController.navigate(DeleteAccountScreen) },
+                                logOutButtonClicked = { navigateToMainActivity() }
                             )
                         }
                         composable<EditProfileScreen>{ backStackEntry ->
@@ -186,9 +201,9 @@ class HomeActivity : ComponentActivity() {
                             DeleteAccountPage(
                                 backButtonClicked = { navController.popBackStack() },
                                 confirmButtonClicked = { navController.navigate(ConfirmedScreen(
-                                    title = "Delete account",
-                                    description = "Are you sure you want to delete your account?",
-                                    buttonText = "Delete"
+                                    title = "Account deleted",
+                                    description = "Your account successfully deleted",
+                                    buttonText = "Back to LogIn"
                                 )) }
                             )
                         }
@@ -204,10 +219,15 @@ class HomeActivity : ComponentActivity() {
                                 description = args.description,
                                 buttonText = args.buttonText,
                                 onConfirmButtonClicked = {
-                                    navController.navigate(items[selectedIndex]) {
-                                        popUpTo(navController.graph.startDestinationId)
-                                        launchSingleTop = true
-                                } }
+                                    if (args.title == "Account deleted") {
+                                        navigateToMainActivity()
+                                    } else {
+                                        navController.navigate(items[selectedIndex]) {
+                                            popUpTo(navController.graph.startDestinationId) { inclusive = true }
+                                            launchSingleTop = true
+                                        }
+                                    }
+                                }
                             )
                         }
                         composable<AddItemScreen> { backStackEntry ->
@@ -232,13 +252,13 @@ class HomeActivity : ComponentActivity() {
 }
 
 @Serializable
-sealed class NavDestination(val title: String, val icon: Int) {
+sealed class NavDestination(var title: String, val icon: Int) {
     @Serializable
-    object MarketScreen : NavDestination(title = "Market", icon = R.drawable.ic_market)
+    object MarketScreen : NavDestination(title = "Catalog", icon = R.drawable.ic_market)
     @Serializable
     object QRScreen : NavDestination(title = "QR", icon = R.drawable.ic_favourite)
     @Serializable
-    object GiveScreen : NavDestination(title = "Give", icon = R.drawable.ic_give)
+    object GiveScreen : NavDestination(title = "Bolis", icon = R.drawable.ic_give)
     @Serializable
     object ChatScreen : NavDestination(title = "Chat", icon = R.drawable.ic_chat)
     @Serializable

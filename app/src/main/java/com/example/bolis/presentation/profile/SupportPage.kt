@@ -29,13 +29,11 @@ fun SupportPage(
     backButtonClicked:() -> Unit = {},
     confirmButtonClicked:() -> Unit = {}
 ) {
-    Box(Modifier.fillMaxSize()) {
-        CustomBackButton(
-            modifier = Modifier
-                .padding(top = 28.dp, start = 24.dp),
-            name = "Back"
-        ) { backButtonClicked() }
-    }
+    CustomBackButton(
+        modifier = Modifier
+            .padding(top = 28.dp, start = 24.dp),
+        name = "Back"
+    ) { backButtonClicked() }
 
     Column(
         modifier = Modifier

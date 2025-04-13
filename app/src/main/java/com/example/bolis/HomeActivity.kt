@@ -42,10 +42,9 @@ import com.example.bolis.ProfileDestination.DeleteAccountScreen
 import com.example.bolis.ProfileDestination.EditProfileScreen
 import com.example.bolis.ProfileDestination.SupportScreen
 import com.example.bolis.data.api.systemLanguageChange
+import com.example.bolis.presentation.chat.ChatPage
 import com.example.bolis.presentation.donate.AddItemPage
 import com.example.bolis.presentation.donate.MyGivesPage
-import com.example.bolis.presentation.home.ChatPage
-import com.example.bolis.presentation.home.FavouritePage
 import com.example.bolis.presentation.home.MarketPage
 import com.example.bolis.presentation.profile.ChangeLanguagePage
 import com.example.bolis.presentation.profile.ChangePasswordPage

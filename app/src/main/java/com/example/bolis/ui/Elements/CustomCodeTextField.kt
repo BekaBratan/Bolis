@@ -30,14 +30,14 @@ fun CustomCodeTextField() {
     val (text, setText) = remember { mutableStateOf("") }
 
     Box {
-        val focusRequesters = List(4) { FocusRequester() }
+        val focusRequesters = List(6) { FocusRequester() }
 
         Row(
             modifier = Modifier
                 .fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(16.dp)
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            for (i in 0 until 4) {
+            for (i in 0 until 6) {
                 BasicTextField(
                     value = text.getOrNull(i)?.toString() ?: "",
                     onValueChange = { newValue ->
@@ -49,7 +49,7 @@ fun CustomCodeTextField() {
                                 } else {
                                     newText.add(newValue[0])
                                 }
-                                if (i < 3) {
+                                if (i < 5) {
                                     focusRequesters[i + 1].requestFocus()
                                 }
                             } else if (i < text.length) {

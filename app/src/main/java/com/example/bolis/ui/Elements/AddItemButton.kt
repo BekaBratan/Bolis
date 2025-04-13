@@ -25,7 +25,11 @@ import com.example.bolis.ui.theme.fontFamily
 
 @Preview
 @Composable
-fun AddItemButton(name: String = "Button", isSelected: Boolean = false, onClick: () -> Unit = {}) {
+fun AddItemButton(
+    name: String = "Button",
+    isSelected: Boolean = false,
+    onClick: () -> Unit = {}
+) {
     Box(
         modifier = Modifier
             .width(84.dp)

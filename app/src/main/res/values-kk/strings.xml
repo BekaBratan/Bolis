@@ -2,4 +2,9 @@
 <resources>
     <string name="app_name">Bolis</string>
     <string name="name">Есім</string>
+    <string name="email">Email</string>
+    <string name="password">Құпия сөз</string>
+    <string name="create_new_account">ЖАҢА АККАУНТ ҚҰРУ</string>
+    <string name="forgot_password">ҚҰРПИЯ СӨЗДІ ҰМЫТТЫМ</string>
+    <string name="login">Кіру</string>
 </resources>

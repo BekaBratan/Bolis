@@ -40,7 +40,7 @@ fun AddItemPage(
     onConfirmButtonClick:() -> Unit = {}
 ) {
     var nameError by remember { mutableStateOf(false) }
-    var selectedButton by remember { mutableStateOf("") }
+    var selectedButton by remember { mutableStateOf("New") }
     var descriptionError by remember { mutableStateOf(false) }
     var listImages by remember { mutableStateOf<List<Uri>>(emptyList()) }
     var uploadError by remember { mutableStateOf(false) }

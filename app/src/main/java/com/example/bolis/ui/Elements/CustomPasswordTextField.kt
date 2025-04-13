@@ -38,8 +38,12 @@ import com.example.bolis.ui.theme.fontFamily
 
 @Preview
 @Composable
-fun CustomPasswordTextField(name: String = "PassTextField", isRequired: Boolean = false) {
-    val (password, setPassword) = remember { mutableStateOf("") }
+fun CustomPasswordTextField(
+    name: String = "PassTextField",
+    isRequired: Boolean = false,
+    text: String = "",
+    setText: (String) -> Unit = {}
+) {
     val (passwordVisible, setPasswordVisible) = remember { mutableStateOf(false) }
     val isRequired = isRequired
 
@@ -54,8 +58,8 @@ fun CustomPasswordTextField(name: String = "PassTextField", isRequired: Boolean 
         )
 
         BasicTextField(
-            value = password,
-            onValueChange = setPassword,
+            value = text,
+            onValueChange = { value -> setText(value) },
             singleLine = true,
             visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),

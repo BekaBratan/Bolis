@@ -2,6 +2,7 @@ package com.example.bolis.presentation.auth
 
 import android.content.Context
 import android.content.res.Configuration
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -16,6 +17,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -26,10 +28,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.bolis.R
 import com.example.bolis.data.api.appLanguages
 import com.example.bolis.data.api.languageState
 import com.example.bolis.data.api.systemLanguageChange
+import com.example.bolis.data.models.LogInRequest
+import com.example.bolis.data.models.SignUpRequest
 import com.example.bolis.ui.Elements.CustomButton
 import com.example.bolis.ui.Elements.CustomPasswordTextField
 import com.example.bolis.ui.Elements.CustomTextField
@@ -41,17 +46,22 @@ import com.example.bolis.ui.theme.Red50
 import com.example.bolis.ui.theme.fontFamily
 import com.example.bolis.utils.SharedProvider
 import java.util.Locale
+import kotlin.math.log
 
 @Preview
 @Composable
 fun LogInPage(
     createButtonClicked: () -> Unit = {},
     forgotButtonClicked: () -> Unit = {},
-    nextButtonClicked: () -> Unit = {}
+    nextButtonClicked: () -> Unit = {},
+    viewModel: AuthViewModel = viewModel()
 ) {
     var languageIndex by remember { mutableIntStateOf(appLanguages.indexOf(languageState)) }
     val context = LocalContext.current
     val selectedLanguage = languageState
+    val sharedProvider = SharedProvider(context)
+    var phoneNumber by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
 
     Row(
         modifier = Modifier
@@ -85,16 +95,16 @@ fun LogInPage(
         Logo()
         Spacer(Modifier.size(12.dp))
         Text(
-            text = stringResource(R.string.name),
+            text = "Bolis",
             fontSize = 28.sp,
             fontWeight = FontWeight(600),
             fontFamily = fontFamily,
             color = Black20
         )
         Spacer(Modifier.size(80.dp))
-        CustomTextField(name = "Phone number")
+        CustomTextField(name = stringResource(R.string.email), text = phoneNumber, setText = { phoneNumber = it })
         Spacer(Modifier.size(24.dp))
-        CustomPasswordTextField(name = "Password")
+        CustomPasswordTextField(name = stringResource(R.string.password), text = password, setText = { password = it })
         Spacer(Modifier.size(12.dp))
 
         Row(
@@ -103,7 +113,7 @@ fun LogInPage(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
-                text = "CREATE NEW ACCOUNT",
+                text = stringResource(R.string.create_new_account),
                 fontSize = 12.sp,
                 fontWeight = FontWeight(600),
                 fontFamily = fontFamily,
@@ -111,7 +121,7 @@ fun LogInPage(
                 modifier = Modifier.clickable { createButtonClicked() }
             )
             Text(
-                text = "FORGOT YOUR PASSWORD ?",
+                text = stringResource(R.string.forgot_password),
                 fontSize = 12.sp,
                 fontWeight = FontWeight(600),
                 fontFamily = fontFamily,
@@ -121,7 +131,23 @@ fun LogInPage(
         }
 
         Spacer(Modifier.size(42.dp))
-        CustomButton(name = "Log In", onClick = { nextButtonClicked() })
+        CustomButton(name = stringResource(R.string.login), onClick = {
+            if (phoneNumber.isEmpty() || password.isEmpty()) {
+                Toast.makeText(context, "Fill in all fields", Toast.LENGTH_SHORT).show()
+            } else {
+                viewModel.login(LogInRequest(phoneNumber.trim(), password.trim()))
+            }
+        })
+
+        viewModel.logInResponse.observeForever {
+            sharedProvider.saveUser(SignUpRequest(phoneNumber.trim(), password.trim()), "Bolis", "Helper")
+            nextButtonClicked()
+        }
+
+        viewModel.errorResponse.observeForever {
+            Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+            Log.d("Error", it.toString())
+        }
     }
 }
 

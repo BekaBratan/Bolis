@@ -10,8 +10,6 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -27,8 +25,13 @@ import com.example.bolis.ui.theme.fontFamily
 
 @Preview
 @Composable
-fun CustomTextField(name: String = "TextField", isRequired: Boolean = false, placeholder: String = "") {
-    val (text, setText) = remember { mutableStateOf("") }
+fun CustomTextField(
+    name: String = "TextField",
+    isRequired: Boolean = false,
+    text: String = "",
+    setText: (String) -> Unit = {},
+    placeholder: String = ""
+) {
     val isRequired = isRequired
 
     Box {
@@ -43,7 +46,7 @@ fun CustomTextField(name: String = "TextField", isRequired: Boolean = false, pla
 
         BasicTextField(
             value = text,
-            onValueChange = setText,
+            onValueChange = { value -> setText(value) },
             singleLine = true,
             keyboardOptions = KeyboardOptions(keyboardType = if (name == "Phone number") KeyboardType.Phone else KeyboardType.Text),
             textStyle = TextStyle(

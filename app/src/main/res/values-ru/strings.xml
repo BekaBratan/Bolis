@@ -2,4 +2,9 @@
 <resources>
     <string name="app_name">Bolis</string>
     <string name="name">Имя</string>
+    <string name="email">Email</string>
+    <string name="password">Пороль</string>
+    <string name="create_new_account">СОЗДАТЬ НОВЫЙ АККАУНТ</string>
+    <string name="forgot_password">ЗАБЫЛИ ПОРОЛЬ?</string>
+    <string name="login">Войти</string>
 </resources>

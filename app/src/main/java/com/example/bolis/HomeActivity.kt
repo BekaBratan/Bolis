@@ -32,10 +32,10 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.example.bolis.GiveDestination.AddItemScreen
 import com.example.bolis.NavDestination.ChatScreen
-import com.example.bolis.NavDestination.FavouriteScreen
 import com.example.bolis.NavDestination.GiveScreen
 import com.example.bolis.NavDestination.MarketScreen
 import com.example.bolis.NavDestination.ProfileScreen
+import com.example.bolis.NavDestination.QRScreen
 import com.example.bolis.ProfileDestination.ChangeLanguageScreen
 import com.example.bolis.ProfileDestination.ChangePasswordScreen
 import com.example.bolis.ProfileDestination.DeleteAccountScreen
@@ -54,6 +54,7 @@ import com.example.bolis.presentation.profile.DeleteAccountPage
 import com.example.bolis.presentation.profile.ProfileEditPage
 import com.example.bolis.presentation.profile.ProfilePage
 import com.example.bolis.presentation.profile.SupportPage
+import com.example.bolis.presentation.qr.QRPage
 import com.example.bolis.ui.theme.BolisTheme
 import com.example.bolis.ui.theme.Green50
 import com.example.bolis.ui.theme.White50
@@ -69,7 +70,7 @@ class HomeActivity : ComponentActivity() {
             val navController = rememberNavController()
             val items = listOf(
                 MarketScreen,
-                FavouriteScreen,
+                QRScreen,
                 GiveScreen,
                 ChatScreen,
                 ProfileScreen
@@ -127,8 +128,8 @@ class HomeActivity : ComponentActivity() {
                         composable<MarketScreen>{ backStackEntry ->
                             MarketPage()
                         }
-                        composable<FavouriteScreen>{ backStackEntry ->
-                            FavouritePage()
+                        composable<QRScreen>{ backStackEntry ->
+                            QRPage()
                         }
                         composable<GiveScreen>{ backStackEntry ->
                             MyGivesPage(
@@ -236,7 +237,7 @@ sealed class NavDestination(val title: String, val icon: Int) {
     @Serializable
     object MarketScreen : NavDestination(title = "Market", icon = R.drawable.ic_market)
     @Serializable
-    object FavouriteScreen : NavDestination(title = "Favourite", icon = R.drawable.ic_favourite)
+    object QRScreen : NavDestination(title = "QR", icon = R.drawable.ic_favourite)
     @Serializable
     object GiveScreen : NavDestination(title = "Give", icon = R.drawable.ic_give)
     @Serializable

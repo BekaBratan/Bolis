@@ -10,6 +10,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -38,6 +42,7 @@ fun PasswordRecoveryPage(
     nextButtonClicked:() -> Unit = {}
 ) {
     val isSetNewPassword = isSetNewPassword
+    var phoneNumber by remember { mutableStateOf("") }
 
     CustomBackButton(
         modifier = Modifier
@@ -88,10 +93,10 @@ fun PasswordRecoveryPage(
                 modifier = Modifier.padding(horizontal = 24.dp)
             )
             Spacer(Modifier.size(38.dp))
-            CustomTextField(name = "Phone number")
+            CustomTextField(name = "Email", text = phoneNumber, setText = { phoneNumber = it })
             Spacer(Modifier.size(32.dp))
         } else if (isSetNewPassword == PasswordRecoveryState.NEW_PASSWORD) {
-            CustomPasswordTextField(name = "Enter a new password")
+            CustomPasswordTextField(name = "Enter a new password", text = phoneNumber, setText = { phoneNumber = it })
             Spacer(Modifier.size(32.dp))
         }
 

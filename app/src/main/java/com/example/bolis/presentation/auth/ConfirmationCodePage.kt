@@ -56,14 +56,14 @@ fun ConfirmationCodePage(
         CustomCodeTextField()
         Spacer(Modifier.size(20.dp))
 
-        Text(
-            text = "Send the code again at 0:30",
-            fontSize = 16.sp,
-            textAlign = TextAlign.Center,
-            fontWeight = FontWeight(400),
-            fontFamily = fontFamily,
-            color = Black50
-        )
+//        Text(
+//            text = "Send the code again at 0:30",
+//            fontSize = 16.sp,
+//            textAlign = TextAlign.Center,
+//            fontWeight = FontWeight(400),
+//            fontFamily = fontFamily,
+//            color = Black50
+//        )
         Spacer(Modifier.size(35.dp))
 
         CustomHugeButton(

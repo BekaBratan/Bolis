@@ -42,6 +42,7 @@ import com.example.bolis.ProfileDestination.ChangeLanguageScreen
 import com.example.bolis.ProfileDestination.ChangePasswordScreen
 import com.example.bolis.ProfileDestination.DeleteAccountScreen
 import com.example.bolis.ProfileDestination.EditProfileScreen
+import com.example.bolis.ProfileDestination.MapScreen
 import com.example.bolis.ProfileDestination.SupportScreen
 import com.example.bolis.data.api.languageState
 import com.example.bolis.data.api.systemLanguageChange
@@ -53,6 +54,7 @@ import com.example.bolis.presentation.profile.ChangeLanguagePage
 import com.example.bolis.presentation.profile.ChangePasswordPage
 import com.example.bolis.presentation.profile.ConfirmedPage
 import com.example.bolis.presentation.profile.DeleteAccountPage
+import com.example.bolis.presentation.profile.MapPage
 import com.example.bolis.presentation.profile.ProfileEditPage
 import com.example.bolis.presentation.profile.ProfilePage
 import com.example.bolis.presentation.profile.SupportPage
@@ -156,7 +158,7 @@ class HomeActivity : ComponentActivity() {
                             ProfilePage(
                                 profileButtonClicked = { navController.navigate(EditProfileScreen) },
                                 myBudgetButtonClicked = {  },
-                                postamatButtonClicked = {  },
+                                postamatButtonClicked = { navController.navigate(MapScreen) },
                                 changePassButtonClicked = { navController.navigate(ChangePasswordScreen) },
                                 supportButtonClicked = { navController.navigate(SupportScreen) },
                                 languageButtonClicked = { navController.navigate(ChangeLanguageScreen) },
@@ -230,6 +232,9 @@ class HomeActivity : ComponentActivity() {
                                 }
                             )
                         }
+                        composable<MapScreen> { backStackEntry ->
+                            MapPage()
+                        }
                         composable<AddItemScreen> { backStackEntry ->
                             AddItemPage(
                                 backButtonClicked = { navController.popBackStack() },
@@ -277,6 +282,8 @@ sealed class ProfileDestination() {
     object DeleteAccountScreen: ProfileDestination()
     @Serializable
     object ChangeLanguageScreen: ProfileDestination()
+    @Serializable
+    object MapScreen: ProfileDestination()
 }
 
 @Serializable

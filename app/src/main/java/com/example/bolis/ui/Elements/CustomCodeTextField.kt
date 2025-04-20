@@ -26,8 +26,10 @@ import com.example.bolis.ui.theme.fontFamily
 
 @Preview
 @Composable
-fun CustomCodeTextField() {
-    val (text, setText) = remember { mutableStateOf("") }
+fun CustomCodeTextField(
+    text: String = "",
+    setText: (String) -> Unit = {}
+) {
 
     Box {
         val focusRequesters = List(6) { FocusRequester() }

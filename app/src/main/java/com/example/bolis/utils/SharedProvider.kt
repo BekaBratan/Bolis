@@ -26,11 +26,14 @@ class SharedProvider(private val context: Context) {
     fun saveUser(user: SignUpRequest, firstName: String, lastName: String) {
         preferences.edit() {
             clear()
-            putBoolean(_isAuthorized, true)
             putString(_email, user.email)
             putString(_password, user.password)
             putString(_firstName, firstName)
             putString(_lastName, lastName) }
+    }
+
+    fun setAuthorized() {
+        preferences.edit() { putBoolean(_isAuthorized, true) }
     }
 
     fun getFirstName(): String {

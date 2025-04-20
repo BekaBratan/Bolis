@@ -72,7 +72,7 @@ class MainActivity : ComponentActivity() {
                             ConfirmationCodePage(
                                 codeState = CodeState.REGISTRATION,
                                 backButtonClicked = { navController.popBackStack() },
-                                nextButtonClicked = { navigateToHomeActivity() }
+                                nextButtonClicked = { navController.navigate(LogInScreen) }
                             )
                         }
                         composable<RecPassScreen>{ backStackEntry ->

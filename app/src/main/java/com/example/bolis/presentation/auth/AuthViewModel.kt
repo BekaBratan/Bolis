@@ -9,6 +9,7 @@ import com.example.bolis.data.models.LogInRequest
 import com.example.bolis.data.models.LogInResponse
 import com.example.bolis.data.models.SignUpRequest
 import com.example.bolis.data.models.SignUpResponse
+import com.example.bolis.data.models.VerificationRequest
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -18,6 +19,9 @@ class AuthViewModel(): ViewModel() {
 
     private var _logInResponse: MutableLiveData<LogInResponse?> = MutableLiveData()
     val logInResponse: LiveData<LogInResponse?> = _logInResponse
+
+    private var _verifyResponse: MutableLiveData<String?> = MutableLiveData()
+    val verifyResponse: LiveData<String?> = _verifyResponse
 
     private var _errorResponse: MutableLiveData<String?> = MutableLiveData()
     val errorResponse: LiveData<String?> = _errorResponse
@@ -45,6 +49,21 @@ class AuthViewModel(): ViewModel() {
             }.fold(
                 onSuccess = {
                     _logInResponse.postValue(it)
+                },
+                onFailure = {
+                    _errorResponse.postValue(it.message)
+                }
+            )
+        }
+    }
+
+    fun verify(verificationRequest: VerificationRequest) {
+        viewModelScope.launch(Dispatchers.IO) {
+            runCatching {
+                ServiceBuilder.api.verify(verificationRequest)
+            }.fold(
+                onSuccess = {
+                    _verifyResponse.postValue(it)
                 },
                 onFailure = {
                     _errorResponse.postValue(it.message)

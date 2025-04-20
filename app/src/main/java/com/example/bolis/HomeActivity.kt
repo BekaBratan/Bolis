@@ -63,12 +63,17 @@ import com.example.bolis.ui.theme.BolisTheme
 import com.example.bolis.ui.theme.Green50
 import com.example.bolis.ui.theme.White50
 import com.example.bolis.utils.SharedProvider
+import com.yandex.mapkit.MapKitFactory
 import kotlinx.serialization.Serializable
 
 class HomeActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
+        MapKitFactory.setApiKey("febf663c-17d1-47a2-b099-01090ea4588f")
+        MapKitFactory.initialize(this)
+
         setContent {
             val selectedLanguage = languageState
             val navController = rememberNavController()
@@ -253,6 +258,16 @@ class HomeActivity : ComponentActivity() {
                 }
             }
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        MapKitFactory.getInstance().onStart()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        MapKitFactory.getInstance().onStop()
     }
 }
 

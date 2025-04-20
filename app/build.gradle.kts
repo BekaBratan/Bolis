@@ -12,7 +12,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.bolis"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
@@ -98,4 +98,10 @@ dependencies {
 
     // Zxing
     implementation("com.google.zxing:core:3.3.3")
+
+    // YandexMap
+    implementation("com.yandex.android:maps.mobile:4.14.0-full")
+
+    // GPS Location
+    implementation("com.google.android.gms:play-services-location:21.0.1")
 }

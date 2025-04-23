@@ -136,12 +136,15 @@ fun LogInPage(
                 Toast.makeText(context, "Fill in all fields", Toast.LENGTH_SHORT).show()
             } else {
                 viewModel.login(LogInRequest(phoneNumber.trim(), password.trim()))
+//                Toast.makeText(context, "${phoneNumber.trim()}, ${password.trim()}", Toast.LENGTH_SHORT).show()
             }
         })
 
         viewModel.logInResponse.observeForever {
+//            Toast.makeText(context, it!!.token, Toast.LENGTH_SHORT).show()
             sharedProvider.saveUser(SignUpRequest(phoneNumber.trim(), password.trim()), "Bolis", "Helper")
             sharedProvider.setAuthorized()
+            sharedProvider.saveToken(it!!.token)
             nextButtonClicked()
         }
 

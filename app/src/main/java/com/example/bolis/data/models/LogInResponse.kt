@@ -7,5 +7,7 @@ data class LogInResponse(
     @SerializedName("redirect")
     val redirect: String,
     @SerializedName("success")
-    val success: String
+    val success: String,
+    @SerializedName("token")
+    val token: String
 )

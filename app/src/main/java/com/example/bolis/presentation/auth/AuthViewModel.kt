@@ -5,11 +5,13 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.bolis.data.api.ServiceBuilder
+import com.example.bolis.data.models.ErrorResponse
 import com.example.bolis.data.models.LogInRequest
 import com.example.bolis.data.models.LogInResponse
 import com.example.bolis.data.models.SignUpRequest
 import com.example.bolis.data.models.SignUpResponse
 import com.example.bolis.data.models.VerificationRequest
+import com.example.bolis.data.models.VerificationResponse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -20,11 +22,14 @@ class AuthViewModel(): ViewModel() {
     private var _logInResponse: MutableLiveData<LogInResponse?> = MutableLiveData()
     val logInResponse: LiveData<LogInResponse?> = _logInResponse
 
-    private var _verifyResponse: MutableLiveData<String?> = MutableLiveData()
-    val verifyResponse: LiveData<String?> = _verifyResponse
+    private var _verifyResponse: MutableLiveData<VerificationResponse?> = MutableLiveData()
+    val verifyResponse: LiveData<VerificationResponse?> = _verifyResponse
 
     private var _errorResponse: MutableLiveData<String?> = MutableLiveData()
     val errorResponse: LiveData<String?> = _errorResponse
+
+    private var _errorMessageResponse: MutableLiveData<ErrorResponse?> = MutableLiveData()
+    val errorMessageResponse: LiveData<ErrorResponse?> = _errorMessageResponse
 
     fun signUp(signUpRequest: SignUpRequest) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -35,8 +40,8 @@ class AuthViewModel(): ViewModel() {
                     _signUpResponse.postValue(it)
                 },
                 onFailure = { throwable ->
-                    val errorBody = (throwable as? retrofit2.HttpException)?.response()?.errorBody()?.string()
-                    _errorResponse.postValue(errorBody ?: "Unknown error occurred")
+                    val errorMessage = (throwable as? retrofit2.HttpException)?.response()?.errorBody()?.string()
+                    _errorMessageResponse.postValue(ErrorResponse(errorMessage.toString()))
                 }
             )
         }
@@ -50,8 +55,9 @@ class AuthViewModel(): ViewModel() {
                 onSuccess = {
                     _logInResponse.postValue(it)
                 },
-                onFailure = {
-                    _errorResponse.postValue(it.message)
+                onFailure = { throwable ->
+                    val errorMessage = (throwable as? retrofit2.HttpException)?.response()?.errorBody()?.string()
+                    _errorMessageResponse.postValue(ErrorResponse(errorMessage.toString()))
                 }
             )
         }
@@ -65,8 +71,9 @@ class AuthViewModel(): ViewModel() {
                 onSuccess = {
                     _verifyResponse.postValue(it)
                 },
-                onFailure = {
-                    _errorResponse.postValue(it.message)
+                onFailure = { throwable ->
+                    val errorMessage = (throwable as? retrofit2.HttpException)?.response()?.errorBody()?.string()
+                    _errorMessageResponse.postValue(ErrorResponse(errorMessage.toString()))
                 }
             )
         }

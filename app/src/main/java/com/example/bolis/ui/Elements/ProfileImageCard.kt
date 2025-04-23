@@ -22,6 +22,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil3.Image
+import coil3.compose.AsyncImage
 import com.example.bolis.R
 import com.example.bolis.ui.theme.Blue50
 import com.example.bolis.ui.theme.Green50
@@ -29,7 +31,7 @@ import com.example.bolis.ui.theme.fontFamily
 
 @Preview
 @Composable
-fun ProfileImageCard(onClick: () -> Unit = {}) {
+fun ProfileImageCard(onClick: () -> Unit = {}, url: String = "") {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -41,14 +43,22 @@ fun ProfileImageCard(onClick: () -> Unit = {}) {
         verticalArrangement = Arrangement.spacedBy(10.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Image(
-            painter = painterResource(R.drawable.ic_profile_img),
+        AsyncImage(
+            model = url, // Replace with your image URL
+            contentDescription = "Profile Image",
             contentScale = ContentScale.Fit,
-            contentDescription = "show",
             modifier = Modifier
-                .size(50.dp)
-                .clickable(onClick = { })
+                .size(100.dp)
+                .clip(RoundedCornerShape(5.dp))
         )
+//        Image(
+//            painter = painterResource(R.drawable.ic_profile_img),
+//            contentScale = ContentScale.Fit,
+//            contentDescription = "show",
+//            modifier = Modifier
+//                .size(50.dp)
+//                .clickable(onClick = { })
+//        )
         Text(
             text = "Change Profile Image",
             fontSize = 12.sp,

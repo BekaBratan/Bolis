@@ -89,7 +89,10 @@ class SharedProvider(private val context: Context) {
     }
 
     fun saveToken(token: String) {
-        preferences.edit() { putString(_sharedToken, token) }
+        preferences.edit() {
+            putString(_tokenType, "Bearer")
+            putString(_sharedToken, token)
+        }
     }
 
     fun getToken():String {

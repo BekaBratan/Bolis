@@ -3,6 +3,7 @@ package com.example.bolis.presentation.qr
 import android.Manifest
 import android.content.pm.PackageManager
 import android.util.Size
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.camera.core.CameraSelector
@@ -97,16 +98,14 @@ fun QRPage() {
                         preview.setSurfaceProvider(previewView.surfaceProvider)
                         val imageAnalysis = ImageAnalysis.Builder()
                             .setTargetResolution(
-                                Size(
-                                    previewView.width,
-                                    previewView.height
-                                )
+                                Size(1280, 720)
                             )
                             .setBackpressureStrategy(STRATEGY_KEEP_ONLY_LATEST)
                             .build()
                         imageAnalysis.setAnalyzer(
                             ContextCompat.getMainExecutor(context),
                             QRAnalyzer { result ->
+                                Toast.makeText(context, result, Toast.LENGTH_SHORT).show()
                                 code = result
                             }
                         )

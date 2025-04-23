@@ -1,6 +1,7 @@
 package com.example.bolis.presentation.qr
 
 import android.graphics.ImageFormat
+import android.util.Log
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageProxy
 import com.google.zxing.BarcodeFormat
@@ -22,34 +23,39 @@ class QRAnalyzer(
     )
 
     override fun analyze(image: ImageProxy) {
+        Log.d("QRAnalyzer", "Image format: ${image.format}")
         if (image.format in supportedImageFormats) {
-            val bytes = image.planes.first().buffer.toByteArray()
+            val yBuffer = image.planes[0].buffer
+            val ySize = yBuffer.remaining()
+            val yBytes = ByteArray(ySize)
+            yBuffer.get(yBytes)
 
             val source = PlanarYUVLuminanceSource(
-                bytes,
+                yBytes,
                 image.width,
                 image.height,
                 0,
                 0,
                 image.width,
                 image.height,
-                false
+                true
             )
 
             val binaryBitMap = BinaryBitmap(HybridBinarizer(source))
             try {
-                val result = MultiFormatReader().apply {
+                val reader = MultiFormatReader().apply {
                     setHints(
                         mapOf(
-                            DecodeHintType.POSSIBLE_FORMATS to arrayListOf(
-                                BarcodeFormat.QR_CODE
-                            )
+                            DecodeHintType.POSSIBLE_FORMATS to listOf(BarcodeFormat.QR_CODE),
+                            DecodeHintType.TRY_HARDER to true
                         )
                     )
-                }.decode(binaryBitMap)
+                }
+
+                val result = reader.decodeWithState(binaryBitMap)
                 onQRCodeScanned(result.text)
             } catch (e: Exception) {
-                e.printStackTrace()
+                Log.d("QRAnalyzer", "No QR found: ${e.message}")
             } finally {
                 image.close()
             }

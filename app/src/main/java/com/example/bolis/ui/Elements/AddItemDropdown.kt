@@ -45,6 +45,7 @@ fun AddItemDropdown(
     isRequired: Boolean = false,
     placeholder: String = "Choose",
     options: List<String> = listOf<String>("Almaty", "Astana", "Shymkent"),
+    optionSelected: (Int) -> Unit = {},
 ) {
     var text by remember { mutableStateOf("") }
     var expanded by remember { mutableStateOf(false) }
@@ -67,7 +68,10 @@ fun AddItemDropdown(
             value = text,
             onValueChange = {
                 text = it
-                tempOptions = options.filter { option -> option.contains(text, ignoreCase = true) }
+                tempOptions = options.filter { option ->
+                    option.contains(text, ignoreCase = true)
+                }
+                optionSelected(tempOptions.indexOf(it))
             },
             singleLine = true,
             textStyle = TextStyle(

@@ -72,7 +72,7 @@ class HomeActivity : ComponentActivity() {
         enableEdgeToEdge()
 
         MapKitFactory.setApiKey("febf663c-17d1-47a2-b099-01090ea4588f")
-//        MapKitFactory.initialize(this)
+        MapKitFactory.initialize(this)
 
         setContent {
             val selectedLanguage = languageState

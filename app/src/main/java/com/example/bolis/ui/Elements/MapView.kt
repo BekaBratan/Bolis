@@ -92,26 +92,29 @@ fun MapWithUserLocation() {
         Box(modifier = Modifier.fillMaxSize()) {
             AndroidView(
                 factory = { mapViewState },
+                modifier = Modifier.fillMaxSize(),
                 update = { mapView ->
-                    if (location != null) {
-                        val userLocationPoint = Point(location!!.latitude, location!!.longitude)
-                        mapView.map.move(
-                            CameraPosition(
-                                userLocationPoint,
-                                15.0f,  // Adjust zoom level as needed
-                                0.0f,
-                                0.0f
-                            )
-                        )
-                        //  Optional: Add a placemark (marker) at the user's location:
-                        mapView.map.mapObjects.clear() // Clear previous markers if any
-                        mapView.map.mapObjects.addPlacemark().apply {
-                            geometry = userLocationPoint
-                            // Customize the marker appearance if desired.
-                        }
+                    val targetPoint = if (location != null) {
+                        Point(location!!.latitude, location!!.longitude)
+                    } else {
+                        // Default to Moscow Red Square
+                        Point(55.751225, 37.62954)
                     }
+
+                    mapView.map.move(
+                        CameraPosition(
+                            targetPoint,
+                            17.0f,
+                            if (location != null) 0.0f else 150.0f, // Default azimuth if no user location
+                            if (location != null) 0.0f else 30.0f    // Default tilt if no user location
+                        )
+                    )
+
+                    mapView.map.mapObjects.clear()
+                    mapView.map.mapObjects.addPlacemark(targetPoint)
                 }
             )
+
         }
     }
 }

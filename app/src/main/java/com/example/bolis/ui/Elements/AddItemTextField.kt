@@ -39,9 +39,10 @@ fun AddItemTextField(
     isRequired: Boolean = false,
     placeholder: String = "",
     isError: Boolean = false,
-    multiLine: Boolean = false
+    multiLine: Boolean = false,
+    text: String = "",
+    setText: (String) -> Unit = {},
 ) {
-    val (text, setText) = remember { mutableStateOf("") }
     val isRequired = isRequired
     val height = if (multiLine) 96.dp else 53.dp
 

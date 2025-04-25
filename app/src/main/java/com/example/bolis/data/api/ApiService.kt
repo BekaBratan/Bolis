@@ -1,5 +1,6 @@
 package com.example.bolis.data.api
 
+import com.example.bolis.data.models.CatalogResponse
 import com.example.bolis.data.models.CategoriesListResponse
 import com.example.bolis.data.models.GiveProductRequest
 import com.example.bolis.data.models.GiveProductResponse
@@ -76,4 +77,10 @@ interface ApiService {
         @Part("condition") condition: RequestBody,
         @Part images: List<MultipartBody.Part>
     ): GiveProductResponse
+
+    @Headers("Accept: application/json")
+    @GET("home")
+    suspend fun getCatalog(
+        @Header("Authorization") token: String
+    ): CatalogResponse
 }

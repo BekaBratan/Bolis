@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import com.example.bolis.R
+import com.example.bolis.utils.Constants.Companion.IMAGE_URL
 import com.example.bolis.ui.theme.Black50
 import com.example.bolis.ui.theme.Dark50
 import com.example.bolis.ui.theme.Green50

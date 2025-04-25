@@ -1,5 +1,6 @@
 package com.example.bolis.presentation.profile
 
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -69,6 +70,8 @@ fun ProfileEditPage(
             lastName = response.lastName
             imageURL = IMAGE_URL + response.avatarUrl
         }
+        Toast.makeText(context, response.toString(), Toast.LENGTH_SHORT).show()
+        Log.d("Profile", response.toString())
     }
 
     viewModel.errorMessageResponse.observeForever { response ->

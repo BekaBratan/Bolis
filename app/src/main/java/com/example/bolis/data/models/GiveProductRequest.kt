@@ -12,8 +12,6 @@ data class GiveProductRequest(
     val description: String,
     @SerializedName("condition")
     val condition: String,
-    @SerializedName("images")
-    val images: List<MultipartBody.Part>,
     @SerializedName("name")
     val name: String
 )

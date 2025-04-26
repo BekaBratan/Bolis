@@ -31,11 +31,11 @@ import com.example.bolis.ui.theme.fontFamily
 @Composable
 fun CustomButton(
     name: String = "Button",
-    onClick: () -> Unit = {},
     cornerSize: Dp = 7.dp,
     strokeColor: Color = Color.Transparent,
     backgroundColor: Color = Green50,
-    textColor: Color = White50
+    textColor: Color = White50,
+    onClick: () -> Unit = {},
 ) {
     Box(
         modifier = Modifier

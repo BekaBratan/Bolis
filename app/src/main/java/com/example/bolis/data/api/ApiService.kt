@@ -12,7 +12,6 @@ import com.example.bolis.data.models.SignUpResponse
 import com.example.bolis.data.models.VerificationRequest
 import com.example.bolis.data.models.VerificationResponse
 import okhttp3.MultipartBody
-import okhttp3.RequestBody
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
@@ -71,10 +70,11 @@ interface ApiService {
     @Headers("Accept: application/json")
     @POST("give/products")
     suspend fun giveProductsWithImages(
-        @Part("name") name: RequestBody,
-        @Part("description") desc: RequestBody,
-        @Part("category_id") categoryId: RequestBody,
-        @Part("condition") condition: RequestBody,
+        @Header("Authorization") token: String,
+        @Part name: MultipartBody.Part,
+        @Part categoryId: MultipartBody.Part,
+        @Part description: MultipartBody.Part,
+        @Part condition: MultipartBody.Part,
         @Part images: List<MultipartBody.Part>
     ): GiveProductResponse
 

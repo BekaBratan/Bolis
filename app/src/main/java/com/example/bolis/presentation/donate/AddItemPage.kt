@@ -2,6 +2,7 @@ package com.example.bolis.presentation.donate
 
 import android.content.Context
 import android.net.Uri
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
@@ -16,6 +17,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -49,51 +51,65 @@ import java.io.File
 @Preview
 @Composable
 fun AddItemPage(
-    backButtonClicked:() -> Unit = {},
-    onConfirmButtonClick:() -> Unit = {},
+    backButtonClicked: () -> Unit = {},
+    onConfirmButtonClick: () -> Unit = {},
     viewModel: DonateViewModel = viewModel()
 ) {
     val context = LocalContext.current
-    val sharedProvider = SharedProvider(context)
+    val sharedProvider = remember { SharedProvider(context) }
 
     var nameError by remember { mutableStateOf(false) }
     var selectedButton by remember { mutableStateOf("New") }
     var descriptionError by remember { mutableStateOf(false) }
     var listImages by remember { mutableStateOf<List<Uri>>(emptyList()) }
     var uploadError by remember { mutableStateOf(false) }
-    var options by remember { mutableStateOf(listOf<Category>()) }
     var selectedOption by remember { mutableStateOf(0) }
 
     val (productName, setProductName) = remember { mutableStateOf("") }
     val (description, setDescription) = remember { mutableStateOf("") }
 
+    val categories by viewModel.categoriesResponse.collectAsState()
+    val giveProductResponse by viewModel.giveProductResponse.collectAsState()
+    val errorResponse by viewModel.errorResponse.collectAsState()
+
+    val options = categories?.categories ?: emptyList()
+
     val photoPickerLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.PickMultipleVisualMedia(),
-        onResult = { uris -> listImages = uris }
-    )
+        contract = ActivityResultContracts.PickMultipleVisualMedia()
+    ) { uris -> listImages = uris }
 
     LaunchedEffect(Unit) {
         viewModel.getCategories(sharedProvider.getToken())
     }
 
-    viewModel.categoriesResponse.observeForever {
-        if (it != null) {
-            options = it.categories
+    LaunchedEffect(giveProductResponse) {
+        giveProductResponse?.let {
+            Toast.makeText(context, it.message, Toast.LENGTH_SHORT).show()
+            onConfirmButtonClick()
+        }
+    }
+
+    LaunchedEffect(errorResponse) {
+        errorResponse?.let {
+            when (it) {
+                "Name is required" -> nameError = true
+                "Description is required" -> descriptionError = true
+                "Images are required" -> uploadError = true
+                else -> Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
-            .padding(start = 24.dp, end = 24.dp, bottom = 30.dp),
+            .padding(horizontal = 24.dp, vertical = 30.dp),
         verticalArrangement = Arrangement.spacedBy(20.dp)
     ) {
         item {
-            CustomBackButton(
-                modifier = Modifier
-                    .padding(top = 58.dp),
-                name = "Back"
-            ) { backButtonClicked() }
+            CustomBackButton(modifier = Modifier.padding(top = 58.dp), name = "Back") {
+                backButtonClicked()
+            }
         }
 
         item {
@@ -128,10 +144,7 @@ fun AddItemPage(
         }
 
         item {
-            Column(
-                modifier = Modifier.fillMaxWidth(),
-                verticalArrangement = Arrangement.spacedBy(7.dp)
-            ) {
+            Column(modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(7.dp)) {
                 Text(
                     modifier = Modifier.padding(start = 4.dp),
                     text = "Status",
@@ -141,14 +154,8 @@ fun AddItemPage(
                     color = Black40
                 )
                 Row(horizontalArrangement = Arrangement.spacedBy(15.dp)) {
-                    AddItemButton(
-                        name = "New",
-                        isSelected = selectedButton == "New",
-                        onClick = { selectedButton = "New" })
-                    AddItemButton(
-                        name = "Used",
-                        isSelected = selectedButton == "Used",
-                        onClick = { selectedButton = "Used" })
+                    AddItemButton("New", selectedButton == "New") { selectedButton = "New" }
+                    AddItemButton("Used", selectedButton == "Used") { selectedButton = "Used" }
                 }
             }
         }
@@ -178,44 +185,26 @@ fun AddItemPage(
         }
 
         item {
-            CustomButton(name = "Confirm", onClick = {
-                if (listImages.isNotEmpty()) {
-                    val imageParts = listImages.map { uri ->
-                        convertUriToMultipart(uri, context)
-                    }
+            CustomButton("Confirm") {
+                nameError = productName.isBlank()
+                descriptionError = description.isBlank()
+                uploadError = listImages.isEmpty()
 
-                    // Send the request to the ViewModel
-                    viewModel.giveProduct(
-                        sharedProvider.getToken(),
-                        GiveProductRequest(
-                            name = productName,
-                            description = description,
-                            condition = selectedButton,
-                            categoryId = options[selectedOption].iD,
-                            images = imageParts
-                        )
+                if (!nameError && !descriptionError && !uploadError) {
+                    val categoryId = categories?.categories?.get(selectedOption)?.iD ?: 75
+                    val condition = if (selectedButton == "New") "new" else "used"
+                    val giveProductsBody = GiveProductRequest(
+                        categoryId = categoryId,
+                        description = description,
+                        condition = condition,
+                        name = productName
                     )
-                } else {
-                    // Handle error if no images selected
-                    uploadError = true
-                }
-            })
 
-            viewModel.giveProductResponse.observeForever {
-                if (it != null) {
-                    Toast.makeText(context, it.message, Toast.LENGTH_SHORT).show()
-                    onConfirmButtonClick()
-                }
-            }
-
-            viewModel.errorResponse.observeForever {
-                if (it != null) {
-                    when (it) {
-                        "Name is required" -> nameError = true
-                        "Description is required" -> descriptionError = true
-                        "Images are required" -> uploadError = true
-                        else -> Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
-                    }
+                    viewModel.giveProduct(
+                        token = sharedProvider.getToken(),
+                        giveProductsBody = giveProductsBody,
+                        images = listImages.map { convertUriToFile(it, context) }
+                    )
                 }
             }
         }
@@ -230,4 +219,14 @@ fun convertUriToMultipart(uri: Uri, context: Context): MultipartBody.Part {
     inputStream?.copyTo(outputStream)
     val requestFile = file.asRequestBody("image/*".toMediaTypeOrNull())
     return MultipartBody.Part.createFormData("images", file.name, requestFile)
+}
+
+fun convertUriToFile(uri: Uri, context: Context): File {
+    val file = File(context.cacheDir, uri.lastPathSegment ?: "image.jpg")
+    file.createNewFile()
+    file.outputStream().use {
+        context.contentResolver.openInputStream(uri)?.copyTo(it)
+    }
+    Log.d("convertUriToFile", "File path: ${file.absolutePath}")
+    return file
 }

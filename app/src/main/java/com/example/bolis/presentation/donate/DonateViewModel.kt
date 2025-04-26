@@ -9,41 +9,61 @@ import com.example.bolis.data.models.CategoriesListResponse
 import com.example.bolis.data.models.ErrorResponse
 import com.example.bolis.data.models.GiveProductRequest
 import com.example.bolis.data.models.GiveProductResponse
-import com.example.bolis.data.models.LogInRequest
-import com.example.bolis.data.models.LogInResponse
-import com.example.bolis.data.models.ProfileResponse
-import com.example.bolis.data.models.SignUpRequest
-import com.example.bolis.data.models.SignUpResponse
-import com.example.bolis.data.models.VerificationRequest
-import com.example.bolis.data.models.VerificationResponse
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody.Companion.asRequestBody
 import retrofit2.HttpException
+import java.io.File
 
-class DonateViewModel(): ViewModel() {
-    private var _giveProductResponse: MutableLiveData<GiveProductResponse?> = MutableLiveData()
-    val giveProductResponse: LiveData<GiveProductResponse?> = _giveProductResponse
+class DonateViewModel : ViewModel() {
 
-    private var _categoriesResponse: MutableLiveData<CategoriesListResponse?> = MutableLiveData()
-    val categoriesResponse: LiveData<CategoriesListResponse?> = _categoriesResponse
+    private val _giveProductResponse = MutableStateFlow<GiveProductResponse?>(null)
+    val giveProductResponse: StateFlow<GiveProductResponse?> = _giveProductResponse
 
-    private var _errorResponse: MutableLiveData<String?> = MutableLiveData()
-    val errorResponse: LiveData<String?> = _errorResponse
+    private val _categoriesResponse = MutableStateFlow<CategoriesListResponse?>(null)
+    val categoriesResponse: StateFlow<CategoriesListResponse?> = _categoriesResponse
 
-    private var _errorMessageResponse: MutableLiveData<ErrorResponse?> = MutableLiveData()
-    val errorMessageResponse: LiveData<ErrorResponse?> = _errorMessageResponse
+    private val _errorResponse = MutableStateFlow<String?>(null)
+    val errorResponse: StateFlow<String?> = _errorResponse
 
-    fun giveProduct(token: String, giveProductsBody: GiveProductRequest) {
+    fun giveProduct(token: String, giveProductsBody: GiveProductRequest, images: List<File>) {
         viewModelScope.launch(Dispatchers.IO) {
             runCatching {
-                ServiceBuilder.api.giveProducts(token = token, giveProductsBody = giveProductsBody)
+                val name = MultipartBody.Part.createFormData("name", giveProductsBody.name)
+                val categoryId = MultipartBody.Part.createFormData("category_id", giveProductsBody.categoryId.toString())
+                val condition = MultipartBody.Part.createFormData("condition", giveProductsBody.condition)
+                val description = MultipartBody.Part.createFormData("description", giveProductsBody.description)
+
+                val imageParts = images.map { imageFile ->
+                    val requestFile = imageFile.asRequestBody("image/*".toMediaTypeOrNull())
+                    MultipartBody.Part.createFormData("images", imageFile.name, requestFile)
+                }
+
+                ServiceBuilder.api.giveProductsWithImages(
+                    token = token,
+                    name = name,
+                    categoryId = categoryId,
+                    description = description,
+                    condition = condition,
+                    images = imageParts
+                )
             }.fold(
-                onSuccess = {
-                    _giveProductResponse.postValue(it)
+                onSuccess = { response ->
+                    _giveProductResponse.value = response
+                    _errorResponse.value = null
                 },
                 onFailure = { throwable ->
-                    val errorMessage = (throwable as? HttpException)?.response()?.errorBody()?.string()
-                    _errorMessageResponse.postValue(ErrorResponse(errorMessage.toString()))
+                    val errorMessage = (throwable as? HttpException)
+                        ?.response()
+                        ?.errorBody()
+                        ?.string()
+                        ?.takeIf { it.isNotBlank() }
+                        ?: throwable.localizedMessage
+                    _errorResponse.value = errorMessage
                 }
             )
         }
@@ -54,12 +74,18 @@ class DonateViewModel(): ViewModel() {
             runCatching {
                 ServiceBuilder.api.getCategories(token = token)
             }.fold(
-                onSuccess = {
-                    _categoriesResponse.postValue(it)
+                onSuccess = { response ->
+                    _categoriesResponse.value = response
+                    _errorResponse.value = null
                 },
                 onFailure = { throwable ->
-                    val errorMessage = (throwable as? HttpException)?.response()?.errorBody()?.string()
-                    _errorMessageResponse.postValue(ErrorResponse(errorMessage.toString()))
+                    val errorMessage = (throwable as? HttpException)
+                        ?.response()
+                        ?.errorBody()
+                        ?.string()
+                        ?.takeIf { it.isNotBlank() }
+                        ?: throwable.localizedMessage
+                    _errorResponse.value = errorMessage
                 }
             )
         }

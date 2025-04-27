@@ -1,12 +1,17 @@
 package com.example.bolis.presentation.profile
 
+import android.net.Uri
 import android.util.Log
 import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Text
@@ -16,6 +21,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
@@ -58,8 +64,13 @@ fun ProfileEditPage(
     )) }
     var firstName by remember { mutableStateOf("") }
     var imageURL by remember { mutableStateOf("https://plus.unsplash.com/premium_photo-1674902194669-9aadae2f76a1?q=80&w=1930&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D") }
+    var uploadedImage by remember { mutableStateOf<Uri?>(null) }
     var lastName by remember { mutableStateOf("") }
     var city by remember { mutableStateOf(sharedProvider.getCity()) }
+
+    val photoPickerLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.PickVisualMedia()
+    ) { uri -> uploadedImage = uri }
 
 //    Toast.makeText(context, sharedProvider.getToken(), Toast.LENGTH_SHORT).show()
     LaunchedEffect(Unit)  {
@@ -92,7 +103,7 @@ fun ProfileEditPage(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(top = 140.dp, start = 34.dp, end = 34.dp),
+            .padding(top = 84.dp, start = 34.dp, end = 34.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         Text(
@@ -103,13 +114,31 @@ fun ProfileEditPage(
             fontFamily = fontFamily,
             color = Black50
         )
+
         Spacer(Modifier.size(4.dp))
-        ProfileImageCard(url = imageURL)
+        Box(
+            Modifier.fillMaxWidth(),
+            contentAlignment = Alignment.Center
+        ) {
+            ProfileImageCard(
+                url = if (uploadedImage != null) uploadedImage.toString() else imageURL,
+                onClick = {
+                    photoPickerLauncher.launch(
+                        PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                    )
+                }
+            )
+        }
         Spacer(Modifier.size(4.dp))
+
         CustomTextField(name = "Name", text = firstName, setText = { firstName = it })
+
         CustomTextField(name = "Surname", text = lastName, setText = { lastName = it })
+
         CustomDropdown(name = "City", text = city, setText = { city = it })
+
         Spacer(Modifier.size(4.dp))
+
         CustomButton(name = "Save", onClick = {
             profileBody.firstName = firstName
             profileBody.lastName = lastName

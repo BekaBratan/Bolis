@@ -1,14 +1,17 @@
 package com.example.bolis.ui.Elements
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -26,30 +29,36 @@ import coil3.Image
 import coil3.compose.AsyncImage
 import com.example.bolis.R
 import com.example.bolis.ui.theme.Blue50
+import com.example.bolis.ui.theme.Blur
+import com.example.bolis.ui.theme.Blur10
 import com.example.bolis.ui.theme.Green50
+import com.example.bolis.ui.theme.Grey20
 import com.example.bolis.ui.theme.fontFamily
+import com.yandex.mapkit.geometry.Circle
 
 @Preview
 @Composable
 fun ProfileImageCard(onClick: () -> Unit = {}, url: String = "") {
-    Column(
+    Box(
         modifier = Modifier
-            .fillMaxWidth()
-            .height(116.dp)
-            .border(2.dp, Green50, RoundedCornerShape(5.dp))
-            .clip(shape = RoundedCornerShape(5.dp))
             .clickable(onClick = { onClick() })
-            .padding(vertical = 12.dp),
-        verticalArrangement = Arrangement.spacedBy(10.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+            .clip(CircleShape)
+            .size(200.dp),
+        contentAlignment = Alignment.Center
     ) {
         AsyncImage(
             model = url, // Replace with your image URL
             contentDescription = "Profile Image",
-            contentScale = ContentScale.Fit,
+            contentScale = ContentScale.Crop,
             modifier = Modifier
-                .size(100.dp)
-                .clip(RoundedCornerShape(5.dp))
+                .fillMaxWidth()
+                .height(200.dp)
+                .clip(CircleShape)
+                .border(
+                    width = 1.dp,
+                    color = Green50,
+                    shape = CircleShape
+                )
         )
 //        Image(
 //            painter = painterResource(R.drawable.ic_profile_img),
@@ -60,12 +69,17 @@ fun ProfileImageCard(onClick: () -> Unit = {}, url: String = "") {
 //                .clickable(onClick = { })
 //        )
         Text(
-            text = "Change Profile Image",
-            fontSize = 12.sp,
+            text = "Change",
+            fontSize = 14.sp,
             fontWeight = FontWeight(500),
             textAlign = TextAlign.Center,
             fontFamily = fontFamily,
-            color = Blue50
+            color = Blue50,
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .background(Blur10)
+                .padding(top = 5.dp, bottom = 10.dp)
+                .fillMaxWidth()
         )
     }
 }

@@ -20,6 +20,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -43,9 +44,10 @@ import com.example.bolis.ui.theme.fontFamily
 @Preview
 @Composable
 fun CatalogItem(
-    name: String = "Name\nSurn\name",
+    name: String = "Narname",
     location: String = "Location",
     status: String = "New",
+    isFavorite: Boolean = false,
     imageUrl: String = "http://bolis.maisa.kz/storage/images/1.jpg",
     onClick: () -> Unit = {}
 ) {
@@ -53,15 +55,16 @@ fun CatalogItem(
         modifier = Modifier
             .clickable(onClick = onClick)
             .width(170.dp)
+            .shadow(elevation = 10.dp, shape = RoundedCornerShape(24.dp), clip = true)
             .clip(RoundedCornerShape(24.dp))
             .background(White50)
             .padding(12.dp),
         verticalArrangement = Arrangement.spacedBy(4.dp)
     ) {
         AsyncImage(
-            model = imageUrl, // Replace with your image URL
+            model = IMAGE_URL + imageUrl, // Replace with your image URL
             contentDescription = "Profile Image",
-            contentScale = ContentScale.Fit,
+            contentScale = ContentScale.Crop,
             modifier = Modifier
                 .fillMaxWidth()
                 .height(125.dp)
@@ -78,15 +81,31 @@ fun CatalogItem(
                 fontSize = 15.sp,
                 fontWeight = FontWeight(600),
                 overflow = TextOverflow.Ellipsis,
+                minLines = 2,
                 maxLines = 2,
                 fontFamily = fontFamily,
-                color = Black50
+                color = Black50,
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(end = 6.dp)
             )
-            Icon(
-                painter = painterResource(id = R.drawable.ic_back),
-                contentDescription = "back",
-                tint = Dark50
-            )
+            if (isFavorite) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_bookmark_filled),
+                    contentDescription = "back",
+                    tint = Dark50,
+                    modifier = Modifier
+                        .size(24.dp)
+                )
+            } else {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_bookmark),
+                    contentDescription = "back",
+                    tint = Green50,
+                    modifier = Modifier
+                        .size(24.dp)
+                )
+            }
         }
 
         Box(

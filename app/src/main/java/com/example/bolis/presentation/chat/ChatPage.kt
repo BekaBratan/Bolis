@@ -39,6 +39,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.bolis.R
+import com.example.bolis.data.api.navBarStateChange
 import com.example.bolis.ui.Elements.ChatTextField
 import com.example.bolis.ui.Elements.ChatTextView
 import com.example.bolis.ui.Elements.CustomBackButton
@@ -57,6 +58,8 @@ fun ChatPage(
     backButtonClicked:() -> Unit = {},
     viewModel: ChatViewModel = viewModel()
 ) {
+    navBarStateChange(true)
+
     val messages = viewModel.messages
     var userInput by remember { mutableStateOf("") }
 

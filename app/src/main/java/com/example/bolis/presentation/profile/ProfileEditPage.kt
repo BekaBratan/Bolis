@@ -24,6 +24,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.bolis.data.api.navBarStateChange
 import com.example.bolis.data.models.ProfileResponse
 import com.example.bolis.presentation.auth.AuthViewModel
 import com.example.bolis.ui.Elements.CustomBackButton
@@ -44,6 +45,8 @@ fun ProfileEditPage(
 ) {
     val context = LocalContext.current
     val sharedProvider = SharedProvider(context)
+    navBarStateChange(false)
+
     var profileBody by remember { mutableStateOf(ProfileResponse(
         avatarUrl = "",
         email = "",

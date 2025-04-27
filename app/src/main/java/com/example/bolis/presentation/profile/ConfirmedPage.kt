@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.bolis.R
 import com.example.bolis.data.ConfirmedState
+import com.example.bolis.data.api.navBarStateChange
 import com.example.bolis.ui.Elements.CustomBackButton
 import com.example.bolis.ui.Elements.CustomButton
 import com.example.bolis.ui.theme.Black40
@@ -35,6 +36,7 @@ fun ConfirmedPage(
     buttonText: String = "",
     onConfirmButtonClicked:() -> Unit = {}
 ) {
+    navBarStateChange(false)
     Column(
         modifier = Modifier
             .fillMaxSize()

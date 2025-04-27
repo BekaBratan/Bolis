@@ -21,6 +21,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.bolis.data.api.navBarStateChange
 import com.example.bolis.ui.Elements.CustomBackButton
 import com.example.bolis.ui.Elements.CustomButton
 import com.example.bolis.ui.Elements.CustomTextField
@@ -35,6 +36,7 @@ fun DeleteAccountPage(
     backButtonClicked:() -> Unit = {},
     confirmButtonClicked:() -> Unit = {}
 ) {
+    navBarStateChange(false)
     val context = LocalContext.current
     val sharedProvider = SharedProvider(context)
     var codeText by remember { mutableStateOf("") }

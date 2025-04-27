@@ -41,6 +41,7 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.example.bolis.R
+import com.example.bolis.data.api.navBarStateChange
 import com.example.bolis.ui.theme.Black50
 import com.example.bolis.ui.theme.White50
 import com.example.bolis.ui.theme.fontFamily
@@ -48,9 +49,12 @@ import com.example.bolis.ui.theme.fontFamily
 @Preview
 @Composable
 fun QRPage() {
+    navBarStateChange(true)
+
     var code by remember {
         mutableStateOf("Scan the QR code to more actions")
     }
+
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
     val cameraProviderFuture = remember {

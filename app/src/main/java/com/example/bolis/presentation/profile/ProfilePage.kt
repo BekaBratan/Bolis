@@ -21,6 +21,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.bolis.R
+import com.example.bolis.data.api.navBarStateChange
 import com.example.bolis.ui.Elements.CustomDialog
 import com.example.bolis.ui.Elements.ProfileButton
 import com.example.bolis.ui.Elements.SettingsButton
@@ -44,6 +45,8 @@ fun ProfilePage(
     deleteButtonClicked: () -> Unit = {},
     logOutButtonClicked: () -> Unit = {}
 ) {
+    navBarStateChange(true)
+
     var isLogout by remember { mutableStateOf(false) }
     var isDeleteAccount by remember { mutableStateOf(false) }
     val context = LocalContext.current

@@ -21,6 +21,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.bolis.data.api.navBarStateChange
 import com.example.bolis.data.models.CatalogResponse
 import com.example.bolis.data.models.Item
 import com.example.bolis.ui.Elements.CatalogItem
@@ -34,6 +35,7 @@ fun MarketPage(
 ) {
     val context = LocalContext.current
     val sharedProvider = SharedProvider(context)
+    navBarStateChange(true)
 
     var catalogBody by remember { mutableStateOf(CatalogResponse(
         items = List(10) { Item() },

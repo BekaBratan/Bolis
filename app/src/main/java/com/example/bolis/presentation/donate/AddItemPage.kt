@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.bolis.data.api.languageState
+import com.example.bolis.data.api.navBarStateChange
 import com.example.bolis.data.models.Category
 import com.example.bolis.data.models.GiveProductRequest
 import com.example.bolis.ui.Elements.AddItemButton
@@ -57,6 +58,7 @@ fun AddItemPage(
 ) {
     val context = LocalContext.current
     val sharedProvider = remember { SharedProvider(context) }
+    navBarStateChange(false)
 
     var nameError by remember { mutableStateOf(false) }
     var selectedButton by remember { mutableStateOf("New") }
@@ -103,11 +105,11 @@ fun AddItemPage(
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
-            .padding(horizontal = 24.dp, vertical = 30.dp),
+            .padding(horizontal = 24.dp),
         verticalArrangement = Arrangement.spacedBy(20.dp)
     ) {
         item {
-            CustomBackButton(modifier = Modifier.padding(top = 58.dp), name = "Back") {
+            CustomBackButton(modifier = Modifier.padding(top = 28.dp), name = "Back") {
                 backButtonClicked()
             }
         }

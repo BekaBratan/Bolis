@@ -49,7 +49,8 @@ fun CatalogItem(
     status: String = "New",
     isFavorite: Boolean = false,
     imageUrl: String = "http://bolis.maisa.kz/storage/images/1.jpg",
-    onClick: () -> Unit = {}
+    onClick: () -> Unit = {},
+    onFavoriteClick: () -> Unit = {}
 ) {
     Column(
         modifier = Modifier
@@ -72,8 +73,7 @@ fun CatalogItem(
         )
         Row (
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 6.dp),
+                .fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
         ){
             Text(
@@ -95,7 +95,9 @@ fun CatalogItem(
                     contentDescription = "back",
                     tint = Dark50,
                     modifier = Modifier
+                        .padding(top = 6.dp)
                         .size(24.dp)
+                        .clickable(onClick = onFavoriteClick)
                 )
             } else {
                 Icon(
@@ -103,7 +105,9 @@ fun CatalogItem(
                     contentDescription = "back",
                     tint = Green50,
                     modifier = Modifier
+                        .padding(top = 6.dp)
                         .size(24.dp)
+                        .clickable(onClick = onFavoriteClick)
                 )
             }
         }

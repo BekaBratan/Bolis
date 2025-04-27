@@ -45,6 +45,7 @@ import com.example.bolis.ProfileDestination.EditProfileScreen
 import com.example.bolis.ProfileDestination.MapScreen
 import com.example.bolis.ProfileDestination.SupportScreen
 import com.example.bolis.data.api.languageState
+import com.example.bolis.data.api.navBarState
 import com.example.bolis.data.api.systemLanguageChange
 import com.example.bolis.presentation.chat.ChatPage
 import com.example.bolis.presentation.donate.AddItemPage
@@ -76,6 +77,7 @@ class HomeActivity : ComponentActivity() {
 
         setContent {
             val selectedLanguage = languageState
+            val isNavBarVisible = navBarState
             val navController = rememberNavController()
             MarketScreen.title = stringResource(R.string.catalog)
             ChatScreen.title = stringResource(R.string.chat)
@@ -101,37 +103,39 @@ class HomeActivity : ComponentActivity() {
                 Scaffold(
                     containerColor = White50,
                     bottomBar = {
-                        NavigationBar(
-                            contentColor = Green50,
-                            containerColor = Color.White,
-                            modifier = Modifier.border(BorderStroke(1.dp, Color.Gray))
-                        ) {
-                            items.forEachIndexed {index, screen ->
-                                NavigationBarItem(
-                                    icon = {
-                                        Icon(
-                                            painterResource(screen.icon),
-                                            contentDescription = null
+                        if (isNavBarVisible) {
+                            NavigationBar(
+                                contentColor = Green50,
+                                containerColor = Color.White,
+                                modifier = Modifier.border(BorderStroke(1.dp, Color.Gray))
+                            ) {
+                                items.forEachIndexed { index, screen ->
+                                    NavigationBarItem(
+                                        icon = {
+                                            Icon(
+                                                painterResource(screen.icon),
+                                                contentDescription = null
+                                            )
+                                        },
+                                        label = { Text(text = screen.title) },
+                                        selected = index == selectedIndex,
+                                        onClick = {
+                                            selectedIndex = index
+                                            navController.navigate(screen) {
+                                                popUpTo(navController.graph.startDestinationId)
+                                                launchSingleTop = true
+                                                restoreState = true
+                                            }
+                                        },
+                                        colors = NavigationBarItemDefaults.colors(
+                                            selectedIconColor = Green50,
+                                            unselectedIconColor = Color.Gray,
+                                            indicatorColor = Color.Transparent,
+                                            selectedTextColor = Green50,
+                                            unselectedTextColor = Color.Gray
                                         )
-                                    },
-                                    label = { Text(text = screen.title) },
-                                    selected = index == selectedIndex,
-                                    onClick = {
-                                        selectedIndex = index
-                                        navController.navigate(screen) {
-                                            popUpTo(navController.graph.startDestinationId)
-                                            launchSingleTop = true
-                                            restoreState = true
-                                        }
-                                    },
-                                    colors = NavigationBarItemDefaults.colors(
-                                        selectedIconColor = Green50,
-                                        unselectedIconColor = Color.Gray,
-                                        indicatorColor = Color.Transparent,
-                                        selectedTextColor = Green50,
-                                        unselectedTextColor = Color.Gray
                                     )
-                                )
+                                }
                             }
                         }
                     }

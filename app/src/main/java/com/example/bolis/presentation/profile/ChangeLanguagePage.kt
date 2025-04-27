@@ -33,6 +33,7 @@ import com.example.bolis.R
 import com.example.bolis.data.api.Language
 import com.example.bolis.data.api.appLanguages
 import com.example.bolis.data.api.languageState
+import com.example.bolis.data.api.navBarStateChange
 import com.example.bolis.data.api.systemLanguageChange
 import com.example.bolis.ui.Elements.CustomBackButton
 import com.example.bolis.ui.theme.Black50
@@ -51,6 +52,7 @@ fun ChangeLanguagePage(
 ) {
     val context = LocalContext.current
     val selectedLanguage = languageState
+    navBarStateChange(false)
 
     CustomBackButton(
         modifier = Modifier

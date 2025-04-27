@@ -21,6 +21,8 @@ val appLanguages = listOf(
 
 var languageState by mutableStateOf(appLanguages[0])
 
+var navBarState by mutableStateOf(true)
+
 fun systemLanguageChange(context: Context, languageCode: String) {
     languageState = appLanguages.find { it.code == languageCode } ?: languageState
     SharedProvider(context).saveLanguage(languageCode)
@@ -29,4 +31,8 @@ fun systemLanguageChange(context: Context, languageCode: String) {
     val config = Configuration()
     config.setLocale(locale)
     context.resources.updateConfiguration(config, context.resources.displayMetrics)
+}
+
+fun navBarStateChange(state: Boolean) {
+    navBarState = state
 }

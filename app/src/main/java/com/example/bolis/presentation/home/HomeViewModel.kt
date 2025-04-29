@@ -12,6 +12,7 @@ import com.example.bolis.data.models.LogInResponse
 import com.example.bolis.data.models.ProfileResponse
 import com.example.bolis.data.models.SignUpRequest
 import com.example.bolis.data.models.SignUpResponse
+import com.example.bolis.data.models.SuggestionsResponse
 import com.example.bolis.data.models.VerificationRequest
 import com.example.bolis.data.models.VerificationResponse
 import kotlinx.coroutines.Dispatchers
@@ -21,6 +22,9 @@ import retrofit2.HttpException
 class HomeViewModel(): ViewModel() {
     private var _catalogResponse: MutableLiveData<CatalogResponse?> = MutableLiveData()
     val catalogResponse: LiveData<CatalogResponse?> = _catalogResponse
+
+    private var _suggestionsResponse: MutableLiveData<SuggestionsResponse?> = MutableLiveData()
+    val suggestionsResponse: LiveData<SuggestionsResponse?> = _suggestionsResponse
 
     private var _errorResponse: MutableLiveData<String?> = MutableLiveData()
     val errorResponse: LiveData<String?> = _errorResponse
@@ -35,6 +39,22 @@ class HomeViewModel(): ViewModel() {
             }.fold(
                 onSuccess = {
                     _catalogResponse.postValue(it)
+                },
+                onFailure = { throwable ->
+                    val errorMessage = (throwable as? HttpException)?.response()?.errorBody()?.string()
+                    _errorMessageResponse.postValue(ErrorResponse(errorMessage.toString()))
+                }
+            )
+        }
+    }
+
+    fun getSuggestions(token: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            runCatching {
+                ServiceBuilder.api.getSuggestions(token = token)
+            }.fold(
+                onSuccess = {
+                    _suggestionsResponse.postValue(it)
                 },
                 onFailure = { throwable ->
                     val errorMessage = (throwable as? HttpException)?.response()?.errorBody()?.string()

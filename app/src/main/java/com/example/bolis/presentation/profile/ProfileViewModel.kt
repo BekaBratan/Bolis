@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.bolis.data.api.ServiceBuilder
+import com.example.bolis.data.models.DeliveryAddressResponse
 import com.example.bolis.data.models.ErrorResponse
 import com.example.bolis.data.models.LogInRequest
 import com.example.bolis.data.models.LogInResponse
@@ -26,6 +27,9 @@ class ProfileViewModel(): ViewModel() {
 
     private var _profileUpdateResponse: MutableLiveData<ProfileUpdateResponse?> = MutableLiveData()
     val profileUpdateResponse: LiveData<ProfileUpdateResponse?> = _profileUpdateResponse
+
+    private var _deliveryAddressResponse: MutableLiveData<DeliveryAddressResponse?> = MutableLiveData()
+    val deliveryAddressResponse: LiveData<DeliveryAddressResponse?> = _deliveryAddressResponse
 
     private var _messageResponse: MutableLiveData<MessageResponse?> = MutableLiveData()
     val messageResponse: LiveData<MessageResponse?> = _messageResponse
@@ -78,6 +82,22 @@ class ProfileViewModel(): ViewModel() {
             }.fold(
                 onSuccess = {
                     _messageResponse.postValue(it)
+                },
+                onFailure = { throwable ->
+                    val errorMessage = (throwable as? HttpException)?.response()?.errorBody()?.string()
+                    _errorMessageResponse.postValue(ErrorResponse(errorMessage.toString()))
+                }
+            )
+        }
+    }
+
+    fun getDeliveryAddress(token: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            runCatching {
+                ServiceBuilder.api.getDeliveryAddress(token = token)
+            }.fold(
+                onSuccess = {
+                    _deliveryAddressResponse.postValue(it)
                 },
                 onFailure = { throwable ->
                     val errorMessage = (throwable as? HttpException)?.response()?.errorBody()?.string()

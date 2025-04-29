@@ -2,6 +2,7 @@ package com.example.bolis.data.api
 
 import com.example.bolis.data.models.CatalogResponse
 import com.example.bolis.data.models.CategoriesListResponse
+import com.example.bolis.data.models.DeliveryAddressResponse
 import com.example.bolis.data.models.GiveProductRequest
 import com.example.bolis.data.models.GiveProductResponse
 import com.example.bolis.data.models.LogInRequest
@@ -11,6 +12,7 @@ import com.example.bolis.data.models.ProfileResponse
 import com.example.bolis.data.models.ProfileUpdateResponse
 import com.example.bolis.data.models.SignUpRequest
 import com.example.bolis.data.models.SignUpResponse
+import com.example.bolis.data.models.SuggestionsResponse
 import com.example.bolis.data.models.UpdatePasswordRequest
 import com.example.bolis.data.models.VerificationRequest
 import com.example.bolis.data.models.VerificationResponse
@@ -75,6 +77,18 @@ interface ApiService {
         @Header("Authorization") token: String,
         @Body updatePasswordRequest: UpdatePasswordRequest
     ): MessageResponse
+
+    @Headers("Accept: application/json")
+    @GET("api/get-delivery-address")
+    suspend fun getDeliveryAddress(
+        @Header("Authorization") token: String
+    ): DeliveryAddressResponse
+
+    @Headers("Accept: application/json")
+    @GET("api/suggestions")
+    suspend fun getSuggestions(
+        @Header("Authorization") token: String
+    ): SuggestionsResponse
 
     @Multipart
     @Headers("Accept: application/json")

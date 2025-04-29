@@ -75,6 +75,7 @@ fun ProfileEditPage(
 //    Toast.makeText(context, sharedProvider.getToken(), Toast.LENGTH_SHORT).show()
     LaunchedEffect(Unit)  {
         viewModel.getProfile(sharedProvider.getToken())
+        viewModel.getDeliveryAddress(sharedProvider.getToken())
     }
 
     viewModel.profileResponse.observeForever { response ->
@@ -83,6 +84,13 @@ fun ProfileEditPage(
             firstName = response.firstName
             lastName = response.lastName
             imageURL = IMAGE_URL + response.avatarUrl
+        }
+        Log.d("Profile", response.toString())
+    }
+
+    viewModel.deliveryAddressResponse.observeForever { response ->
+        if (response != null) {
+            city = response.addressLine
         }
         Log.d("Profile", response.toString())
     }

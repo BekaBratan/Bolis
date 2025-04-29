@@ -8,10 +8,12 @@ import com.example.bolis.data.api.ServiceBuilder
 import com.example.bolis.data.models.ErrorResponse
 import com.example.bolis.data.models.LogInRequest
 import com.example.bolis.data.models.LogInResponse
+import com.example.bolis.data.models.MessageResponse
 import com.example.bolis.data.models.ProfileResponse
 import com.example.bolis.data.models.ProfileUpdateResponse
 import com.example.bolis.data.models.SignUpRequest
 import com.example.bolis.data.models.SignUpResponse
+import com.example.bolis.data.models.UpdatePasswordRequest
 import com.example.bolis.data.models.VerificationRequest
 import com.example.bolis.data.models.VerificationResponse
 import kotlinx.coroutines.Dispatchers
@@ -24,6 +26,9 @@ class ProfileViewModel(): ViewModel() {
 
     private var _profileUpdateResponse: MutableLiveData<ProfileUpdateResponse?> = MutableLiveData()
     val profileUpdateResponse: LiveData<ProfileUpdateResponse?> = _profileUpdateResponse
+
+    private var _messageResponse: MutableLiveData<MessageResponse?> = MutableLiveData()
+    val messageResponse: LiveData<MessageResponse?> = _messageResponse
 
     private var _errorResponse: MutableLiveData<String?> = MutableLiveData()
     val errorResponse: LiveData<String?> = _errorResponse
@@ -54,6 +59,25 @@ class ProfileViewModel(): ViewModel() {
             }.fold(
                 onSuccess = {
                     _profileUpdateResponse.postValue(it)
+                },
+                onFailure = { throwable ->
+                    val errorMessage = (throwable as? HttpException)?.response()?.errorBody()?.string()
+                    _errorMessageResponse.postValue(ErrorResponse(errorMessage.toString()))
+                }
+            )
+        }
+    }
+
+    fun updatePassword(
+        token: String,
+        updatePasswordRequest: UpdatePasswordRequest
+    ) {
+        viewModelScope.launch(Dispatchers.IO) {
+            runCatching {
+                ServiceBuilder.api.updatePassword(token = token, updatePasswordRequest = updatePasswordRequest)
+            }.fold(
+                onSuccess = {
+                    _messageResponse.postValue(it)
                 },
                 onFailure = { throwable ->
                     val errorMessage = (throwable as? HttpException)?.response()?.errorBody()?.string()

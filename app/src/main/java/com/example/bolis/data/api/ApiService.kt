@@ -6,10 +6,12 @@ import com.example.bolis.data.models.GiveProductRequest
 import com.example.bolis.data.models.GiveProductResponse
 import com.example.bolis.data.models.LogInRequest
 import com.example.bolis.data.models.LogInResponse
+import com.example.bolis.data.models.MessageResponse
 import com.example.bolis.data.models.ProfileResponse
 import com.example.bolis.data.models.ProfileUpdateResponse
 import com.example.bolis.data.models.SignUpRequest
 import com.example.bolis.data.models.SignUpResponse
+import com.example.bolis.data.models.UpdatePasswordRequest
 import com.example.bolis.data.models.VerificationRequest
 import com.example.bolis.data.models.VerificationResponse
 import okhttp3.MultipartBody
@@ -66,6 +68,13 @@ interface ApiService {
         @Header("Authorization") token: String,
         @Body giveProductsBody: GiveProductRequest
     ): GiveProductResponse
+
+    @Headers("Accept: application/json")
+    @POST("update-password")
+    suspend fun updatePassword(
+        @Header("Authorization") token: String,
+        @Body updatePasswordRequest: UpdatePasswordRequest
+    ): MessageResponse
 
     @Multipart
     @Headers("Accept: application/json")

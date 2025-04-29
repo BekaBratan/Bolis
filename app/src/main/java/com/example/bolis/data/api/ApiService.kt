@@ -7,6 +7,7 @@ import com.example.bolis.data.models.GiveProductResponse
 import com.example.bolis.data.models.LogInRequest
 import com.example.bolis.data.models.LogInResponse
 import com.example.bolis.data.models.ProfileResponse
+import com.example.bolis.data.models.ProfileUpdateResponse
 import com.example.bolis.data.models.SignUpRequest
 import com.example.bolis.data.models.SignUpResponse
 import com.example.bolis.data.models.VerificationRequest
@@ -51,7 +52,7 @@ interface ApiService {
     suspend fun updateProfile(
         @Header("Authorization") token: String,
         @Body profileBody: ProfileResponse
-    ): String
+    ): ProfileUpdateResponse
 
     @Headers("Accept: application/json")
     @GET("give/products")

@@ -136,20 +136,18 @@ fun LogInPage(
                 Toast.makeText(context, "Fill in all fields", Toast.LENGTH_SHORT).show()
             } else {
                 viewModel.login(LogInRequest(phoneNumber.trim(), password.trim()))
-//                Toast.makeText(context, "${phoneNumber.trim()}, ${password.trim()}", Toast.LENGTH_SHORT).show()
             }
         })
-
+    
         viewModel.logInResponse.observeForever {
-//            Toast.makeText(context, it!!.token, Toast.LENGTH_SHORT).show()
             sharedProvider.saveUser(SignUpRequest(phoneNumber.trim(), password.trim()), "Bolis", "Helper")
             sharedProvider.setAuthorized()
             sharedProvider.saveToken(it!!.token)
             nextButtonClicked()
         }
 
-        viewModel.errorResponse.observeForever {
-            Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+        viewModel.errorMessageResponse.observeForever {
+            Toast.makeText(context, it?.error?.split('"')[3], Toast.LENGTH_SHORT).show()
             Log.d("Error", it.toString())
         }
     }

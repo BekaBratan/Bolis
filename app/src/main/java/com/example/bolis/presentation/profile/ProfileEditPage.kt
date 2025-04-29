@@ -84,7 +84,6 @@ fun ProfileEditPage(
             lastName = response.lastName
             imageURL = IMAGE_URL + response.avatarUrl
         }
-        Toast.makeText(context, response.toString(), Toast.LENGTH_SHORT).show()
         Log.d("Profile", response.toString())
     }
 
@@ -121,7 +120,7 @@ fun ProfileEditPage(
             contentAlignment = Alignment.Center
         ) {
             ProfileImageCard(
-                url = if (uploadedImage != null) uploadedImage.toString() else imageURL,
+                url = uploadedImage?.toString() ?: imageURL,
                 onClick = {
                     photoPickerLauncher.launch(
                         PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
@@ -144,7 +143,10 @@ fun ProfileEditPage(
             profileBody.lastName = lastName
             viewModel.updateProfile(sharedProvider.getToken(), profileBody)
             sharedProvider.setCity(city)
-            backButtonClicked()
         })
+
+        viewModel.profileUpdateResponse.observeForever {
+            backButtonClicked()
+        }
     }
 }

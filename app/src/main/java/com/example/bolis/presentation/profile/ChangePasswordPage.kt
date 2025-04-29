@@ -9,12 +9,17 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.bolis.data.api.navBarStateChange
 import com.example.bolis.ui.Elements.CustomBackButton
 import com.example.bolis.ui.Elements.CustomButton
@@ -26,9 +31,13 @@ import com.example.bolis.ui.theme.fontFamily
 @Composable
 fun ChangePasswordPage(
     backButtonClicked:() -> Unit = {},
-    confirmButtonClicked:() -> Unit = {}
+    confirmButtonClicked:() -> Unit = {},
+    viewModel: ProfileViewModel = viewModel()
 ) {
     navBarStateChange(false)
+
+    var newPassword by remember { mutableStateOf("") }
+    var confirmPassword by remember { mutableStateOf("") }
 
     Box(Modifier.fillMaxSize()) {
         CustomBackButton(
@@ -53,8 +62,8 @@ fun ChangePasswordPage(
             color = Black50
         )
         Spacer(Modifier.size(4.dp))
-        CustomPasswordTextField(name = "Your current password")
-        CustomPasswordTextField(name = "Your new password")
+        CustomPasswordTextField(name = "New password", text = newPassword, setText = { newPassword = it })
+        CustomPasswordTextField(name = "Confirm new password", text = confirmPassword, setText = { confirmPassword = it })
         Spacer(Modifier.size(4.dp))
         CustomButton(name = "Change", onClick = confirmButtonClicked)
     }

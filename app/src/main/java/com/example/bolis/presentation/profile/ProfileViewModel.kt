@@ -9,6 +9,7 @@ import com.example.bolis.data.models.ErrorResponse
 import com.example.bolis.data.models.LogInRequest
 import com.example.bolis.data.models.LogInResponse
 import com.example.bolis.data.models.ProfileResponse
+import com.example.bolis.data.models.ProfileUpdateResponse
 import com.example.bolis.data.models.SignUpRequest
 import com.example.bolis.data.models.SignUpResponse
 import com.example.bolis.data.models.VerificationRequest
@@ -20,6 +21,9 @@ import retrofit2.HttpException
 class ProfileViewModel(): ViewModel() {
     private var _profileResponse: MutableLiveData<ProfileResponse?> = MutableLiveData()
     val profileResponse: LiveData<ProfileResponse?> = _profileResponse
+
+    private var _profileUpdateResponse: MutableLiveData<ProfileUpdateResponse?> = MutableLiveData()
+    val profileUpdateResponse: LiveData<ProfileUpdateResponse?> = _profileUpdateResponse
 
     private var _errorResponse: MutableLiveData<String?> = MutableLiveData()
     val errorResponse: LiveData<String?> = _errorResponse
@@ -49,7 +53,7 @@ class ProfileViewModel(): ViewModel() {
                 ServiceBuilder.api.updateProfile(token = token, profileBody = profileBody)
             }.fold(
                 onSuccess = {
-                    _errorResponse.postValue(it)
+                    _profileUpdateResponse.postValue(it)
                 },
                 onFailure = { throwable ->
                     val errorMessage = (throwable as? HttpException)?.response()?.errorBody()?.string()

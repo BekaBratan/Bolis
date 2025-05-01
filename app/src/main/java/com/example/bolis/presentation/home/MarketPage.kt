@@ -1,8 +1,11 @@
 package com.example.bolis.presentation.home
 
 import android.util.Log
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -15,6 +18,7 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -24,13 +28,17 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.bolis.R
 import com.example.bolis.data.api.navBarStateChange
 import com.example.bolis.data.models.CatalogResponse
 import com.example.bolis.data.models.Item
@@ -39,6 +47,12 @@ import com.example.bolis.data.models.SuggestionsResponse
 import com.example.bolis.ui.Elements.CatalogItem
 import com.example.bolis.ui.Elements.WebView
 import com.example.bolis.ui.theme.Black50
+import com.example.bolis.ui.theme.Green10
+import com.example.bolis.ui.theme.Green20
+import com.example.bolis.ui.theme.Green50
+import com.example.bolis.ui.theme.Grey30
+import com.example.bolis.ui.theme.White40
+import com.example.bolis.ui.theme.White50
 import com.example.bolis.ui.theme.fontFamily
 import com.example.bolis.utils.SharedProvider
 
@@ -93,6 +107,49 @@ fun MarketPage(
     }
 
     LazyColumn {
+
+        item {
+            Row (
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(20.dp)
+                    .clip(RoundedCornerShape(10.dp))
+                    .background(Green50)
+                    .padding(20.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(10.dp)
+            ) {
+                Image(
+                    painter = painterResource(R.drawable.ic_profile_image),
+                    contentScale = ContentScale.Crop,
+                    contentDescription = "chat",
+                )
+
+                Column (
+                    modifier = Modifier
+                        .weight(1f)
+                ) {
+                    Text(
+                        text = "Welcome to BOLIS!",
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight(600),
+                        overflow = TextOverflow.Ellipsis,
+                        maxLines = 1,
+                        fontFamily = fontFamily,
+                        color = White50
+                    )
+
+                    Text(
+                        text = "Hello! We're here to connect people who want to give and those in need. Join our community!",
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight(400),
+                        overflow = TextOverflow.Ellipsis,
+                        fontFamily = fontFamily,
+                        color = Green20
+                    )
+                }
+            }
+        }
 
         item {
             Text(

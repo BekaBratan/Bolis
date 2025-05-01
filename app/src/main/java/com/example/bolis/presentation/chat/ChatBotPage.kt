@@ -12,12 +12,12 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.material.OutlinedButton
+import androidx.compose.material.Text
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -29,6 +29,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -51,16 +52,24 @@ import com.example.bolis.ui.theme.fontFamily
 
 @Preview
 @Composable
-fun ChatPage(
+fun ChatBotScreen(
     backButtonClicked:() -> Unit = {},
     viewModel: ChatBotViewModel = viewModel(),
-    chatID: Int = 1,
 ) {
+    val chatMessages = remember { mutableStateListOf<Message>() }
+    var userInput by remember { mutableStateOf("") }
+    val listState = rememberLazyListState()
+
+    val context = LocalContext.current
     navBarStateChange(false)
 
-    val chatMessages = remember { mutableStateListOf<Message>() }
-    val listState = rememberLazyListState()
-    var userInput by remember { mutableStateOf("") }
+
+    // Observe bot replies
+    LaunchedEffect(viewModel.botMessage) {
+        viewModel.botMessage.observeForever { botReply ->
+            chatMessages.add(Message(content = botReply, role = "bot"))
+        }
+    }
 
     Box(
         modifier = Modifier
@@ -70,7 +79,7 @@ fun ChatPage(
         CustomBackButton(
             name = "Back"
         ) { backButtonClicked() }
-        Text(
+        androidx.compose.material3.Text(
             text = "Bolis consultant",
             fontSize = 17.sp,
             fontWeight = FontWeight(700),
@@ -94,15 +103,9 @@ fun ChatPage(
         ) {
             items(chatMessages) { message ->
                 if (message.role == "user") {
-                    ChatTextView(
-                        text = message.content,
-                        isMine = true,
-                    )
+                    ChatTextView(text = message.content, isMine = true)
                 } else {
-                    ChatTextView(
-                        text = message.content,
-                        isMine = false,
-                    )
+                    ChatTextView(text = message.content, isMine = false)
                 }
             }
         }
@@ -113,6 +116,18 @@ fun ChatPage(
             }
         }
 
+        // Quick Replies
+        Row (
+            Modifier
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            listOf("Hello", "How can I donate?", "Need help").forEach { text ->
+                AssistChip(text = text, onClick = { userInput = text })
+            }
+        }
+
+        // Input field and send button
         Row (
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(7.dp),
@@ -134,7 +149,7 @@ fun ChatPage(
                             .padding(14.dp)
                     ) {
                         if (userInput.isEmpty()) {
-                            Text(
+                            androidx.compose.material3.Text(
                                 text = "Type your messages...",
                                 style = TextStyle(
                                     fontSize = 16.sp,
@@ -175,5 +190,19 @@ fun ChatPage(
                 )
             }
         }
+    }
+}
+
+@Composable
+fun AssistChip(text: String, onClick: () -> Unit) {
+    OutlinedButton(onClick = onClick, shape = RoundedCornerShape(50)) {
+        Text(
+            text = text,
+            style = TextStyle(
+                fontWeight = FontWeight(500),
+                fontFamily = fontFamily,
+                color = Grey30
+            )
+        )
     }
 }

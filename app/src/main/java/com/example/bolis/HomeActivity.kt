@@ -33,7 +33,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.example.bolis.GiveDestination.AddItemScreen
-import com.example.bolis.NavDestination.ChatScreen
+import com.example.bolis.NavDestination.ChatsListScreen
 import com.example.bolis.NavDestination.GiveScreen
 import com.example.bolis.NavDestination.MarketScreen
 import com.example.bolis.NavDestination.ProfileScreen
@@ -47,7 +47,9 @@ import com.example.bolis.ProfileDestination.SupportScreen
 import com.example.bolis.data.api.languageState
 import com.example.bolis.data.api.navBarState
 import com.example.bolis.data.api.systemLanguageChange
+import com.example.bolis.presentation.chat.ChatBotScreen
 import com.example.bolis.presentation.chat.ChatPage
+import com.example.bolis.presentation.chat.ChatsListPage
 import com.example.bolis.presentation.donate.AddItemPage
 import com.example.bolis.presentation.donate.MyGivesPage
 import com.example.bolis.presentation.home.MarketPage
@@ -80,14 +82,14 @@ class HomeActivity : ComponentActivity() {
             val isNavBarVisible = navBarState
             val navController = rememberNavController()
             MarketScreen.title = stringResource(R.string.catalog)
-            ChatScreen.title = stringResource(R.string.chat)
+            ChatsListScreen.title = stringResource(R.string.chat)
             ProfileScreen.title = stringResource(R.string.profile)
 
             val items = listOf(
                 MarketScreen,
                 QRScreen,
                 GiveScreen,
-                ChatScreen,
+                ChatsListScreen,
                 ProfileScreen
             )
 
@@ -160,8 +162,29 @@ class HomeActivity : ComponentActivity() {
                                 addButtonClick = { navController.navigate(AddItemScreen) },
                             )
                         }
+                        composable<ChatsListScreen>{ backStackEntry ->
+                            ChatsListPage(
+                                chatOpen = { chatID ->
+                                    navController.navigate(ChatScreen(chatID)) {
+                                        popUpTo(navController.graph.startDestinationId)
+                                        launchSingleTop = true
+                                    }
+                                }
+                            )
+                        }
                         composable<ChatScreen>{ backStackEntry ->
-                            ChatPage()
+                            val args = backStackEntry.toRoute<ChatScreen>()
+                            if (args.chatID == 0) {
+                                ChatBotScreen(
+                                    backButtonClicked = { navController.popBackStack() }
+                                )
+                            }
+                            else {
+                                ChatPage(
+                                    backButtonClicked = { navController.popBackStack() },
+                                    chatID = args.chatID
+                                )
+                            }
                         }
                         composable<ProfileScreen>{ backStackEntry ->
                             ProfilePage(
@@ -284,7 +307,7 @@ sealed class NavDestination(var title: String, val icon: Int) {
     @Serializable
     object GiveScreen : NavDestination(title = "Bolis", icon = R.drawable.ic_give)
     @Serializable
-    object ChatScreen : NavDestination(title = "Chat", icon = R.drawable.ic_chat)
+    object ChatsListScreen : NavDestination(title = "Chat", icon = R.drawable.ic_chat)
     @Serializable
     object ProfileScreen : NavDestination(title = "Profile", icon = R.drawable.ic_profile)
 }
@@ -317,3 +340,8 @@ sealed class GiveDestination() {
     @Serializable
     object AddItemScreen: GiveDestination()
 }
+
+@Serializable
+data class ChatScreen(
+    val chatID: Int
+)

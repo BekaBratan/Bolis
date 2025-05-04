@@ -122,18 +122,23 @@ fun MapWithUserLocation() {
 @Composable
 fun rememberMapViewWithLifecycle(): MapView {
     val context = LocalContext.current
+    val lifecycleOwner = androidx.lifecycle.compose.LocalLifecycleOwner.current
     val mapView = remember { MapView(context) }
 
-    // Add lifecycle observers to handle the MapView's lifecycle
-    val lifecycleObserver = rememberMapLifecycleObserver(mapView)
-    DisposableEffect(lifecycleObserver) {
+    DisposableEffect(lifecycleOwner) {
+        val observer = MapLifecycleObserver(context, mapView)
+        lifecycleOwner.lifecycle.addObserver(observer)
+
         onDispose {
+            lifecycleOwner.lifecycle.removeObserver(observer)
             mapView.onStop()
         }
     }
 
     return mapView
 }
+
+
 @Composable
 fun rememberMapLifecycleObserver(mapView: MapView): MapLifecycleObserver {
     val context = LocalContext.current

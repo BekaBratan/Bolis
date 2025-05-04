@@ -74,9 +74,6 @@ class HomeActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        MapKitFactory.setApiKey("febf663c-17d1-47a2-b099-01090ea4588f")
-//        MapKitFactory.initialize(this)
-
         setContent {
             val selectedLanguage = languageState
             val isNavBarVisible = navBarState
@@ -287,15 +284,15 @@ class HomeActivity : ComponentActivity() {
         }
     }
 
-//    override fun onStart() {
-//        super.onStart()
-//        MapKitFactory.getInstance().onStart()
-//    }
-//
-//    override fun onStop() {
-//        super.onStop()
-//        MapKitFactory.getInstance().onStop()
-//    }
+    override fun onStart() {
+        super.onStart()
+        MapKitFactory.getInstance().onStart()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        MapKitFactory.getInstance().onStop()
+    }
 }
 
 @Serializable

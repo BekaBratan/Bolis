@@ -23,12 +23,14 @@ import com.example.bolis.presentation.onboarding.OnboardingScreen
 import com.example.bolis.ui.theme.BolisTheme
 import com.example.bolis.ui.theme.White50
 import com.example.bolis.utils.SharedProvider
+import com.yandex.mapkit.MapKitFactory
 import kotlinx.serialization.Serializable
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
         setContent {
 
             val navController = rememberNavController()

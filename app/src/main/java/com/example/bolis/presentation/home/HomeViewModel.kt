@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.bolis.data.api.ServiceBuilder
 import com.example.bolis.data.models.CatalogResponse
 import com.example.bolis.data.models.ErrorResponse
+import com.example.bolis.data.models.LikedItemsListResponse
 import com.example.bolis.data.models.LogInRequest
 import com.example.bolis.data.models.LogInResponse
 import com.example.bolis.data.models.ProfileResponse
@@ -25,6 +26,9 @@ class HomeViewModel(): ViewModel() {
 
     private var _suggestionsResponse: MutableLiveData<SuggestionsResponse?> = MutableLiveData()
     val suggestionsResponse: LiveData<SuggestionsResponse?> = _suggestionsResponse
+
+    private var _likedItemsResponse: MutableLiveData<LikedItemsListResponse?> = MutableLiveData()
+    val likedItemsResponse: LiveData<LikedItemsListResponse?> = _likedItemsResponse
 
     private var _errorResponse: MutableLiveData<String?> = MutableLiveData()
     val errorResponse: LiveData<String?> = _errorResponse
@@ -55,6 +59,22 @@ class HomeViewModel(): ViewModel() {
             }.fold(
                 onSuccess = {
                     _suggestionsResponse.postValue(it)
+                },
+                onFailure = { throwable ->
+                    val errorMessage = (throwable as? HttpException)?.response()?.errorBody()?.string()
+                    _errorMessageResponse.postValue(ErrorResponse(errorMessage.toString()))
+                }
+            )
+        }
+    }
+
+    fun getLikedItems(token: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            runCatching {
+                ServiceBuilder.api.getLikedItemsList(token = token)
+            }.fold(
+                onSuccess = {
+                    _likedItemsResponse.postValue(it)
                 },
                 onFailure = { throwable ->
                     val errorMessage = (throwable as? HttpException)?.response()?.errorBody()?.string()

@@ -93,7 +93,7 @@ fun CatalogItem(
                 Icon(
                     painter = painterResource(id = R.drawable.ic_bookmark_filled),
                     contentDescription = "back",
-                    tint = Dark50,
+                    tint = Green50,
                     modifier = Modifier
                         .padding(top = 6.dp)
                         .size(24.dp)

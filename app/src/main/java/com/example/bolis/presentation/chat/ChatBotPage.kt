@@ -79,7 +79,8 @@ fun ChatBotScreen(
         CustomBackButton(
             name = "Back"
         ) { backButtonClicked() }
-        androidx.compose.material3.Text(
+
+        Text(
             text = "Bolis consultant",
             fontSize = 17.sp,
             fontWeight = FontWeight(700),

@@ -33,6 +33,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.example.bolis.GiveDestination.AddItemScreen
+import com.example.bolis.HomeDestination.SearchScreen
 import com.example.bolis.NavDestination.ChatsListScreen
 import com.example.bolis.NavDestination.GiveScreen
 import com.example.bolis.NavDestination.MarketScreen
@@ -53,6 +54,7 @@ import com.example.bolis.presentation.chat.ChatsListPage
 import com.example.bolis.presentation.donate.AddItemPage
 import com.example.bolis.presentation.donate.MyGivesPage
 import com.example.bolis.presentation.home.MarketPage
+import com.example.bolis.presentation.home.SearchPage
 import com.example.bolis.presentation.profile.ChangeLanguagePage
 import com.example.bolis.presentation.profile.ChangePasswordPage
 import com.example.bolis.presentation.profile.ConfirmedPage
@@ -149,7 +151,14 @@ class HomeActivity : ComponentActivity() {
                             .padding(innerPadding)
                     ) {
                         composable<MarketScreen>{ backStackEntry ->
-                            MarketPage()
+                            MarketPage(
+                                onSearchClick = {
+                                    navController.navigate(SearchScreen) {
+                                        popUpTo(navController.graph.startDestinationId)
+                                        launchSingleTop = true
+                                    }
+                                }
+                            )
                         }
                         composable<QRScreen>{ backStackEntry ->
                             QRPage()
@@ -158,6 +167,9 @@ class HomeActivity : ComponentActivity() {
                             MyGivesPage(
                                 addButtonClick = { navController.navigate(AddItemScreen) },
                             )
+                        }
+                        composable<SearchScreen>{ backStackEntry ->
+                            SearchPage()
                         }
                         composable<ChatsListScreen>{ backStackEntry ->
                             ChatsListPage(
@@ -336,6 +348,12 @@ data class ConfirmedScreen(
 sealed class GiveDestination() {
     @Serializable
     object AddItemScreen: GiveDestination()
+}
+
+@Serializable
+sealed class HomeDestination() {
+    @Serializable
+    object SearchScreen : HomeDestination()
 }
 
 @Serializable

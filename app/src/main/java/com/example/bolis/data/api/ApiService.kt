@@ -5,6 +5,7 @@ import com.example.bolis.data.models.CategoriesListResponse
 import com.example.bolis.data.models.DeliveryAddressResponse
 import com.example.bolis.data.models.GiveProductRequest
 import com.example.bolis.data.models.GiveProductResponse
+import com.example.bolis.data.models.LikedItemsListResponse
 import com.example.bolis.data.models.LogInRequest
 import com.example.bolis.data.models.LogInResponse
 import com.example.bolis.data.models.MessageResponse
@@ -111,4 +112,10 @@ interface ApiService {
     suspend fun getCatalog(
         @Header("Authorization") token: String
     ): CatalogResponse
+
+    @Headers("Accept: application/json")
+    @GET("liked")
+    suspend fun getLikedItemsList(
+        @Header("Authorization") token: String
+    ): LikedItemsListResponse
 }

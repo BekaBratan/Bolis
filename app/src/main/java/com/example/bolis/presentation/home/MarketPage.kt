@@ -42,9 +42,12 @@ import com.example.bolis.R
 import com.example.bolis.data.api.navBarStateChange
 import com.example.bolis.data.models.CatalogResponse
 import com.example.bolis.data.models.Item
+import com.example.bolis.data.models.LikedItem
+import com.example.bolis.data.models.LikedItemsListResponse
 import com.example.bolis.data.models.Suggestion
 import com.example.bolis.data.models.SuggestionsResponse
 import com.example.bolis.ui.Elements.CatalogItem
+import com.example.bolis.ui.Elements.SearchBar
 import com.example.bolis.ui.Elements.WebView
 import com.example.bolis.ui.theme.Black50
 import com.example.bolis.ui.theme.Green10
@@ -59,7 +62,8 @@ import com.example.bolis.utils.SharedProvider
 @Preview(showBackground = true)
 @Composable
 fun MarketPage(
-    viewModel: HomeViewModel = viewModel()
+    viewModel: HomeViewModel = viewModel(),
+    onSearchClick: () -> Unit = {},
 ) {
     val context = LocalContext.current
     val sharedProvider = SharedProvider(context)
@@ -75,9 +79,14 @@ fun MarketPage(
         suggestions = List(10) { Suggestion() }
     )) }
 
+    var likedItemsList by remember { mutableStateOf(LikedItemsListResponse(
+        likedItems = listOf()
+    )) }
+
     LaunchedEffect(Unit) {
         viewModel.getCatalog(sharedProvider.getToken())
         viewModel.getSuggestions(sharedProvider.getToken())
+        viewModel.getLikedItems(sharedProvider.getToken())
         Log.d("Catalog", viewModel.catalogResponse.value.toString())
         Log.d("Suggestions", viewModel.suggestionsResponse.value.toString())
     }
@@ -100,6 +109,15 @@ fun MarketPage(
         }
     }
 
+    viewModel.likedItemsResponse.observeForever { response ->
+        if (response != null) {
+            likedItemsList = response
+            Log.d("Catalog", response.toString())
+        } else {
+            Log.d("Catalog", "Response is null")
+        }
+    }
+
     viewModel.errorMessageResponse.observeForever { error ->
         if (error != null) {
             Log.d("Catalog", "Error: ${error.error}")
@@ -107,6 +125,10 @@ fun MarketPage(
     }
 
     LazyColumn {
+
+        item {
+            SearchBar(onClick = onSearchClick)
+        }
 
         item {
             Row (
@@ -179,7 +201,19 @@ fun MarketPage(
                     CatalogItem(
                         name = item.name,
                         status = item.condition,
+                        isFavorite = likedItemsList.likedItems?.any { it?.itemId == item.iD } == true,
                         imageUrl = item.imagePath,
+                        onFavoriteClick = {
+                            if (likedItemsList.likedItems?.any { it?.itemId == item.iD } == true) {
+                                likedItemsList = likedItemsList.copy(
+                                    likedItems = likedItemsList.likedItems?.filter { it?.itemId != item.iD }
+                                )
+                            } else {
+                                likedItemsList = likedItemsList.copy(
+                                    likedItems = likedItemsList.likedItems?.plus(LikedItem(item.iD))
+                                )
+                            }
+                        }
                     )
 
                 }
@@ -220,7 +254,19 @@ fun MarketPage(
                     CatalogItem(
                         name = item.name,
                         status = item.condition,
-                        imageUrl = item.images[0].imagePath,
+                        isFavorite = likedItemsList.likedItems?.any { it?.itemId == item.iD } == true,
+                        imageUrl = item.images.firstOrNull()?.imagePath.orEmpty(),
+                        onFavoriteClick = {
+                            if (likedItemsList.likedItems?.any { it?.itemId == item.iD } == true) {
+                                likedItemsList = likedItemsList.copy(
+                                    likedItems = likedItemsList.likedItems?.filter { it?.itemId != item.iD }
+                                )
+                            } else {
+                                likedItemsList = likedItemsList.copy(
+                                    likedItems = likedItemsList.likedItems?.plus(LikedItem(item.iD))
+                                )
+                            }
+                        }
                     )
                 }
                 item {

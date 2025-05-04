@@ -1,5 +1,6 @@
 package com.example.bolis.presentation.profile
 
+import android.content.Context
 import android.net.Uri
 import android.util.Log
 import android.widget.Toast
@@ -33,6 +34,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.bolis.data.api.navBarStateChange
 import com.example.bolis.data.models.ProfileResponse
 import com.example.bolis.presentation.auth.AuthViewModel
+import com.example.bolis.presentation.donate.convertUriToFile
 import com.example.bolis.ui.Elements.CustomBackButton
 import com.example.bolis.ui.Elements.CustomButton
 import com.example.bolis.ui.Elements.CustomDropdown
@@ -42,6 +44,11 @@ import com.example.bolis.ui.theme.Black50
 import com.example.bolis.ui.theme.fontFamily
 import com.example.bolis.utils.Constants.Companion.IMAGE_URL
 import com.example.bolis.utils.SharedProvider
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody.Companion.asRequestBody
+import java.io.File
+import androidx.core.net.toUri
 
 @Preview
 @Composable
@@ -83,7 +90,8 @@ fun ProfileEditPage(
             profileBody = response
             firstName = response.firstName
             lastName = response.lastName
-            imageURL = IMAGE_URL + response.avatarUrl
+            val timestamp = System.currentTimeMillis()
+            imageURL = "${IMAGE_URL}${response.avatarUrl}?t=$timestamp"
         }
         Log.d("Profile", response.toString())
     }
@@ -149,7 +157,12 @@ fun ProfileEditPage(
         CustomButton(name = "Save", onClick = {
             profileBody.firstName = firstName
             profileBody.lastName = lastName
-            viewModel.updateProfile(sharedProvider.getToken(), profileBody)
+            viewModel.updateProfile(sharedProvider.getToken(), profileBody,
+                if (uploadedImage!=null)
+                    convertUriToFile(uploadedImage!!, context)
+                else
+                    null
+            )
             sharedProvider.setCity(city)
         })
 
@@ -158,3 +171,4 @@ fun ProfileEditPage(
         }
     }
 }
+

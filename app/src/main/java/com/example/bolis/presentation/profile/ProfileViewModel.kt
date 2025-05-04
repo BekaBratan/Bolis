@@ -7,19 +7,17 @@ import androidx.lifecycle.viewModelScope
 import com.example.bolis.data.api.ServiceBuilder
 import com.example.bolis.data.models.DeliveryAddressResponse
 import com.example.bolis.data.models.ErrorResponse
-import com.example.bolis.data.models.LogInRequest
-import com.example.bolis.data.models.LogInResponse
 import com.example.bolis.data.models.MessageResponse
 import com.example.bolis.data.models.ProfileResponse
 import com.example.bolis.data.models.ProfileUpdateResponse
-import com.example.bolis.data.models.SignUpRequest
-import com.example.bolis.data.models.SignUpResponse
 import com.example.bolis.data.models.UpdatePasswordRequest
-import com.example.bolis.data.models.VerificationRequest
-import com.example.bolis.data.models.VerificationResponse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody.Companion.asRequestBody
 import retrofit2.HttpException
+import java.io.File
 
 class ProfileViewModel(): ViewModel() {
     private var _profileResponse: MutableLiveData<ProfileResponse?> = MutableLiveData()
@@ -56,10 +54,26 @@ class ProfileViewModel(): ViewModel() {
         }
     }
 
-    fun updateProfile(token: String, profileBody: ProfileResponse) {
+    fun updateProfile(token: String, profileBody: ProfileResponse, imageFile: File?) {
         viewModelScope.launch(Dispatchers.IO) {
             runCatching {
-                ServiceBuilder.api.updateProfile(token = token, profileBody = profileBody)
+                val first_name = MultipartBody.Part.createFormData("first_name", profileBody.firstName)
+                val last_name = MultipartBody.Part.createFormData("last_name", profileBody.lastName)
+                val email = MultipartBody.Part.createFormData("email", profileBody.email)
+                var imagePart: MultipartBody.Part? = null
+
+                if (imageFile!=null) {
+                    val requestFile = imageFile.asRequestBody("image/*".toMediaTypeOrNull())
+                    imagePart = MultipartBody.Part.createFormData("avatar_url", imageFile.name, requestFile)
+                }
+
+                ServiceBuilder.api.updateProfile(
+                    token = token,
+                    first_name = first_name,
+                    last_name = last_name,
+                    avatar_url = imagePart,
+                    email = email,
+                )
             }.fold(
                 onSuccess = {
                     _profileUpdateResponse.postValue(it)

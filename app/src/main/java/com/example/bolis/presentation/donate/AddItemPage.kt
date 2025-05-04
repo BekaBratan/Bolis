@@ -44,6 +44,7 @@ import com.example.bolis.ui.theme.Black40
 import com.example.bolis.ui.theme.Black50
 import com.example.bolis.ui.theme.fontFamily
 import com.example.bolis.utils.SharedProvider
+import kotlinx.coroutines.flow.observeOn
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
@@ -66,15 +67,15 @@ fun AddItemPage(
     var listImages by remember { mutableStateOf<List<Uri>>(emptyList()) }
     var uploadError by remember { mutableStateOf(false) }
     var selectedOption by remember { mutableStateOf(0) }
+    val options by remember { mutableStateOf<List<Category>>(emptyList()) }
 
     val (productName, setProductName) = remember { mutableStateOf("") }
     val (description, setDescription) = remember { mutableStateOf("") }
 
-    val categories by viewModel.categoriesResponse.collectAsState()
+//    val categories by viewModel.categoriesResponse.collectAsState()
     val giveProductResponse by viewModel.giveProductResponse.collectAsState()
     val errorResponse by viewModel.errorResponse.collectAsState()
 
-    val options = categories?.categories ?: emptyList()
 
     val photoPickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickMultipleVisualMedia()
@@ -83,6 +84,8 @@ fun AddItemPage(
     LaunchedEffect(Unit) {
         viewModel.getCategories(sharedProvider.getToken())
     }
+
+//    viewModel.categoriesResponse.
 
     LaunchedEffect(giveProductResponse) {
         giveProductResponse?.let {
@@ -193,7 +196,7 @@ fun AddItemPage(
                 uploadError = listImages.isEmpty()
 
                 if (!nameError && !descriptionError && !uploadError) {
-                    val categoryId = categories?.categories?.get(selectedOption)?.iD ?: 75
+                    val categoryId = options.get(selectedOption)?.iD ?: 75
                     val condition = if (selectedButton == "New") "new" else "used"
                     val giveProductsBody = GiveProductRequest(
                         categoryId = categoryId,

@@ -51,11 +51,15 @@ interface ApiService {
         @Header("Authorization") token: String
     ): ProfileResponse
 
+    @Multipart
     @Headers("Accept: application/json")
     @POST("profile-update")
     suspend fun updateProfile(
         @Header("Authorization") token: String,
-        @Body profileBody: ProfileResponse
+        @Part first_name: MultipartBody.Part,
+        @Part last_name: MultipartBody.Part,
+        @Part email: MultipartBody.Part,
+        @Part avatar_url: MultipartBody.Part?,
     ): ProfileUpdateResponse
 
     @Headers("Accept: application/json")

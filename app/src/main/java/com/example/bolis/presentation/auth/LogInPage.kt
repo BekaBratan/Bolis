@@ -141,6 +141,7 @@ fun LogInPage(
     
         viewModel.logInResponse.observeForever {
             sharedProvider.saveUser(SignUpRequest(phoneNumber.trim(), password.trim()), "Bolis", "Helper")
+            Log.d("LogInResponse", it.toString())
             sharedProvider.setAuthorized()
             sharedProvider.saveToken(it!!.token)
             nextButtonClicked()

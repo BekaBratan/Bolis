@@ -303,7 +303,7 @@ sealed class NavDestination(var title: String, val icon: Int) {
     @Serializable
     object MarketScreen : NavDestination(title = "Catalog", icon = R.drawable.ic_market)
     @Serializable
-    object QRScreen : NavDestination(title = "QR", icon = R.drawable.ic_favourite)
+    object QRScreen : NavDestination(title = "QR", icon = R.drawable.ic_qr)
     @Serializable
     object GiveScreen : NavDestination(title = "Bolis", icon = R.drawable.ic_give)
     @Serializable

@@ -5,5 +5,5 @@ import com.google.gson.annotations.SerializedName
 
 data class SuggestionsResponse(
     @SerializedName("suggestions")
-    val suggestions: List<Suggestion>
+    val suggestions: List<Item>
 )

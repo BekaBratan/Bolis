@@ -76,7 +76,7 @@ fun MarketPage(
     )) }
 
     var suggestionsBody by remember { mutableStateOf(SuggestionsResponse(
-        suggestions = List(10) { Suggestion() }
+        suggestions = List(10) { Item() }
     )) }
 
     var likedItemsList by remember { mutableStateOf(LikedItemsListResponse(
@@ -202,7 +202,7 @@ fun MarketPage(
                         name = item.name,
                         status = item.condition,
                         isFavorite = likedItemsList.likedItems?.any { it?.itemId == item.iD } == true,
-                        imageUrl = item.imagePath,
+                        imageUrl = item.images.firstOrNull()?.imagePath.orEmpty(),
                         onFavoriteClick = {
                             if (likedItemsList.likedItems?.any { it?.itemId == item.iD } == true) {
                                 likedItemsList = likedItemsList.copy(
@@ -213,6 +213,7 @@ fun MarketPage(
                                     likedItems = likedItemsList.likedItems?.plus(LikedItem(item.iD))
                                 )
                             }
+                            viewModel.likeItem(sharedProvider.getToken(), item.iD)
                         }
                     )
 
@@ -266,6 +267,7 @@ fun MarketPage(
                                     likedItems = likedItemsList.likedItems?.plus(LikedItem(item.iD))
                                 )
                             }
+                            viewModel.likeItem(sharedProvider.getToken(), item.iD)
                         }
                     )
                 }

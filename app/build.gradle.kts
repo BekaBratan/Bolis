@@ -110,4 +110,7 @@ dependencies {
 
     // GPS Location
     implementation("com.google.android.gms:play-services-location:21.0.1")
+
+    //WebSocket
+    implementation("org.java-websocket:Java-WebSocket:1.5.3")
 }

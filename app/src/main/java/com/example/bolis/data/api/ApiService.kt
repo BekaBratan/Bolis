@@ -2,9 +2,11 @@ package com.example.bolis.data.api
 
 import com.example.bolis.data.models.CatalogResponse
 import com.example.bolis.data.models.CategoriesListResponse
+import com.example.bolis.data.models.ChatListResponse
 import com.example.bolis.data.models.DeliveryAddressResponse
 import com.example.bolis.data.models.GiveProductRequest
 import com.example.bolis.data.models.GiveProductResponse
+import com.example.bolis.data.models.LikeItemRequest
 import com.example.bolis.data.models.LikedItemsListResponse
 import com.example.bolis.data.models.LogInRequest
 import com.example.bolis.data.models.LogInResponse
@@ -118,4 +120,11 @@ interface ApiService {
     suspend fun getLikedItemsList(
         @Header("Authorization") token: String
     ): LikedItemsListResponse
+
+    @Headers("Accept: application/json")
+    @POST("liked/add")
+    suspend fun likeItem(
+        @Header("Authorization") token: String,
+        @Body itemId: LikeItemRequest
+    ): MessageResponse
 }

@@ -66,8 +66,8 @@ fun AddItemPage(
     var descriptionError by remember { mutableStateOf(false) }
     var listImages by remember { mutableStateOf<List<Uri>>(emptyList()) }
     var uploadError by remember { mutableStateOf(false) }
-    var selectedOption by remember { mutableStateOf(0) }
-    val options by remember { mutableStateOf<List<Category>>(emptyList()) }
+    var selectedOption by remember { mutableStateOf(75) }
+    var options by remember { mutableStateOf<List<Category>>(emptyList()) }
 
     val (productName, setProductName) = remember { mutableStateOf("") }
     val (description, setDescription) = remember { mutableStateOf("") }
@@ -85,7 +85,12 @@ fun AddItemPage(
         viewModel.getCategories(sharedProvider.getToken())
     }
 
-//    viewModel.categoriesResponse.
+    viewModel.categoriesResponse.observeForever {
+        it?.let { categories ->
+            options = categories.categories
+            selectedOption = categories.categories[0].iD
+        }
+    }
 
     LaunchedEffect(giveProductResponse) {
         giveProductResponse?.let {
@@ -196,7 +201,7 @@ fun AddItemPage(
                 uploadError = listImages.isEmpty()
 
                 if (!nameError && !descriptionError && !uploadError) {
-                    val categoryId = options.get(selectedOption)?.iD ?: 75
+                    val categoryId = selectedOption
                     val condition = if (selectedButton == "New") "new" else "used"
                     val giveProductsBody = GiveProductRequest(
                         categoryId = categoryId,

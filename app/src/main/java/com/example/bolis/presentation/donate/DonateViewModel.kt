@@ -24,8 +24,8 @@ class DonateViewModel : ViewModel() {
     private val _giveProductResponse = MutableStateFlow<GiveProductResponse?>(null)
     val giveProductResponse: StateFlow<GiveProductResponse?> = _giveProductResponse
 
-    private val _categoriesResponse = MutableStateFlow<CategoriesListResponse?>(null)
-    val categoriesResponse: StateFlow<CategoriesListResponse?> = _categoriesResponse
+    private val _categoriesResponse = MutableLiveData<CategoriesListResponse?>(null)
+    val categoriesResponse: LiveData<CategoriesListResponse?> = _categoriesResponse
 
     private val _errorResponse = MutableStateFlow<String?>(null)
     val errorResponse: StateFlow<String?> = _errorResponse

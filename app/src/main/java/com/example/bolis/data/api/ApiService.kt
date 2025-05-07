@@ -2,7 +2,6 @@ package com.example.bolis.data.api
 
 import com.example.bolis.data.models.CatalogResponse
 import com.example.bolis.data.models.CategoriesListResponse
-import com.example.bolis.data.models.ChatListResponse
 import com.example.bolis.data.models.DeliveryAddressResponse
 import com.example.bolis.data.models.GiveProductRequest
 import com.example.bolis.data.models.GiveProductResponse

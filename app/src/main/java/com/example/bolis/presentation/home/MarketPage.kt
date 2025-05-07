@@ -79,9 +79,9 @@ fun MarketPage(
         suggestions = List(10) { Item() }
     )) }
 
-    var likedItemsList by remember { mutableStateOf(LikedItemsListResponse(
-        likedItems = listOf()
-    )) }
+//    var likedItemsList by remember { mutableStateOf(LikedItemsListResponse(
+//        likedItems = listOf()
+//    )) }
 
     LaunchedEffect(Unit) {
         viewModel.getCatalog(sharedProvider.getToken())
@@ -109,14 +109,14 @@ fun MarketPage(
         }
     }
 
-    viewModel.likedItemsResponse.observeForever { response ->
-        if (response != null) {
-            likedItemsList = response
-            Log.d("Catalog", response.toString())
-        } else {
-            Log.d("Catalog", "Response is null")
-        }
-    }
+//    viewModel.likedItemsResponse.observeForever { response ->
+//        if (response != null) {
+//            likedItemsList = response
+//            Log.d("Catalog", response.toString())
+//        } else {
+//            Log.d("Catalog", "Response is null")
+//        }
+//    }
 
     viewModel.errorMessageResponse.observeForever { error ->
         if (error != null) {
@@ -201,20 +201,20 @@ fun MarketPage(
                     CatalogItem(
                         name = item.name,
                         status = item.condition,
-                        isFavorite = likedItemsList.likedItems?.any { it?.itemId == item.iD } == true,
-                        imageUrl = item.images.firstOrNull()?.imagePath.orEmpty(),
-                        onFavoriteClick = {
-                            if (likedItemsList.likedItems?.any { it?.itemId == item.iD } == true) {
-                                likedItemsList = likedItemsList.copy(
-                                    likedItems = likedItemsList.likedItems?.filter { it?.itemId != item.iD }
-                                )
-                            } else {
-                                likedItemsList = likedItemsList.copy(
-                                    likedItems = likedItemsList.likedItems?.plus(LikedItem(item.iD))
-                                )
-                            }
-                            viewModel.likeItem(sharedProvider.getToken(), item.iD)
-                        }
+//                        isFavorite = likedItemsList.likedItems?.any { it?.itemId == item.iD } == true,
+                        imageUrl = item.images?.firstOrNull()?.imagePath.orEmpty(),
+//                        onFavoriteClick = {
+//                            if (likedItemsList.likedItems?.any { it?.itemId == item.iD } == true) {
+//                                likedItemsList = likedItemsList.copy(
+//                                    likedItems = likedItemsList.likedItems?.filter { it?.itemId != item.iD }
+//                                )
+//                            } else {
+//                                likedItemsList = likedItemsList.copy(
+//                                    likedItems = likedItemsList.likedItems?.plus(LikedItem(item.iD))
+//                                )
+//                            }
+//                            viewModel.likeItem(sharedProvider.getToken(), item.iD)
+//                        }
                     )
 
                 }
@@ -255,20 +255,20 @@ fun MarketPage(
                     CatalogItem(
                         name = item.name,
                         status = item.condition,
-                        isFavorite = likedItemsList.likedItems?.any { it?.itemId == item.iD } == true,
-                        imageUrl = item.images.firstOrNull()?.imagePath.orEmpty(),
-                        onFavoriteClick = {
-                            if (likedItemsList.likedItems?.any { it?.itemId == item.iD } == true) {
-                                likedItemsList = likedItemsList.copy(
-                                    likedItems = likedItemsList.likedItems?.filter { it?.itemId != item.iD }
-                                )
-                            } else {
-                                likedItemsList = likedItemsList.copy(
-                                    likedItems = likedItemsList.likedItems?.plus(LikedItem(item.iD))
-                                )
-                            }
-                            viewModel.likeItem(sharedProvider.getToken(), item.iD)
-                        }
+//                        isFavorite = likedItemsList.likedItems?.any { it?.itemId == item.iD } == true,
+                        imageUrl = item.images?.firstOrNull()?.imagePath.orEmpty(),
+//                        onFavoriteClick = {
+//                            if (likedItemsList.likedItems?.any { it?.itemId == item.iD } == true) {
+//                                likedItemsList = likedItemsList.copy(
+//                                    likedItems = likedItemsList.likedItems?.filter { it?.itemId != item.iD }
+//                                )
+//                            } else {
+//                                likedItemsList = likedItemsList.copy(
+//                                    likedItems = likedItemsList.likedItems?.plus(LikedItem(item.iD))
+//                                )
+//                            }
+//                            viewModel.likeItem(sharedProvider.getToken(), item.iD)
+//                        }
                     )
                 }
                 item {

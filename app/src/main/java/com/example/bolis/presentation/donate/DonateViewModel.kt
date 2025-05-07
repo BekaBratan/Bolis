@@ -75,7 +75,7 @@ class DonateViewModel : ViewModel() {
                 ServiceBuilder.api.getCategories(token = token)
             }.fold(
                 onSuccess = { response ->
-                    _categoriesResponse.value = response
+                    _categoriesResponse.postValue(response)
                     _errorResponse.value = null
                 },
                 onFailure = { throwable ->

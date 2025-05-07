@@ -94,7 +94,7 @@ fun AddItemPage(
 
     LaunchedEffect(giveProductResponse) {
         giveProductResponse?.let {
-            Toast.makeText(context, it.message, Toast.LENGTH_SHORT).show()
+//            Toast.makeText(context, it.message, Toast.LENGTH_SHORT).show()
             onConfirmButtonClick()
         }
     }

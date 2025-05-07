@@ -1,5 +1,7 @@
 package com.example.bolis.presentation.home
 
+import android.annotation.SuppressLint
+import android.util.Log
 import android.widget.Space
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -39,6 +41,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -46,9 +49,12 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import coil3.compose.AsyncImage
 import com.example.bolis.R
 import com.example.bolis.data.models.Item
+import com.example.bolis.data.models.ItemX
+import com.example.bolis.data.models.LikedItem
 import com.example.bolis.data.models.SuggestionsResponse
 import com.example.bolis.presentation.onboarding.OnboardingPage1
 import com.example.bolis.presentation.onboarding.OnboardingPage2
@@ -67,35 +73,67 @@ import com.example.bolis.ui.theme.Red40
 import com.example.bolis.ui.theme.White50
 import com.example.bolis.ui.theme.fontFamily
 import com.example.bolis.utils.Constants.Companion.IMAGE_URL
+import com.example.bolis.utils.SharedProvider
 import kotlinx.coroutines.launch
 
+@SuppressLint("RememberReturnType")
 @Preview
 @Composable
 fun ItemDetailsPage(
+    viewModel: HomeViewModel = viewModel(),
     backButtonClicked: () -> Unit = {},
-    onZoomClick: () -> Unit = {},
-    isFavorite: Boolean = false,
-    onFavoriteClick: () -> Unit = {},
-    onItemClick: (id: Int) -> Unit = {}
+    onZoomClick: (images: List<String>) -> Unit = {},
+    onItemClick: (id: Int) -> Unit = {},
+    itemID: Int = 0,
 ) {
-
-    val images = listOf(
+    val context = LocalContext.current
+    val sharedProvider = SharedProvider(context)
+    var images by remember { mutableStateOf<List<String>>(listOf(
         "https://picsum.photos/200/300",
         "https://picsum.photos/200/300",
         "https://picsum.photos/200/300"
-    )
+    ))}
+
+    var likedItems: List<LikedItem?>? = emptyList()
 
     var suggestionsBody by remember { mutableStateOf(SuggestionsResponse(
         suggestions = List(10) { Item() }
     )) }
 
-    val pagerState = rememberPagerState(initialPage = 1, pageCount = { images.size })
+    var item: ItemX? by remember { mutableStateOf(null) }
+    var isFavorite by remember { mutableStateOf(false) }
+
+    val pagerState = rememberPagerState(initialPage = 0, pageCount = { images.size })
+
+    LaunchedEffect(Unit) {
+        viewModel.getItemDetails(sharedProvider.getToken(), itemID)
+        viewModel.getLikedItems(sharedProvider.getToken())
+        viewModel.getSuggestions(sharedProvider.getToken())
+    }
+
+    viewModel.likedItemsResponse.observeForever {
+        likedItems = it?.likedItems
+    }
+
+    viewModel.itemDetailsResponse.observeForever { response ->
+        images = response?.images?.map { it.imagePath.toString() } ?: emptyList()
+        isFavorite = likedItems?.any { it?.itemId == itemID } == true
+        item = response?.item
+    }
+
+    viewModel.suggestionsResponse.observeForever { response ->
+        if (response != null) {
+            suggestionsBody = response
+            Log.d("Catalog", response.toString())
+        } else {
+            Log.d("Catalog", "Response is null")
+        }
+    }
 
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
-            .background(White50)
-            .padding(bottom = 16.dp),
+            .background(White50),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         item {
@@ -149,7 +187,7 @@ fun ItemDetailsPage(
                         modifier = Modifier
                             .padding(start = 6.dp)
                             .size(24.dp)
-                            .clickable(onClick = onZoomClick)
+                            .clickable(onClick = { onZoomClick(images) })
                     )
                 }
             }
@@ -171,7 +209,7 @@ fun ItemDetailsPage(
                         .weight(1f),
                 ) {
                     Text(
-                        text = "Zoomer Boomer",
+                        text = item?.name ?: "Item name",
                         fontSize = 18.sp,
                         fontWeight = FontWeight(600),
                         fontFamily = fontFamily,
@@ -195,7 +233,7 @@ fun ItemDetailsPage(
                                 color = Black40,
                             )
                             Text(
-                                text = "new",
+                                text = if (item?.condition.isNullOrEmpty()) "Unknown" else item?.condition?.uppercase() ?: "Unknown",
                                 fontSize = 12.sp,
                                 fontWeight = FontWeight(500),
                                 fontFamily = fontFamily,
@@ -215,7 +253,7 @@ fun ItemDetailsPage(
                                 color = Grey30,
                             )
                             Text(
-                                text = "1421",
+                                text = if (item?.iD!=null) item?.iD.toString() else "0000",
                                 fontSize = 12.sp,
                                 fontWeight = FontWeight(500),
                                 fontFamily = fontFamily,
@@ -232,7 +270,9 @@ fun ItemDetailsPage(
                         tint = Green50,
                         modifier = Modifier
                             .size(24.dp)
-                            .clickable(onClick = onFavoriteClick)
+                            .clickable(onClick = {
+                                isFavorite = false
+                            })
                     )
                 } else {
                     Icon(
@@ -241,7 +281,9 @@ fun ItemDetailsPage(
                         tint = Green50,
                         modifier = Modifier
                             .size(24.dp)
-                            .clickable(onClick = onFavoriteClick)
+                            .clickable(onClick = {
+                                isFavorite = true
+                            })
                     )
                 }
             }
@@ -265,7 +307,7 @@ fun ItemDetailsPage(
                 )
 
                 Text(
-                    text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+                    text = item?.description ?: "Item description",
                     fontSize = 12.sp,
                     fontWeight = FontWeight(400),
                     fontFamily = fontFamily,

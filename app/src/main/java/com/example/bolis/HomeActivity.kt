@@ -56,8 +56,10 @@ import com.example.bolis.presentation.donate.AddItemPage
 import com.example.bolis.presentation.donate.MyGivesPage
 import com.example.bolis.presentation.home.CatalogSortPage
 import com.example.bolis.presentation.home.FavoritePage
+import com.example.bolis.presentation.home.ItemDetailsPage
 import com.example.bolis.presentation.home.MarketPage
 import com.example.bolis.presentation.home.SearchPage
+import com.example.bolis.presentation.home.ZoomPage
 import com.example.bolis.presentation.profile.ChangeLanguagePage
 import com.example.bolis.presentation.profile.ChangePasswordPage
 import com.example.bolis.presentation.profile.ConfirmedPage
@@ -178,12 +180,24 @@ class HomeActivity : ComponentActivity() {
                                         popUpTo(navController.graph.startDestinationId)
                                         launchSingleTop = true
                                     }
+                                },
+                                onItemClick = { itemId ->
+                                    navController.navigate(ItemDetailsScreen(itemId)) {
+                                        popUpTo(navController.graph.startDestinationId)
+                                        launchSingleTop = true
+                                    }
                                 }
                             )
                         }
                         composable<SearchScreen>{ backStackEntry ->
                             SearchPage(
                                 onBackClick = { navController.popBackStack() },
+                                onItemClick = { itemId ->
+                                    navController.navigate(ItemDetailsScreen(itemId)) {
+                                        popUpTo(navController.graph.startDestinationId)
+                                        launchSingleTop = true
+                                    }
+                                }
                             )
                         }
                         composable<CatalogSortScreen> { backStackEntry ->
@@ -203,7 +217,13 @@ class HomeActivity : ComponentActivity() {
                                         launchSingleTop = true
                                     }
                                 },
-                                onBackClick = { navController.popBackStack() }
+                                onBackClick = { navController.popBackStack() },
+                                onItemClick = { itemId ->
+                                    navController.navigate(ItemDetailsScreen(itemId)) {
+                                        popUpTo(navController.graph.startDestinationId)
+                                        launchSingleTop = true
+                                    }
+                                }
                             )
                         }
                         composable<FavoriteScreen> { backStackEntry ->
@@ -220,10 +240,40 @@ class HomeActivity : ComponentActivity() {
                                         launchSingleTop = true
                                     }
                                 },
-                                onBackClick = { navController.popBackStack() }
+                                onBackClick = { navController.popBackStack() },
+                                onItemClick = { itemId ->
+                                    navController.navigate(ItemDetailsScreen(itemId)) {
+                                        popUpTo(navController.graph.startDestinationId)
+                                        launchSingleTop = true
+                                    }
+                                }
                             )
                         }
-
+                        composable<ItemDetailsScreen>{ backStackEntry ->
+                            val args = backStackEntry.toRoute<ItemDetailsScreen>()
+                            ItemDetailsPage(
+                                backButtonClicked = { navController.popBackStack() },
+                                onZoomClick = { images ->
+                                    navController.navigate(ZoomScreen(
+                                        images = images
+                                    ))
+                                },
+                                onItemClick = { itemId ->
+                                    navController.navigate(ItemDetailsScreen(itemId)) {
+                                        popUpTo(navController.graph.startDestinationId)
+                                        launchSingleTop = true
+                                    }
+                                },
+                                itemID = args.itemID,
+                            )
+                        }
+                        composable<ZoomScreen>{ backStackEntry ->
+                            val args = backStackEntry.toRoute<ZoomScreen>()
+                            ZoomPage(
+                                backButtonClicked = { navController.popBackStack() },
+                                images = args.images
+                            )
+                        }
 
                         composable<QRScreen>{ backStackEntry ->
                             QRPage()
@@ -429,4 +479,14 @@ data class CatalogSortScreen(
 @Serializable
 data class ChatScreen(
     val chatID: Int
+)
+
+@Serializable
+data class ItemDetailsScreen(
+    val itemID: Int
+)
+
+@Serializable
+data class ZoomScreen(
+    val images: List<String>
 )

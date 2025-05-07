@@ -44,7 +44,7 @@ import com.example.bolis.ui.theme.fontFamily
 @Preview
 @Composable
 fun CatalogItem(
-    name: String = "Narname",
+    name: String = "Item Name",
     location: String = "Location",
     status: String = "New",
     isFavorite: Boolean = false,

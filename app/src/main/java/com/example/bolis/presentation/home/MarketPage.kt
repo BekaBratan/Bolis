@@ -43,6 +43,8 @@ import com.example.bolis.R
 import com.example.bolis.data.api.navBarStateChange
 import com.example.bolis.data.models.CatalogResponse
 import com.example.bolis.data.models.Item
+import com.example.bolis.data.models.LikedItem
+import com.example.bolis.data.models.LikedItemsListResponse
 import com.example.bolis.data.models.SuggestionsResponse
 import com.example.bolis.ui.Elements.CatalogItem
 import com.example.bolis.ui.Elements.SearchBar
@@ -77,9 +79,9 @@ fun MarketPage(
         suggestions = List(10) { Item() }
     )) }
 
-//    var likedItemsList by remember { mutableStateOf(LikedItemsListResponse(
-//        likedItems = listOf()
-//    )) }
+    var likedItemsList by remember { mutableStateOf(LikedItemsListResponse(
+        likedItems = listOf()
+    )) }
 
     LaunchedEffect(Unit) {
         viewModel.getCatalog(sharedProvider.getToken())
@@ -107,14 +109,14 @@ fun MarketPage(
         }
     }
 
-//    viewModel.likedItemsResponse.observeForever { response ->
-//        if (response != null) {
-//            likedItemsList = response
-//            Log.d("Catalog", response.toString())
-//        } else {
-//            Log.d("Catalog", "Response is null")
-//        }
-//    }
+    viewModel.likedItemsResponse.observeForever { response ->
+        if (response != null) {
+            likedItemsList = response
+            Log.d("Catalog", response.toString())
+        } else {
+            Log.d("Catalog", "Response is null")
+        }
+    }
 
     viewModel.errorMessageResponse.observeForever { error ->
         if (error != null) {
@@ -205,21 +207,21 @@ fun MarketPage(
                     CatalogItem(
                         name = item.name,
                         status = item.condition,
-//                        isFavorite = likedItemsList.likedItems?.any { it?.itemId == item.iD } == true,
+                        isFavorite = likedItemsList.likedItems?.any { it?.itemId == item.iD } == true,
                         imageUrl = item.images?.firstOrNull()?.imagePath.orEmpty(),
                         onClick = { onItemClick(item.iD) },
-//                        onFavoriteClick = {
-//                            if (likedItemsList.likedItems?.any { it?.itemId == item.iD } == true) {
-//                                likedItemsList = likedItemsList.copy(
-//                                    likedItems = likedItemsList.likedItems?.filter { it?.itemId != item.iD }
-//                                )
-//                            } else {
-//                                likedItemsList = likedItemsList.copy(
-//                                    likedItems = likedItemsList.likedItems?.plus(LikedItem(item.iD))
-//                                )
-//                            }
-//                            viewModel.likeItem(sharedProvider.getToken(), item.iD)
-//                        }
+                        onFavoriteClick = {
+                            if (likedItemsList.likedItems?.any { it?.itemId == item.iD } == true) {
+                                likedItemsList = likedItemsList.copy(
+                                    likedItems = likedItemsList.likedItems?.filter { it?.itemId != item.iD }
+                                )
+                            } else {
+                                likedItemsList = likedItemsList.copy(
+                                    likedItems = likedItemsList.likedItems?.plus(LikedItem(item.iD))
+                                )
+                            }
+                            viewModel.likeItem(sharedProvider.getToken(), item.iD)
+                        }
                     )
 
                 }
@@ -255,20 +257,21 @@ fun MarketPage(
                     CatalogItem(
                         name = item.name,
                         status = item.condition,
-//                        isFavorite = likedItemsList.likedItems?.any { it?.itemId == item.iD } == true,
+                        isFavorite = likedItemsList.likedItems?.any { it?.itemId == item.iD } == true,
                         imageUrl = item.images?.firstOrNull()?.imagePath.orEmpty(),
-//                        onFavoriteClick = {
-//                            if (likedItemsList.likedItems?.any { it?.itemId == item.iD } == true) {
-//                                likedItemsList = likedItemsList.copy(
-//                                    likedItems = likedItemsList.likedItems?.filter { it?.itemId != item.iD }
-//                                )
-//                            } else {
-//                                likedItemsList = likedItemsList.copy(
-//                                    likedItems = likedItemsList.likedItems?.plus(LikedItem(item.iD))
-//                                )
-//                            }
-//                            viewModel.likeItem(sharedProvider.getToken(), item.iD)
-//                        }
+                        onClick = { onItemClick(item.iD) },
+                        onFavoriteClick = {
+                            if (likedItemsList.likedItems?.any { it?.itemId == item.iD } == true) {
+                                likedItemsList = likedItemsList.copy(
+                                    likedItems = likedItemsList.likedItems?.filter { it?.itemId != item.iD }
+                                )
+                            } else {
+                                likedItemsList = likedItemsList.copy(
+                                    likedItems = likedItemsList.likedItems?.plus(LikedItem(item.iD))
+                                )
+                            }
+                            viewModel.likeItem(sharedProvider.getToken(), item.iD)
+                        }
                     )
 
                 }
@@ -302,8 +305,20 @@ fun MarketPage(
                         CatalogItem(
                             name = item.name,
                             status = item.condition,
-                            onClick = { /* Handle item click */ },
-                            onFavoriteClick = { /* Handle favorite click */ }
+                            isFavorite = likedItemsList.likedItems?.any { it?.itemId == item.iD } == true,
+                            onClick = { onItemClick(item.iD) },
+                            onFavoriteClick = {
+                                if (likedItemsList.likedItems?.any { it?.itemId == item.iD } == true) {
+                                    likedItemsList = likedItemsList.copy(
+                                        likedItems = likedItemsList.likedItems?.filter { it?.itemId != item.iD }
+                                    )
+                                } else {
+                                    likedItemsList = likedItemsList.copy(
+                                        likedItems = likedItemsList.likedItems?.plus(LikedItem(item.iD))
+                                    )
+                                }
+                                viewModel.likeItem(sharedProvider.getToken(), item.iD)
+                            }
                         )
                     }
                 }

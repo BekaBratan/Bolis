@@ -5,6 +5,7 @@ import com.example.bolis.data.models.CategoriesListResponse
 import com.example.bolis.data.models.DeliveryAddressResponse
 import com.example.bolis.data.models.GiveProductRequest
 import com.example.bolis.data.models.GiveProductResponse
+import com.example.bolis.data.models.ItemDetailsResponse
 import com.example.bolis.data.models.LikeItemRequest
 import com.example.bolis.data.models.LikedItemsListResponse
 import com.example.bolis.data.models.LogInRequest
@@ -12,6 +13,7 @@ import com.example.bolis.data.models.LogInResponse
 import com.example.bolis.data.models.MessageResponse
 import com.example.bolis.data.models.ProfileResponse
 import com.example.bolis.data.models.ProfileUpdateResponse
+import com.example.bolis.data.models.SearchResponse
 import com.example.bolis.data.models.SignUpRequest
 import com.example.bolis.data.models.SignUpResponse
 import com.example.bolis.data.models.SuggestionsResponse
@@ -26,6 +28,8 @@ import retrofit2.http.Headers
 import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.Part
+import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface ApiService {
 
@@ -126,4 +130,21 @@ interface ApiService {
         @Header("Authorization") token: String,
         @Body itemId: LikeItemRequest
     ): MessageResponse
+
+    @Headers("Accept: application/json")
+    @GET("item/{itemId}")
+    suspend fun getItemDetails(
+        @Header("Authorization") token: String,
+        @Path("itemId") itemId: Int
+    ): ItemDetailsResponse
+
+    @Headers("Accept: application/json")
+    @GET("/search")
+    suspend fun searchItems(
+        @Header("Authorization") token: String,
+        @Query("query") query: String,
+        @Query("category_id") categoryId: Int? = null,
+        @Query("max_price") maxPrice: Double? = null,
+        @Query("api") api: Int = 1 // важный параметр!
+    ): SearchResponse
 }

@@ -23,7 +23,7 @@ data class Item(
     @SerializedName("image_path")
     val imagePath: String = "https://example.com/image.jpg",
     @SerializedName("Images")
-    val images: List<Image> = listOf(
+    val images: List<Image>? = listOf(
         Image(
             createdAt = "2023-10-01T12:00:00Z",
             deletedAt = null,

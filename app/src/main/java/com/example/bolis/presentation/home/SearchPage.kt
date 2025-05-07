@@ -50,6 +50,7 @@ import com.example.bolis.utils.SharedProvider
 fun SearchPage(
     viewModel: HomeViewModel = viewModel(),
     onBackClick: () -> Unit = {},
+    onItemClick: (id: Int) -> Unit = {},
 ) {
     val context = LocalContext.current
     val sharedProvider = SharedProvider(context)
@@ -115,7 +116,8 @@ fun SearchPage(
                     CatalogItem(
                         name = item.name,
                         status = item.condition,
-                        imageUrl = item.images.firstOrNull()?.imagePath.orEmpty(),
+                        imageUrl = item.images?.firstOrNull()?.imagePath.orEmpty(),
+                        onClick = { onItemClick(item.iD) },
                     )
                 }
                 item {

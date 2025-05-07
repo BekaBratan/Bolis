@@ -55,6 +55,7 @@ fun CatalogSortPage(
     onSearchClick: () -> Unit = {},
     onChatClick: () -> Unit = {},
     onBackClick: () -> Unit = {},
+    onItemClick: (id: Int) -> Unit = {},
 ) {
     val context = LocalContext.current
     val sharedProvider = SharedProvider(context)
@@ -117,7 +118,8 @@ fun CatalogSortPage(
                     CatalogItem(
                         name = item.name,
                         status = item.condition,
-                        imageUrl = item.images.firstOrNull()?.imagePath.orEmpty(),
+                        imageUrl = item.images?.firstOrNull()?.imagePath.orEmpty(),
+                        onClick = { onItemClick(item.iD) },
                     )
                 }
                 item {

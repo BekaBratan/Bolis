@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -59,7 +60,8 @@ fun MarketPage(
     onSearchClick: () -> Unit = {},
     onChatClick: () -> Unit = {},
     onFavoriteClick: () -> Unit = {},
-    onCatalogClick: (catalogName: String, catalogId: Int) -> Unit = {catalogName, catalogId ->}
+    onCatalogClick: (catalogName: String, catalogId: Int) -> Unit = {catalogName, catalogId ->},
+    onItemClick: (id: Int) -> Unit = {},
 ) {
     val context = LocalContext.current
     val sharedProvider = SharedProvider(context)
@@ -120,7 +122,11 @@ fun MarketPage(
         }
     }
 
-    LazyColumn {
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxSize(),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
 
         item {
             Box (modifier = Modifier.padding(20.dp)) {
@@ -130,9 +136,7 @@ fun MarketPage(
                     onChatClick = onChatClick
                 )
             }
-        }
 
-        item {
             Row (
                 modifier = Modifier
                     .fillMaxWidth()
@@ -173,9 +177,7 @@ fun MarketPage(
                     )
                 }
             }
-        }
 
-        item {
             Text(
                 text = "News",
                 fontSize = 18.sp,
@@ -205,6 +207,7 @@ fun MarketPage(
                         status = item.condition,
 //                        isFavorite = likedItemsList.likedItems?.any { it?.itemId == item.iD } == true,
                         imageUrl = item.images?.firstOrNull()?.imagePath.orEmpty(),
+                        onClick = { onItemClick(item.iD) },
 //                        onFavoriteClick = {
 //                            if (likedItemsList.likedItems?.any { it?.itemId == item.iD } == true) {
 //                                likedItemsList = likedItemsList.copy(
@@ -224,11 +227,9 @@ fun MarketPage(
                     Spacer(Modifier.size(4.dp))
                 }
             }
-        }
 
-        item {
             Text(
-                text = "Recommendations",
+                text = "Recomendations",
                 fontSize = 18.sp,
                 fontWeight = FontWeight(600),
                 overflow = TextOverflow.Ellipsis,
@@ -275,9 +276,7 @@ fun MarketPage(
                     Spacer(Modifier.size(4.dp))
                 }
             }
-        }
 
-        item {
             Text(
                 text = "Donated Items",
                 fontSize = 18.sp,
@@ -287,48 +286,26 @@ fun MarketPage(
                 fontFamily = fontFamily,
                 color = Black50,
                 modifier = Modifier
-                    .padding(top = 24.dp, start = 24.dp, end = 24.dp, bottom = 0.dp)
+                    .padding(top = 24.dp, start = 24.dp, end = 24.dp)
             )
+        }
 
-            LazyVerticalGrid(
-                columns = GridCells.Fixed(2),
-                verticalArrangement = Arrangement.spacedBy(16.dp),
-                horizontalArrangement = Arrangement.spacedBy(16.dp),
-                modifier = Modifier
-                    .padding(horizontal = 20.dp)
-                    .height(1800.dp)
+        items(suggestionsBody.suggestions.chunked(2)) { pair ->
+            Box(
+                modifier = Modifier.fillMaxWidth(),
+                contentAlignment = Alignment.Center
             ) {
-                item {
-                    Spacer(Modifier.size(4.dp))
-                }
-                item {
-                    Spacer(Modifier.size(4.dp))
-                }
-                items(catalogBody.items) { item ->
-                    CatalogItem(
-                        name = item.name,
-                        status = item.condition,
-//                        isFavorite = likedItemsList.likedItems?.any { it?.itemId == item.iD } == true,
-                        imageUrl = item.images?.firstOrNull()?.imagePath.orEmpty(),
-//                        onFavoriteClick = {
-//                            if (likedItemsList.likedItems?.any { it?.itemId == item.iD } == true) {
-//                                likedItemsList = likedItemsList.copy(
-//                                    likedItems = likedItemsList.likedItems?.filter { it?.itemId != item.iD }
-//                                )
-//                            } else {
-//                                likedItemsList = likedItemsList.copy(
-//                                    likedItems = likedItemsList.likedItems?.plus(LikedItem(item.iD))
-//                                )
-//                            }
-//                            viewModel.likeItem(sharedProvider.getToken(), item.iD)
-//                        }
-                    )
-                }
-                item {
-                    Spacer(Modifier.size(4.dp))
-                }
-                item {
-                    Spacer(Modifier.size(4.dp))
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    pair.forEach { item ->
+                        CatalogItem(
+                            name = item.name,
+                            status = item.condition,
+                            onClick = { /* Handle item click */ },
+                            onFavoriteClick = { /* Handle favorite click */ }
+                        )
+                    }
                 }
             }
         }

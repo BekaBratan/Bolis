@@ -54,10 +54,10 @@ fun CatalogItem(
 ) {
     Column(
         modifier = Modifier
-            .clickable(onClick = onClick)
             .width(170.dp)
             .shadow(elevation = 10.dp, shape = RoundedCornerShape(24.dp), clip = true)
             .clip(RoundedCornerShape(24.dp))
+            .clickable(onClick = onClick)
             .background(White50)
             .padding(12.dp),
         verticalArrangement = Arrangement.spacedBy(4.dp)
@@ -126,7 +126,7 @@ fun CatalogItem(
             contentAlignment = Alignment.Center
         ) {
             Text(
-                text = status,
+                text = if (status.isEmpty()) "Unknown" else status,
                 fontSize = 10.sp,
                 fontWeight = FontWeight(500),
                 textAlign = TextAlign.Center,

@@ -81,7 +81,9 @@ fun OnboardingScreen(onGetStartedClick: () -> Unit = {}) {
                 0 -> OnboardingPage1()
                 1 -> OnboardingPage2()
                 2 -> OnboardingPage3()
-                else -> onGetStartedClick()
+                else -> {
+                    onGetStartedClick()
+                }
             }
         }
 

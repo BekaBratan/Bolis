@@ -33,6 +33,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.example.bolis.GiveDestination.AddItemScreen
+import com.example.bolis.HomeDestination.FavoriteScreen
 import com.example.bolis.HomeDestination.SearchScreen
 import com.example.bolis.NavDestination.ChatsListScreen
 import com.example.bolis.NavDestination.GiveScreen
@@ -53,6 +54,8 @@ import com.example.bolis.presentation.chat.ChatPage
 import com.example.bolis.presentation.chat.ChatsListPage
 import com.example.bolis.presentation.donate.AddItemPage
 import com.example.bolis.presentation.donate.MyGivesPage
+import com.example.bolis.presentation.home.CatalogSortPage
+import com.example.bolis.presentation.home.FavoritePage
 import com.example.bolis.presentation.home.MarketPage
 import com.example.bolis.presentation.home.SearchPage
 import com.example.bolis.presentation.profile.ChangeLanguagePage
@@ -157,9 +160,71 @@ class HomeActivity : ComponentActivity() {
                                         popUpTo(navController.graph.startDestinationId)
                                         launchSingleTop = true
                                     }
+                                },
+                                onChatClick = {
+                                    navController.navigate(ChatsListScreen) {
+                                        popUpTo(navController.graph.startDestinationId)
+                                        launchSingleTop = true
+                                    }
+                                },
+                                onCatalogClick = { catalogName, catalogId ->
+                                    navController.navigate(CatalogSortScreen(catalogName, catalogId)) {
+                                        popUpTo(navController.graph.startDestinationId)
+                                        launchSingleTop = true
+                                    }
+                                },
+                                onFavoriteClick = {
+                                    navController.navigate(FavoriteScreen) {
+                                        popUpTo(navController.graph.startDestinationId)
+                                        launchSingleTop = true
+                                    }
                                 }
                             )
                         }
+                        composable<SearchScreen>{ backStackEntry ->
+                            SearchPage(
+                                onBackClick = { navController.popBackStack() },
+                            )
+                        }
+                        composable<CatalogSortScreen> { backStackEntry ->
+                            val args = backStackEntry.toRoute<CatalogSortScreen>()
+                            CatalogSortPage(
+                                catalogName = args.catalogName,
+                                catalogId = args.catalogId,
+                                onSearchClick = {
+                                    navController.navigate(SearchScreen) {
+                                        popUpTo(navController.graph.startDestinationId)
+                                        launchSingleTop = true
+                                    }
+                                },
+                                onChatClick = {
+                                    navController.navigate(ChatsListScreen) {
+                                        popUpTo(navController.graph.startDestinationId)
+                                        launchSingleTop = true
+                                    }
+                                },
+                                onBackClick = { navController.popBackStack() }
+                            )
+                        }
+                        composable<FavoriteScreen> { backStackEntry ->
+                            FavoritePage(
+                                onSearchClick = {
+                                    navController.navigate(SearchScreen) {
+                                        popUpTo(navController.graph.startDestinationId)
+                                        launchSingleTop = true
+                                    }
+                                },
+                                onChatClick = {
+                                    navController.navigate(ChatsListScreen) {
+                                        popUpTo(navController.graph.startDestinationId)
+                                        launchSingleTop = true
+                                    }
+                                },
+                                onBackClick = { navController.popBackStack() }
+                            )
+                        }
+
+
                         composable<QRScreen>{ backStackEntry ->
                             QRPage()
                         }
@@ -167,9 +232,6 @@ class HomeActivity : ComponentActivity() {
                             MyGivesPage(
                                 addButtonClick = { navController.navigate(AddItemScreen) },
                             )
-                        }
-                        composable<SearchScreen>{ backStackEntry ->
-                            SearchPage()
                         }
                         composable<ChatsListScreen>{ backStackEntry ->
                             ChatsListPage(
@@ -354,7 +416,15 @@ sealed class GiveDestination() {
 sealed class HomeDestination() {
     @Serializable
     object SearchScreen : HomeDestination()
+    @Serializable
+    object FavoriteScreen : HomeDestination()
 }
+
+@Serializable
+data class CatalogSortScreen(
+    val catalogName: String,
+    val catalogId: Int
+)
 
 @Serializable
 data class ChatScreen(

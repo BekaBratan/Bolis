@@ -4,10 +4,10 @@ import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -42,19 +42,12 @@ import com.example.bolis.R
 import com.example.bolis.data.api.navBarStateChange
 import com.example.bolis.data.models.CatalogResponse
 import com.example.bolis.data.models.Item
-import com.example.bolis.data.models.LikedItem
-import com.example.bolis.data.models.LikedItemsListResponse
-import com.example.bolis.data.models.Suggestion
 import com.example.bolis.data.models.SuggestionsResponse
 import com.example.bolis.ui.Elements.CatalogItem
 import com.example.bolis.ui.Elements.SearchBar
-import com.example.bolis.ui.Elements.WebView
 import com.example.bolis.ui.theme.Black50
-import com.example.bolis.ui.theme.Green10
 import com.example.bolis.ui.theme.Green20
 import com.example.bolis.ui.theme.Green50
-import com.example.bolis.ui.theme.Grey30
-import com.example.bolis.ui.theme.White40
 import com.example.bolis.ui.theme.White50
 import com.example.bolis.ui.theme.fontFamily
 import com.example.bolis.utils.SharedProvider
@@ -64,6 +57,9 @@ import com.example.bolis.utils.SharedProvider
 fun MarketPage(
     viewModel: HomeViewModel = viewModel(),
     onSearchClick: () -> Unit = {},
+    onChatClick: () -> Unit = {},
+    onFavoriteClick: () -> Unit = {},
+    onCatalogClick: (catalogName: String, catalogId: Int) -> Unit = {catalogName, catalogId ->}
 ) {
     val context = LocalContext.current
     val sharedProvider = SharedProvider(context)
@@ -127,14 +123,20 @@ fun MarketPage(
     LazyColumn {
 
         item {
-            SearchBar(onClick = onSearchClick)
+            Box (modifier = Modifier.padding(20.dp)) {
+                SearchBar(
+                    onSearchClick = onSearchClick,
+                    onFavoriteClick = onFavoriteClick,
+                    onChatClick = onChatClick
+                )
+            }
         }
 
         item {
             Row (
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(20.dp)
+                    .padding(horizontal = 20.dp)
                     .clip(RoundedCornerShape(10.dp))
                     .background(Green50)
                     .padding(20.dp),
@@ -169,6 +171,57 @@ fun MarketPage(
                         fontFamily = fontFamily,
                         color = Green20
                     )
+                }
+            }
+        }
+
+        item {
+            Text(
+                text = "News",
+                fontSize = 18.sp,
+                fontWeight = FontWeight(600),
+                overflow = TextOverflow.Ellipsis,
+                maxLines = 1,
+                fontFamily = fontFamily,
+                color = Black50,
+                modifier = Modifier
+                    .padding(top = 24.dp, start = 24.dp, end = 24.dp, bottom = 0.dp)
+            )
+
+            LazyRow(
+                horizontalArrangement = Arrangement.spacedBy(16.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .padding(vertical = 20.dp)
+                    .fillMaxWidth()
+            ) {
+                item {
+                    Spacer(Modifier.size(4.dp))
+                }
+                items(suggestionsBody.suggestions) { item ->
+
+                    CatalogItem(
+                        name = item.name,
+                        status = item.condition,
+//                        isFavorite = likedItemsList.likedItems?.any { it?.itemId == item.iD } == true,
+                        imageUrl = item.images?.firstOrNull()?.imagePath.orEmpty(),
+//                        onFavoriteClick = {
+//                            if (likedItemsList.likedItems?.any { it?.itemId == item.iD } == true) {
+//                                likedItemsList = likedItemsList.copy(
+//                                    likedItems = likedItemsList.likedItems?.filter { it?.itemId != item.iD }
+//                                )
+//                            } else {
+//                                likedItemsList = likedItemsList.copy(
+//                                    likedItems = likedItemsList.likedItems?.plus(LikedItem(item.iD))
+//                                )
+//                            }
+//                            viewModel.likeItem(sharedProvider.getToken(), item.iD)
+//                        }
+                    )
+
+                }
+                item {
+                    Spacer(Modifier.size(4.dp))
                 }
             }
         }

@@ -36,6 +36,7 @@ import com.example.bolis.data.api.navBarStateChange
 import com.example.bolis.data.models.CatalogResponse
 import com.example.bolis.data.models.Item
 import com.example.bolis.ui.Elements.CatalogItem
+import com.example.bolis.ui.Elements.CatalogName
 import com.example.bolis.ui.Elements.SearchBar
 import com.example.bolis.ui.theme.Black50
 import com.example.bolis.ui.theme.Green50
@@ -47,8 +48,10 @@ import com.example.bolis.utils.SharedProvider
 
 @Preview
 @Composable
-fun SearchPage(
+fun FavoritePage(
     viewModel: HomeViewModel = viewModel(),
+    onSearchClick: () -> Unit = {},
+    onChatClick: () -> Unit = {},
     onBackClick: () -> Unit = {},
 ) {
     val context = LocalContext.current
@@ -62,26 +65,29 @@ fun SearchPage(
     )) }
 
     var searchText by remember { mutableStateOf("") }
-    var isSearched by remember { mutableStateOf(false) }
 
     Column (
         modifier = Modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Box (modifier = Modifier.padding(20.dp)) {
             SearchBar(
-                searchText = searchText,
-                setSearchText = { searchText = it },
-                isFavorite = false,
-                isChat = false,
-                isSearch = true,
+                onSearchClick = onSearchClick,
                 onBackClick = onBackClick,
-                onSearch = {
-                    isSearched = true
-//                    viewModel.searchItem(searchText) { response ->
-//                        searchBody = response
-//                    }
-                },
+                onChatClick = onChatClick,
+                isFavorite = false
+            )
+        }
+
+        Box(modifier = Modifier.padding(bottom = 20.dp)) {
+            Text(
+                text = "Favourites",
+                fontSize = 22.sp,
+                fontWeight = FontWeight(600),
+                fontFamily = fontFamily,
+                color = Black50,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = (20.dp))
             )
         }
 
@@ -125,22 +131,6 @@ fun SearchPage(
                     Spacer(Modifier.size(4.dp))
                 }
             }
-        } else if (isSearched) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = "There is no results",
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight(500),
-                    fontFamily = fontFamily,
-                    color = Red40,
-                    modifier = Modifier
-                        .padding(horizontal = (20.dp))
-                )
-            }
         } else {
             Column (
                 modifier = Modifier
@@ -149,13 +139,13 @@ fun SearchPage(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Image(
-                    painter = painterResource(id = R.drawable.ic_box_search),
+                    painter = painterResource(id = R.drawable.ic_box_give),
                     contentDescription = "Search",
                     modifier = Modifier
                         .padding(bottom = 10.dp)
                 )
                 Text(
-                    text = "What are we going to look for?",
+                    text = "No items in your favourites",
                     fontSize = 18.sp,
                     fontWeight = FontWeight(500),
                     fontFamily = fontFamily,

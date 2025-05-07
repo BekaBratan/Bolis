@@ -36,6 +36,7 @@ import com.example.bolis.data.api.navBarStateChange
 import com.example.bolis.data.models.CatalogResponse
 import com.example.bolis.data.models.Item
 import com.example.bolis.ui.Elements.CatalogItem
+import com.example.bolis.ui.Elements.CatalogName
 import com.example.bolis.ui.Elements.SearchBar
 import com.example.bolis.ui.theme.Black50
 import com.example.bolis.ui.theme.Green50
@@ -47,8 +48,12 @@ import com.example.bolis.utils.SharedProvider
 
 @Preview
 @Composable
-fun SearchPage(
+fun CatalogSortPage(
     viewModel: HomeViewModel = viewModel(),
+    catalogName: String = "Sample Catalog",
+    catalogId: Int = 0,
+    onSearchClick: () -> Unit = {},
+    onChatClick: () -> Unit = {},
     onBackClick: () -> Unit = {},
 ) {
     val context = LocalContext.current
@@ -56,32 +61,29 @@ fun SearchPage(
     navBarStateChange(false)
 
     var searchBody by remember { mutableStateOf(CatalogResponse(
-        items = List(0) { Item() },
+        items = List(3) { Item() },
         searchQuery = "",
         suggestions = ""
     )) }
 
-    var searchText by remember { mutableStateOf("") }
-    var isSearched by remember { mutableStateOf(false) }
+    var searchText by remember { mutableStateOf(catalogName) }
 
     Column (
         modifier = Modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Box (modifier = Modifier.padding(20.dp)) {
             SearchBar(
-                searchText = searchText,
-                setSearchText = { searchText = it },
-                isFavorite = false,
-                isChat = false,
-                isSearch = true,
+                onSearchClick = onSearchClick,
                 onBackClick = onBackClick,
-                onSearch = {
-                    isSearched = true
-//                    viewModel.searchItem(searchText) { response ->
-//                        searchBody = response
-//                    }
-                },
+                onChatClick = onChatClick,
+                isFavorite = false
+            )
+        }
+
+        Box(modifier = Modifier.padding(bottom = 20.dp, start = 20.dp, end = 20.dp)) {
+            CatalogName(
+                catalogName = catalogName,
+                onCancelClick = onBackClick
             )
         }
 
@@ -125,7 +127,7 @@ fun SearchPage(
                     Spacer(Modifier.size(4.dp))
                 }
             }
-        } else if (isSearched) {
+        } else if (searchText.isNotEmpty()) {
             Box(
                 modifier = Modifier
                     .fillMaxSize(),

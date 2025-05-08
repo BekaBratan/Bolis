@@ -1,5 +1,6 @@
 package com.example.bolis.presentation.home
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -17,6 +18,7 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.Text
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -35,6 +37,9 @@ import com.example.bolis.R
 import com.example.bolis.data.api.navBarStateChange
 import com.example.bolis.data.models.CatalogResponse
 import com.example.bolis.data.models.Item
+import com.example.bolis.data.models.LikedItem
+import com.example.bolis.data.models.LikedItemsListResponse
+import com.example.bolis.data.models.SuggestionsResponse
 import com.example.bolis.ui.Elements.CatalogItem
 import com.example.bolis.ui.Elements.CatalogName
 import com.example.bolis.ui.Elements.SearchBar
@@ -59,13 +64,79 @@ fun FavoritePage(
     val sharedProvider = SharedProvider(context)
     navBarStateChange(false)
 
-    var searchBody by remember { mutableStateOf(CatalogResponse(
+    var catalogBody by remember { mutableStateOf(CatalogResponse(
         items = List(0) { Item() },
         searchQuery = "",
         suggestions = ""
     )) }
 
-    var searchText by remember { mutableStateOf("") }
+    var suggestionsBody by remember { mutableStateOf(SuggestionsResponse(
+        suggestions = List(10) { Item() }
+    )) }
+
+    var favoriteBody by remember { mutableStateOf(SuggestionsResponse(
+        suggestions = List(10) { Item() }
+    )) }
+
+    var likedItemsList by remember { mutableStateOf(LikedItemsListResponse(
+        likedItems = listOf()
+    )) }
+
+    LaunchedEffect(Unit) {
+        viewModel.getCatalog(sharedProvider.getToken())
+        viewModel.getSuggestions(sharedProvider.getToken())
+        viewModel.getLikedItems(sharedProvider.getToken())
+        Log.d("Catalog", viewModel.catalogResponse.value.toString())
+        Log.d("Suggestions", viewModel.suggestionsResponse.value.toString())
+    }
+
+    viewModel.catalogResponse.observeForever { response ->
+        if (response != null) {
+            catalogBody = response
+            favoriteBody = suggestionsBody.copy(
+                suggestions = suggestionsBody.suggestions.filter { item ->
+                    likedItemsList.likedItems?.any { it?.itemId == item.iD } == true
+                }
+            )
+            Log.d("Catalog", response.toString())
+        } else {
+            Log.d("Catalog", "Response is null")
+        }
+    }
+
+    viewModel.suggestionsResponse.observeForever { response ->
+        if (response != null) {
+            suggestionsBody = response
+            favoriteBody = suggestionsBody.copy(
+                suggestions = suggestionsBody.suggestions.filter { item ->
+                    likedItemsList.likedItems?.any { it?.itemId == item.iD } == true
+                }
+            )
+            Log.d("Catalog", response.toString())
+        } else {
+            Log.d("Catalog", "Response is null")
+        }
+    }
+
+    viewModel.likedItemsResponse.observeForever { response ->
+        if (response != null) {
+            likedItemsList = response
+            favoriteBody = suggestionsBody.copy(
+                suggestions = suggestionsBody.suggestions.filter { item ->
+                    likedItemsList.likedItems?.any { it?.itemId == item.iD } == true
+                }
+            )
+            Log.d("Catalog", response.toString())
+        } else {
+            Log.d("Catalog", "Response is null")
+        }
+    }
+
+    viewModel.errorMessageResponse.observeForever { error ->
+        if (error != null) {
+            Log.d("Catalog", "Error: ${error.error}")
+        }
+    }
 
     Column (
         modifier = Modifier.fillMaxSize(),
@@ -92,9 +163,9 @@ fun FavoritePage(
             )
         }
 
-        if (searchBody.items.isNotEmpty()) {
+        if (favoriteBody.suggestions.isNotEmpty()) {
             Text(
-                text = "We found ${searchBody.items.size} results",
+                text = "We found ${favoriteBody.suggestions.size} results",
                 fontSize = 18.sp,
                 fontWeight = FontWeight(500),
                 fontFamily = fontFamily,
@@ -118,12 +189,25 @@ fun FavoritePage(
                 item {
                     Spacer(Modifier.size(4.dp))
                 }
-                items(searchBody.items) { item ->
+                items(favoriteBody.suggestions) { item ->
                     CatalogItem(
                         name = item.name,
+                        isFavorite = likedItemsList.likedItems?.any { it?.itemId == item.iD } == true,
                         status = item.condition,
                         imageUrl = item.images?.firstOrNull()?.imagePath.orEmpty(),
                         onClick = { onItemClick(item.iD) },
+                        onFavoriteClick = {
+                            if (likedItemsList.likedItems?.any { it?.itemId == item.iD } == true) {
+                                likedItemsList = likedItemsList.copy(
+                                    likedItems = likedItemsList.likedItems?.filter { it?.itemId != item.iD }
+                                )
+                            } else {
+                                likedItemsList = likedItemsList.copy(
+                                    likedItems = likedItemsList.likedItems?.plus(LikedItem(item.iD))
+                                )
+                            }
+                            viewModel.likeItem(sharedProvider.getToken(), item.iD)
+                        }
                     )
                 }
                 item {

@@ -293,7 +293,7 @@ fun MarketPage(
             )
         }
 
-        items(suggestionsBody.suggestions.chunked(2)) { pair ->
+        items(catalogBody.items.chunked(2)) { pair ->
             Box(
                 modifier = Modifier.fillMaxWidth(),
                 contentAlignment = Alignment.Center
@@ -323,6 +323,10 @@ fun MarketPage(
                     }
                 }
             }
+        }
+
+        item {
+            Spacer(Modifier.size(4.dp))
         }
     }
 }

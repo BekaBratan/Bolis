@@ -68,6 +68,7 @@ fun AddItemPage(
     var uploadError by remember { mutableStateOf(false) }
     var selectedOption by remember { mutableStateOf(75) }
     var options by remember { mutableStateOf<List<Category>>(emptyList()) }
+    var options_1 = listOf<String>("New", "Used", "Refurbished")
 
     val (productName, setProductName) = remember { mutableStateOf("") }
     val (description, setDescription) = remember { mutableStateOf("") }
@@ -85,10 +86,13 @@ fun AddItemPage(
         viewModel.getCategories(sharedProvider.getToken())
     }
 
-    viewModel.categoriesResponse.observeForever {
-        it?.let { categories ->
+    val categoriesResponse by viewModel.categoriesResponse.collectAsState()
+
+    LaunchedEffect(categoriesResponse) {
+        categoriesResponse?.let { categories ->
             options = categories.categories
             selectedOption = categories.categories[0].iD
+            Log.d("Categories", categories.categories.toString())
         }
     }
 
@@ -148,8 +152,11 @@ fun AddItemPage(
             AddItemDropdown(
                 name = "Category",
                 placeholder = "Choose",
-                options = options.map { it.name },
-                optionSelected = { selectedOption = it }
+                options = options.map { it.name }.also {
+                    Log.d("DEBUG", "Dropdown options: $it")
+                },
+                optionSelected = { selectedOption = it
+                Log.d("DEBUG", "Selected option: $selectedOption")}
             )
         }
 

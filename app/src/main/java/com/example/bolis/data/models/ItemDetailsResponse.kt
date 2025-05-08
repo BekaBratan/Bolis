@@ -7,7 +7,7 @@ data class ItemDetailsResponse(
     @SerializedName("averageRating")
     val averageRating: Int?,
     @SerializedName("images")
-    val images: List<ImageX>?,
+    val images: List<Image>?,
     @SerializedName("item")
     val item: ItemX?,
     @SerializedName("reviewCount")

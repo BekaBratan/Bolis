@@ -11,6 +11,7 @@ import com.example.bolis.data.models.LikedItemsListResponse
 import com.example.bolis.data.models.LogInRequest
 import com.example.bolis.data.models.LogInResponse
 import com.example.bolis.data.models.MessageResponse
+import com.example.bolis.data.models.MyGivesResponse
 import com.example.bolis.data.models.ProfileResponse
 import com.example.bolis.data.models.ProfileUpdateResponse
 import com.example.bolis.data.models.SearchResponse
@@ -139,7 +140,7 @@ interface ApiService {
     ): ItemDetailsResponse
 
     @Headers("Accept: application/json")
-    @GET("/search")
+    @GET("search")
     suspend fun searchItems(
         @Header("Authorization") token: String,
         @Query("query") query: String,
@@ -147,4 +148,10 @@ interface ApiService {
         @Query("max_price") maxPrice: Double? = null,
         @Query("api") api: Int = 1 // важный параметр!
     ): SearchResponse
+
+    @Headers("Accept: application/json")
+    @GET("my-gives")
+    suspend fun getMyGives(
+        @Header("Authorization") token: String
+    ): MyGivesResponse
 }

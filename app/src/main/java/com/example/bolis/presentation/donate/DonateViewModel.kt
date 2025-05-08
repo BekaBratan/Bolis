@@ -9,6 +9,7 @@ import com.example.bolis.data.models.CategoriesListResponse
 import com.example.bolis.data.models.ErrorResponse
 import com.example.bolis.data.models.GiveProductRequest
 import com.example.bolis.data.models.GiveProductResponse
+import com.example.bolis.data.models.MyGivesResponse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -24,8 +25,11 @@ class DonateViewModel : ViewModel() {
     private val _giveProductResponse = MutableStateFlow<GiveProductResponse?>(null)
     val giveProductResponse: StateFlow<GiveProductResponse?> = _giveProductResponse
 
-    private val _categoriesResponse = MutableLiveData<CategoriesListResponse?>(null)
-    val categoriesResponse: LiveData<CategoriesListResponse?> = _categoriesResponse
+    private val _categoriesResponse = MutableStateFlow<CategoriesListResponse?>(null)
+    val categoriesResponse: StateFlow<CategoriesListResponse?> = _categoriesResponse
+
+    private val _myGivesResponse = MutableStateFlow<MyGivesResponse?>(null)
+    val myGivesResponse: StateFlow<MyGivesResponse?> = _myGivesResponse
 
     private val _errorResponse = MutableStateFlow<String?>(null)
     val errorResponse: StateFlow<String?> = _errorResponse
@@ -75,7 +79,29 @@ class DonateViewModel : ViewModel() {
                 ServiceBuilder.api.getCategories(token = token)
             }.fold(
                 onSuccess = { response ->
-                    _categoriesResponse.postValue(response)
+                    _categoriesResponse.value = response
+                    _errorResponse.value = null
+                },
+                onFailure = { throwable ->
+                    val errorMessage = (throwable as? HttpException)
+                        ?.response()
+                        ?.errorBody()
+                        ?.string()
+                        ?.takeIf { it.isNotBlank() }
+                        ?: throwable.localizedMessage
+                    _errorResponse.value = errorMessage
+                }
+            )
+        }
+    }
+
+    fun getMyGives(token: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            runCatching {
+                ServiceBuilder.api.getMyGives(token = token)
+            }.fold(
+                onSuccess = { response ->
+                    _myGivesResponse.value = response
                     _errorResponse.value = null
                 },
                 onFailure = { throwable ->

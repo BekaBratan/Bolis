@@ -1,5 +1,6 @@
 package com.example.bolis.ui.Elements
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -49,7 +50,7 @@ fun AddItemDropdown(
 ) {
     var text by remember { mutableStateOf("") }
     var expanded by remember { mutableStateOf(false) }
-    var tempOptions by remember { mutableStateOf(options) }
+    var tempOptions = options
 
     Column(
         modifier = Modifier.fillMaxWidth(),
@@ -68,9 +69,6 @@ fun AddItemDropdown(
             value = text,
             onValueChange = {
                 text = it
-                tempOptions = options.filter { option ->
-                    option.contains(text, ignoreCase = true)
-                }
                 optionSelected(tempOptions.indexOf(it))
             },
             singleLine = true,

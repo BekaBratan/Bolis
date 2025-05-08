@@ -68,7 +68,7 @@ fun ProfilePage(
         )
         Spacer(Modifier.size(22.dp))
         ProfileButton(name = sharedProvider.getFirstName(), onClick = profileButtonClicked)
-        SettingsButton(name = "My budget", onClick = myBudgetButtonClicked, icon = R.drawable.ic_star)
+        SettingsButton(name = "My badges", onClick = myBudgetButtonClicked, icon = R.drawable.ic_star)
         SettingsButton(name = "Postamat", onClick = postamatButtonClicked, icon = R.drawable.ic_box)
         Spacer(Modifier.size(24.dp))
         Text(

@@ -1,5 +1,6 @@
 package com.example.bolis.presentation.donate
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.scrollable
@@ -13,18 +14,23 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.bolis.data.api.navBarStateChange
+import com.example.bolis.data.models.ItemXX
 import com.example.bolis.data.models.Product
 import com.example.bolis.ui.Elements.CustomBackButton
 import com.example.bolis.ui.Elements.CustomButton
@@ -35,39 +41,53 @@ import com.example.bolis.ui.theme.Black50
 import com.example.bolis.ui.theme.Grey30
 import com.example.bolis.ui.theme.Red40
 import com.example.bolis.ui.theme.fontFamily
+import com.example.bolis.utils.SharedProvider
 
 @Preview
 @Composable
 fun MyGivesPage(
-    addButtonClick:() -> Unit = {}
+    viewModel: DonateViewModel = viewModel(),
+    addButtonClick:() -> Unit = {},
+    onItemClick: (int: Int) -> Unit = {},
 ) {
     navBarStateChange(true)
+    val context = LocalContext.current
+    val sharedProvider = remember { SharedProvider(context) }
 
     var statusIndex by remember { mutableIntStateOf(0) }
     var itemIndex by remember { mutableIntStateOf(0) }
     var isDelete by remember { mutableStateOf(false) }
     var isReason by remember { mutableStateOf(false) }
 
-    var listProduct by remember {
+    var listProduct: List<ItemXX>? by remember {
         mutableStateOf(
-            listOf(
-                Product(name = "Iphone ProMaxMaxMaxPlus"),
-                Product(name = "Sofa with armchair", status = 1),
-                Product(name = "Sofa with armchair"),
-                Product(name = "Sofa with armchair", status = 2),
-                Product(name = "Sofa with armchair"),
-                Product(name = "Dongelek")
+            List<ItemXX>(
+                0,
+                init = {
+                    ItemXX()
+                }
             )
         )
     }
 
-    var listFilteredProduct by remember { mutableStateOf<List<Product>>(emptyList()) }
-    listFilteredProduct = listProduct.filter {
+    var listFilteredProduct = listProduct?.filter {
         when (statusIndex) {
-            0 -> it.status == 0
-            1 -> it.status == 1
-            2 -> it.status == 2
+            0 -> it.status == "Completed"
+            1 -> it.status == "Pending"
+            2 -> it.status == "Canceled"
             else -> true
+        }
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.getMyGives(sharedProvider.getToken())
+    }
+
+    val myGivesResponse by viewModel.myGivesResponse.collectAsState()
+
+    LaunchedEffect(myGivesResponse) {
+        myGivesResponse?.let { gives ->
+            listProduct = gives.items
         }
     }
 
@@ -102,11 +122,12 @@ fun MyGivesPage(
             Spacer(Modifier.size(38.dp))
         }
 
-        items(listFilteredProduct.size) { index ->
+        items(listFilteredProduct?.size ?: 0) { index ->
             MyGivesItem(
-                listFilteredProduct[index],
+                listFilteredProduct?.get(index) ?: ItemXX(),
                 onDeleteButtonClick = { isDelete = true; itemIndex = index },
-                onReasonButtonClick = { isReason = true }
+                onReasonButtonClick = { isReason = true },
+                onItemClick = { onItemClick(it) }
             )
             Spacer(
                 modifier = Modifier
@@ -131,9 +152,10 @@ fun MyGivesPage(
         CustomDialog(
             onDismissRequest = { isDelete = false },
             onConfirmRequest = { isDelete = false;
-                listProduct = listProduct.toMutableList().apply {
-                remove(listFilteredProduct[itemIndex])
-            } },
+                listProduct = listProduct?.toMutableList().apply {
+                    this!!.remove(listFilteredProduct?.get(itemIndex) ?: ItemXX())
+                }
+            },
             title = "Delete",
             description = "Are you sure you want to delete product?",
             dismissText = "No",

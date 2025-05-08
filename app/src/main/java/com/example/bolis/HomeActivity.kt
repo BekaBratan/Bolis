@@ -35,6 +35,7 @@ import androidx.navigation.toRoute
 import com.example.bolis.GiveDestination.AddItemScreen
 import com.example.bolis.HomeDestination.FavoriteScreen
 import com.example.bolis.HomeDestination.SearchScreen
+import com.example.bolis.NavDestination.BadgesScreen
 import com.example.bolis.NavDestination.ChatsListScreen
 import com.example.bolis.NavDestination.GiveScreen
 import com.example.bolis.NavDestination.MarketScreen
@@ -49,6 +50,7 @@ import com.example.bolis.ProfileDestination.SupportScreen
 import com.example.bolis.data.api.languageState
 import com.example.bolis.data.api.navBarState
 import com.example.bolis.data.api.systemLanguageChange
+import com.example.bolis.presentation.badges.MyBadgesPage
 import com.example.bolis.presentation.chat.ChatBotScreen
 import com.example.bolis.presentation.chat.ChatPage
 import com.example.bolis.presentation.chat.ChatsListPage
@@ -86,14 +88,14 @@ class HomeActivity : ComponentActivity() {
             val isNavBarVisible = navBarState
             val navController = rememberNavController()
             MarketScreen.title = stringResource(R.string.catalog)
-            ChatsListScreen.title = stringResource(R.string.chat)
+            BadgesScreen.title = stringResource(R.string.badges)
             ProfileScreen.title = stringResource(R.string.profile)
 
             val items = listOf(
                 MarketScreen,
                 QRScreen,
                 GiveScreen,
-                ChatsListScreen,
+                BadgesScreen,
                 ProfileScreen
             )
 
@@ -278,9 +280,15 @@ class HomeActivity : ComponentActivity() {
                         composable<QRScreen>{ backStackEntry ->
                             QRPage()
                         }
+                        composable<BadgesScreen>{ backStackEntry ->
+                            MyBadgesPage()
+                        }
                         composable<GiveScreen>{ backStackEntry ->
                             MyGivesPage(
                                 addButtonClick = { navController.navigate(AddItemScreen) },
+                                onItemClick = { itemId ->
+                                    navController.navigate(ItemDetailsScreen(itemId))
+                                },
                             )
                         }
                         composable<ChatsListScreen>{ backStackEntry ->
@@ -429,6 +437,8 @@ sealed class NavDestination(var title: String, val icon: Int) {
     object GiveScreen : NavDestination(title = "Bolis", icon = R.drawable.ic_give)
     @Serializable
     object ChatsListScreen : NavDestination(title = "Chat", icon = R.drawable.ic_chat)
+    @Serializable
+    object BadgesScreen : NavDestination(title = "Badges", icon = R.drawable.ic_achievement)
     @Serializable
     object ProfileScreen : NavDestination(title = "Profile", icon = R.drawable.ic_profile)
 }

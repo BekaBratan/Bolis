@@ -39,6 +39,7 @@ import com.example.bolis.data.models.CatalogResponse
 import com.example.bolis.data.models.Item
 import com.example.bolis.data.models.LikedItem
 import com.example.bolis.data.models.LikedItemsListResponse
+import com.example.bolis.data.models.SearchResponse
 import com.example.bolis.ui.Elements.CatalogItem
 import com.example.bolis.ui.Elements.SearchBar
 import com.example.bolis.ui.theme.Black50
@@ -60,10 +61,9 @@ fun SearchPage(
     val sharedProvider = SharedProvider(context)
     navBarStateChange(false)
 
-    var searchBody by remember { mutableStateOf(CatalogResponse(
-        items = List(0) { Item() },
-        searchQuery = "",
-        suggestions = ""
+    var searchBody by remember { mutableStateOf(SearchResponse(
+        query = "query",
+        items = List(0) { Item() }
     )) }
 
     var likedItemsList by remember { mutableStateOf(LikedItemsListResponse(
@@ -89,6 +89,15 @@ fun SearchPage(
         }
     }
 
+    viewModel.searchResponse.observeForever { response->
+        if (response != null) {
+            searchBody = response
+            Log.d("Catalog", response.toString())
+        } else {
+            Log.d("Catalog", "Response is null")
+        }
+    }
+
     Column (
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -103,16 +112,14 @@ fun SearchPage(
                 onBackClick = onBackClick,
                 onSearch = {
                     isSearched = true
-//                    viewModel.searchItem(searchText) { response ->
-//                        searchBody = response
-//                    }
+                    viewModel.searchItem(sharedProvider.getToken(), searchText)
                 },
             )
         }
 
-        if (searchBody.items.isNotEmpty()) {
+        if (searchBody.items?.isNotEmpty() == true) {
             Text(
-                text = "We found ${searchBody.items.size} results",
+                text = "We found ${searchBody.items!!.size} results",
                 fontSize = 18.sp,
                 fontWeight = FontWeight(500),
                 fontFamily = fontFamily,
@@ -136,23 +143,24 @@ fun SearchPage(
                 item {
                     Spacer(Modifier.size(4.dp))
                 }
-                items(searchBody.items) { item ->
+
+                items(searchBody.items as List<Item?>) { item ->
                     CatalogItem(
-                        name = item.name,
-                        status = item.condition,
-                        isFavorite = likedItemsList.likedItems?.any { it?.itemId == item.iD } == true,
-                        onClick = { onItemClick(item.iD) },
+                        name = item?.name ?: "",
+                        status = item?.condition ?: "",
+                        isFavorite = likedItemsList.likedItems?.any { it?.itemId == item?.iD } == true,
+                        onClick = { onItemClick(item?.iD ?: 0) },
                         onFavoriteClick = {
-                            if (likedItemsList.likedItems?.any { it?.itemId == item.iD } == true) {
+                            if (likedItemsList.likedItems?.any { it?.itemId == item?.iD } == true) {
                                 likedItemsList = likedItemsList.copy(
-                                    likedItems = likedItemsList.likedItems?.filter { it?.itemId != item.iD }
+                                    likedItems = likedItemsList.likedItems?.filter { it?.itemId != item?.iD }
                                 )
                             } else {
                                 likedItemsList = likedItemsList.copy(
-                                    likedItems = likedItemsList.likedItems?.plus(LikedItem(item.iD))
+                                    likedItems = likedItemsList.likedItems?.plus(LikedItem(item?.iD))
                                 )
                             }
-                            viewModel.likeItem(sharedProvider.getToken(), item.iD)
+                            viewModel.likeItem(sharedProvider.getToken(), item?.iD ?: 0)
                         }
                     )
                 }

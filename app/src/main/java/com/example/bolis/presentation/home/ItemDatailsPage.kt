@@ -55,6 +55,7 @@ import com.example.bolis.R
 import com.example.bolis.data.models.Item
 import com.example.bolis.data.models.ItemX
 import com.example.bolis.data.models.LikedItem
+import com.example.bolis.data.models.LikedItemsListResponse
 import com.example.bolis.data.models.SuggestionsResponse
 import com.example.bolis.presentation.onboarding.OnboardingPage1
 import com.example.bolis.presentation.onboarding.OnboardingPage2
@@ -96,6 +97,10 @@ fun ItemDetailsPage(
 
     var likedItems: List<LikedItem?>? = emptyList()
 
+    var likedItemsList by remember { mutableStateOf(LikedItemsListResponse(
+        likedItems = listOf()
+    )) }
+
     var suggestionsBody by remember { mutableStateOf(SuggestionsResponse(
         suggestions = List(10) { Item() }
     )) }
@@ -111,8 +116,14 @@ fun ItemDetailsPage(
         viewModel.getSuggestions(sharedProvider.getToken())
     }
 
-    viewModel.likedItemsResponse.observeForever {
-        likedItems = it?.likedItems
+    viewModel.likedItemsResponse.observeForever { response ->
+        if (response != null) {
+            likedItemsList = response
+            Log.d("Catalog", response.toString())
+        } else {
+            Log.d("Catalog", "Response is null")
+        }
+        likedItems = response?.likedItems
     }
 
     viewModel.itemDetailsResponse.observeForever { response ->
@@ -272,6 +283,7 @@ fun ItemDetailsPage(
                             .size(24.dp)
                             .clickable(onClick = {
                                 isFavorite = false
+                                viewModel.likeItem(sharedProvider.getToken(), item?.iD ?: 0)
                             })
                     )
                 } else {
@@ -283,6 +295,7 @@ fun ItemDetailsPage(
                             .size(24.dp)
                             .clickable(onClick = {
                                 isFavorite = true
+                                viewModel.likeItem(sharedProvider.getToken(), item?.iD ?: 0)
                             })
                     )
                 }
@@ -342,10 +355,22 @@ fun ItemDetailsPage(
                     pair.forEach { item ->
                         CatalogItem(
                             name = item.name,
+                            isFavorite = likedItemsList.likedItems?.any { it?.itemId == item.iD } == true,
                             status = item.condition,
                             imageUrl = item.images?.firstOrNull()?.imagePath.orEmpty(),
                             onClick = { onItemClick(item.iD) },
-                            onFavoriteClick = { /* Handle favorite click */ }
+                            onFavoriteClick = {
+                                if (likedItemsList.likedItems?.any { it?.itemId == item.iD } == true) {
+                                    likedItemsList = likedItemsList.copy(
+                                        likedItems = likedItemsList.likedItems?.filter { it?.itemId != item.iD }
+                                    )
+                                } else {
+                                    likedItemsList = likedItemsList.copy(
+                                        likedItems = likedItemsList.likedItems?.plus(LikedItem(item.iD))
+                                    )
+                                }
+                                viewModel.likeItem(sharedProvider.getToken(), item.iD)
+                            }
                         )
                     }
                 }

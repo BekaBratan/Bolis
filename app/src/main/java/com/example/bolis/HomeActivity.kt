@@ -318,7 +318,7 @@ class HomeActivity : ComponentActivity() {
                         composable<ProfileScreen>{ backStackEntry ->
                             ProfilePage(
                                 profileButtonClicked = { navController.navigate(EditProfileScreen) },
-                                myBudgetButtonClicked = {  },
+                                myBudgetButtonClicked = { navController.navigate(BadgesScreen) },
                                 postamatButtonClicked = { navController.navigate(MapScreen) },
                                 changePassButtonClicked = { navController.navigate(ChangePasswordScreen) },
                                 supportButtonClicked = { navController.navigate(SupportScreen) },

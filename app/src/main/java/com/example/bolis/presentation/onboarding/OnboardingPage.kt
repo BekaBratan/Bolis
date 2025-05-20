@@ -47,12 +47,22 @@ fun OnboardingPage1() {
         )
         Spacer(modifier = Modifier.height(16.dp))
         Text(
-            text = "Our project supports the well-being of the population and helps families in need.",
+            text = "Bôlis is a charity platform where you can share unwanted items or find something useful for yourself",
             fontFamily = fontFamily,
             color = White50,
             fontSize = 17.sp,
             fontWeight = FontWeight(400),
             modifier = Modifier.fillMaxWidth()
+        )
+        Spacer(modifier = Modifier.height(46.dp))
+        Image(
+            painter = painterResource(id = R.drawable.onboard_2),
+            contentDescription = null,
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(bottom = 16.dp)
+                .clip(RoundedCornerShape(30.dp)),
+            contentScale = ContentScale.Crop
         )
     }
 }
@@ -67,7 +77,7 @@ fun OnboardingPage2() {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = "Welcome to the \n\" Bolis \" application !",
+            text = "What Can You \n Do with Bôlis?",
             fontFamily = fontFamily,
             color = White50,
             fontSize = 22.sp,
@@ -76,12 +86,26 @@ fun OnboardingPage2() {
         )
         Spacer(modifier = Modifier.height(16.dp))
         Text(
-            text = "Our project supports the well-being of the population and helps families in need.",
+            text = "\uD83C\uDF81 Earn rewards — collect badges and achievements as you help others.\n" +
+                    "\n" +
+                    "\uD83D\uDEE1 Stay safe — enjoy secure, contactless handovers with verified users.\n" +
+                    "\n" +
+                    "\uD83C\uDF10 Join the movement — be part of a growing network making a positive impact.",
             fontFamily = fontFamily,
             color = White50,
             fontSize = 17.sp,
             fontWeight = FontWeight(400),
             modifier = Modifier.fillMaxWidth()
+        )
+        Spacer(modifier = Modifier.height(46.dp))
+        Image(
+            painter = painterResource(id = R.drawable.onboard_1),
+            contentDescription = null,
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(bottom = 16.dp)
+                .clip(RoundedCornerShape(30.dp)),
+            contentScale = ContentScale.Crop
         )
     }
 }
@@ -96,7 +120,7 @@ fun OnboardingPage3() {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = "Welcome to the \n\" Bolis \" application !",
+            text = "Why Choose Bôlis?",
             fontFamily = fontFamily,
             color = White50,
             fontSize = 22.sp,
@@ -105,7 +129,9 @@ fun OnboardingPage3() {
         )
         Spacer(modifier = Modifier.height(16.dp))
         Text(
-            text = "Our project supports the well-being of the population and helps families in need.",
+            text = "\uD83D\uDC9B Simplicity — minimal steps, user-friendly interface.\n" +
+                    "\uD83C\uDF0D Community — a place where everyone helps and inspires.\n" +
+                    "\uD83C\uDF31 Eco-friendly — reduce waste, reuse, and give items a second life.",
             fontFamily = fontFamily,
             color = White50,
             fontSize = 17.sp,
@@ -114,7 +140,7 @@ fun OnboardingPage3() {
         )
         Spacer(modifier = Modifier.height(46.dp))
         Image(
-            painter = painterResource(id = R.drawable.ic_launcher_background),
+            painter = painterResource(id = R.drawable.onboard_3),
             contentDescription = null,
             modifier = Modifier
                 .fillMaxSize()

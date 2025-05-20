@@ -180,55 +180,55 @@ fun MarketPage(
                 }
             }
 
-            Text(
-                text = "News",
-                fontSize = 18.sp,
-                fontWeight = FontWeight(600),
-                overflow = TextOverflow.Ellipsis,
-                maxLines = 1,
-                fontFamily = fontFamily,
-                color = Black50,
-                modifier = Modifier
-                    .padding(top = 24.dp, start = 24.dp, end = 24.dp, bottom = 0.dp)
-            )
-
-            LazyRow(
-                horizontalArrangement = Arrangement.spacedBy(16.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .padding(vertical = 20.dp)
-                    .fillMaxWidth()
-            ) {
-                item {
-                    Spacer(Modifier.size(4.dp))
-                }
-                items(suggestionsBody.suggestions) { item ->
-
-                    CatalogItem(
-                        name = item.name,
-                        status = item.condition,
-                        isFavorite = likedItemsList.likedItems?.any { it?.itemId == item.iD } == true,
-                        imageUrl = item.images?.firstOrNull()?.imagePath.orEmpty(),
-                        onClick = { onItemClick(item.iD) },
-                        onFavoriteClick = {
-                            if (likedItemsList.likedItems?.any { it?.itemId == item.iD } == true) {
-                                likedItemsList = likedItemsList.copy(
-                                    likedItems = likedItemsList.likedItems?.filter { it?.itemId != item.iD }
-                                )
-                            } else {
-                                likedItemsList = likedItemsList.copy(
-                                    likedItems = likedItemsList.likedItems?.plus(LikedItem(item.iD))
-                                )
-                            }
-                            viewModel.likeItem(sharedProvider.getToken(), item.iD)
-                        }
-                    )
-
-                }
-                item {
-                    Spacer(Modifier.size(4.dp))
-                }
-            }
+//            Text(
+//                text = "News",
+//                fontSize = 18.sp,
+//                fontWeight = FontWeight(600),
+//                overflow = TextOverflow.Ellipsis,
+//                maxLines = 1,
+//                fontFamily = fontFamily,
+//                color = Black50,
+//                modifier = Modifier
+//                    .padding(top = 24.dp, start = 24.dp, end = 24.dp, bottom = 0.dp)
+//            )
+//
+//            LazyRow(
+//                horizontalArrangement = Arrangement.spacedBy(16.dp),
+//                verticalAlignment = Alignment.CenterVertically,
+//                modifier = Modifier
+//                    .padding(vertical = 20.dp)
+//                    .fillMaxWidth()
+//            ) {
+//                item {
+//                    Spacer(Modifier.size(4.dp))
+//                }
+//                items(suggestionsBody.suggestions) { item ->
+//
+//                    CatalogItem(
+//                        name = item.name,
+//                        status = item.condition,
+//                        isFavorite = likedItemsList.likedItems?.any { it?.itemId == item.iD } == true,
+//                        imageUrl = item.images?.firstOrNull()?.imagePath.orEmpty(),
+//                        onClick = { onItemClick(item.iD) },
+//                        onFavoriteClick = {
+//                            if (likedItemsList.likedItems?.any { it?.itemId == item.iD } == true) {
+//                                likedItemsList = likedItemsList.copy(
+//                                    likedItems = likedItemsList.likedItems?.filter { it?.itemId != item.iD }
+//                                )
+//                            } else {
+//                                likedItemsList = likedItemsList.copy(
+//                                    likedItems = likedItemsList.likedItems?.plus(LikedItem(item.iD))
+//                                )
+//                            }
+//                            viewModel.likeItem(sharedProvider.getToken(), item.iD)
+//                        }
+//                    )
+//
+//                }
+//                item {
+//                    Spacer(Modifier.size(4.dp))
+//                }
+//            }
 
             Text(
                 text = "Recomendations",

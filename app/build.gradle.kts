@@ -64,6 +64,7 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
     implementation("com.google.accompanist:accompanist-pager-indicators:0.30.1")
+    implementation("com.google.accompanist:accompanist-permissions:0.37.3")
 
     val navVersion = "2.8.8"
 
@@ -113,4 +114,19 @@ dependencies {
 
     //WebSocket
     implementation("org.java-websocket:Java-WebSocket:1.5.3")
+
+    // ML Kit Barcode Scanning
+    implementation ("com.google.mlkit:barcode-scanning:17.3.0")
+    //camera
+    implementation ("androidx.camera:camera-core:1.3.4")
+    implementation ("androidx.camera:camera-camera2:1.3.4")
+    implementation ("androidx.camera:camera-lifecycle:1.3.4")
+    implementation ("androidx.camera:camera-view:1.3.4")
+
+    //viewModel lifeCycle
+    implementation ("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.1")
+
+
+    //json Serialization
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.0")
 }

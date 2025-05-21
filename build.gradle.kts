@@ -9,9 +9,14 @@ buildscript {
     repositories {
         google()
         mavenCentral()
+        gradlePluginPortal()
     }
     dependencies {
         val nav_version = "2.8.8"
-        classpath("androidx.navigation:navigation-safe-args-gradle-plugin:$nav_version")
+        classpath(libs.gradle)
+        classpath(libs.androidx.navigation.safe.args.gradle.plugin)
     }
+
 }
+
+

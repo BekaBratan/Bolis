@@ -1,22 +1,22 @@
 package com.example.bolis.data.models
 
 // ChatRequest.kt
-data class ChatRequest(
+data class AIChatRequest(
     val model: String = "gpt-3.5-turbo",
-    val messages: List<Message>
+    val AIMessages: List<AIMessage>
 )
 
-data class Message(
+data class AIMessage(
     val role: String, // "user" or "assistant"
     val content: String
 )
 
 // ChatResponse.kt
-data class ChatResponse(
-    val choices: List<Choice>
+data class AIChatResponse(
+    val AIChoices: List<AIChoice>
 )
 
-data class Choice(
-    val message: Message
+data class AIChoice(
+    val AIMessage: AIMessage
 )
 

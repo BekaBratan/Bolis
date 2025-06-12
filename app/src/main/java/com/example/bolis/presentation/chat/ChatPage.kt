@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
@@ -39,7 +38,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.bolis.R
 import com.example.bolis.data.api.navBarStateChange
-import com.example.bolis.data.models.Message
+import com.example.bolis.data.models.AIMessage
 import com.example.bolis.ui.Elements.ChatTextView
 import com.example.bolis.ui.Elements.CustomBackButton
 import com.example.bolis.ui.theme.Black50
@@ -58,7 +57,7 @@ fun ChatPage(
 ) {
     navBarStateChange(false)
 
-    val chatMessages = remember { mutableStateListOf<Message>() }
+    val chatAIMessages = remember { mutableStateListOf<AIMessage>() }
     val listState = rememberLazyListState()
     var userInput by remember { mutableStateOf("") }
 
@@ -92,7 +91,7 @@ fun ChatPage(
             state = listState,
             verticalArrangement = Arrangement.Bottom
         ) {
-            items(chatMessages) { message ->
+            items(chatAIMessages) { message ->
                 if (message.role == "user") {
                     ChatTextView(
                         text = message.content,
@@ -107,9 +106,9 @@ fun ChatPage(
             }
         }
 
-        LaunchedEffect(chatMessages.size) {
-            if (chatMessages.isNotEmpty()) {
-                listState.scrollToItem(chatMessages.size - 1)
+        LaunchedEffect(chatAIMessages.size) {
+            if (chatAIMessages.isNotEmpty()) {
+                listState.scrollToItem(chatAIMessages.size - 1)
             }
         }
 
@@ -160,8 +159,8 @@ fun ChatPage(
                     .padding(16.dp)
                     .clickable(onClick = {
                         if (userInput.isNotEmpty()) {
-                            chatMessages.add(Message(role = "user", content = userInput))
-                            viewModel.sendMessageToBot(userInput)
+                            chatAIMessages.add(AIMessage(role = "user", content = userInput))
+                            viewModel.sendMessage(userInput)
                             userInput = ""
                         }
                         userInput = ""

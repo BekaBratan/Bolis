@@ -40,7 +40,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.bolis.R
 import com.example.bolis.data.api.navBarStateChange
-import com.example.bolis.data.models.Message
+import com.example.bolis.data.models.AIMessage
 import com.example.bolis.ui.Elements.ChatTextView
 import com.example.bolis.ui.Elements.CustomBackButton
 import com.example.bolis.ui.theme.Black50
@@ -56,7 +56,7 @@ fun ChatBotScreen(
     backButtonClicked:() -> Unit = {},
     viewModel: ChatBotViewModel = viewModel(),
 ) {
-    val chatMessages = remember { mutableStateListOf<Message>() }
+    val chatAIMessages = remember { mutableStateListOf<AIMessage>() }
     var userInput by remember { mutableStateOf("") }
     val listState = rememberLazyListState()
 
@@ -65,9 +65,9 @@ fun ChatBotScreen(
 
 
     // Observe bot replies
-    LaunchedEffect(viewModel.botMessage) {
-        viewModel.botMessage.observeForever { botReply ->
-            chatMessages.add(Message(content = botReply, role = "bot"))
+    LaunchedEffect(viewModel.response) {
+        viewModel.response.observeForever { botReply ->
+            chatAIMessages.add(AIMessage(content = botReply, role = "bot"))
         }
     }
 
@@ -102,7 +102,7 @@ fun ChatBotScreen(
             state = listState,
             verticalArrangement = Arrangement.Bottom
         ) {
-            items(chatMessages) { message ->
+            items(chatAIMessages) { message ->
                 if (message.role == "user") {
                     ChatTextView(text = message.content, isMine = true)
                 } else {
@@ -111,9 +111,9 @@ fun ChatBotScreen(
             }
         }
 
-        LaunchedEffect(chatMessages.size) {
-            if (chatMessages.isNotEmpty()) {
-                listState.scrollToItem(chatMessages.size - 1)
+        LaunchedEffect(chatAIMessages.size) {
+            if (chatAIMessages.isNotEmpty()) {
+                listState.scrollToItem(chatAIMessages.size - 1)
             }
         }
 
@@ -176,8 +176,8 @@ fun ChatBotScreen(
                     .padding(16.dp)
                     .clickable(onClick = {
                         if (userInput.isNotEmpty()) {
-                            chatMessages.add(Message(role = "user", content = userInput))
-                            viewModel.sendMessageToBot(userInput)
+                            chatAIMessages.add(AIMessage(role = "user", content = userInput))
+                            viewModel.sendMessage(userInput)
                             userInput = ""
                         }
                         userInput = ""

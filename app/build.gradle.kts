@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -5,6 +7,17 @@ plugins {
     kotlin("plugin.serialization") version "2.0.21"
     id("androidx.navigation.safeargs.kotlin")
 }
+
+val localProperties = Properties().apply {
+    val localFile = rootProject.file("local.properties")
+    if (localFile.exists()) {
+        load(localFile.inputStream())
+    }
+}
+
+val togetherApiKey = localProperties.getProperty("TOGETHER_API_KEY") ?: "\"\""
+val chatGptApiKey = localProperties.getProperty("CHAT_GPT_API_KEY") ?: "\"\""
+val deepSeekApiKey = localProperties.getProperty("DEEP_SEEK_API_KEY") ?: "\"\""
 
 android {
     namespace = "com.example.bolis"
@@ -21,8 +34,16 @@ android {
     }
 
     buildTypes {
+        debug {
+            buildConfigField("String", "TOGETHER_API_KEY", "\"$togetherApiKey\"")
+            buildConfigField("String", "CHAT_GPT_API_KEY", "\"$chatGptApiKey\"")
+            buildConfigField("String", "DEEP_SEEK_API_KEY", "\"$deepSeekApiKey\"")
+        }
         release {
-            isMinifyEnabled = false
+            buildConfigField("String", "TOGETHER_API_KEY", "\"$togetherApiKey\"")
+            buildConfigField("String", "CHAT_GPT_API_KEY", "\"$chatGptApiKey\"")
+            buildConfigField("String", "DEEP_SEEK_API_KEY", "\"$deepSeekApiKey\"")
+            isMinifyEnabled = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -38,6 +59,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 
@@ -130,3 +152,4 @@ dependencies {
     //json Serialization
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.0")
 }
+

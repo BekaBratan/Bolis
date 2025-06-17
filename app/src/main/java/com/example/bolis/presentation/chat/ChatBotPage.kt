@@ -44,6 +44,7 @@ import com.example.bolis.data.models.AIMessage
 import com.example.bolis.ui.Elements.ChatTextView
 import com.example.bolis.ui.Elements.CustomBackButton
 import com.example.bolis.ui.theme.Black50
+import com.example.bolis.ui.theme.Green30
 import com.example.bolis.ui.theme.Green50
 import com.example.bolis.ui.theme.Grey30
 import com.example.bolis.ui.theme.White40
@@ -172,7 +173,7 @@ fun ChatBotScreen(
             Box(
                 modifier = Modifier
                     .clip(shape = RoundedCornerShape(100.dp))
-                    .background(Green50)
+                    .background(Green30)
                     .padding(16.dp)
                     .clickable(onClick = {
                         if (userInput.isNotEmpty()) {

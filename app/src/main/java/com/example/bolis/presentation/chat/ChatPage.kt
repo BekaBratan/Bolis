@@ -28,6 +28,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -37,16 +38,21 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.bolis.R
+import com.example.bolis.data.api.ChatService
 import com.example.bolis.data.api.navBarStateChange
 import com.example.bolis.data.models.AIMessage
+import com.example.bolis.data.models.ChatRequest
+import com.example.bolis.data.models.ChatResponse
 import com.example.bolis.ui.Elements.ChatTextView
 import com.example.bolis.ui.Elements.CustomBackButton
 import com.example.bolis.ui.theme.Black50
+import com.example.bolis.ui.theme.Green30
 import com.example.bolis.ui.theme.Green50
 import com.example.bolis.ui.theme.Grey30
 import com.example.bolis.ui.theme.White40
 import com.example.bolis.ui.theme.White50
 import com.example.bolis.ui.theme.fontFamily
+import com.example.bolis.utils.SharedProvider
 
 @Preview
 @Composable
@@ -56,10 +62,35 @@ fun ChatPage(
     chatID: Int = 1,
 ) {
     navBarStateChange(false)
+    val context = LocalContext.current
+    val sharedProvider = SharedProvider(context)
 
-    val chatAIMessages = remember { mutableStateListOf<AIMessage>() }
+    val chatMessages = remember { mutableStateListOf<ChatResponse>() }
     val listState = rememberLazyListState()
     var userInput by remember { mutableStateOf("") }
+
+    val chatService = remember {
+        ChatService(
+            token = sharedProvider.getToken()
+        )
+    }
+
+    LaunchedEffect(true) {
+        chatService.connectWebSocket()
+        chatService.onNewMessage = { newMessage ->
+            chatMessages.add(
+                newMessage
+            )
+        }
+
+        viewModel.getChatHistory(sharedProvider.getToken())
+
+        viewModel.chatResponse.observeForever { chatHistory ->
+            chatHistory?.messages?.let { messages ->
+                chatMessages.addAll(messages)
+            }
+        }
+    }
 
     Box(
         modifier = Modifier
@@ -87,28 +118,54 @@ fun ChatPage(
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         LazyColumn(
-            modifier = Modifier.fillMaxWidth().weight(1f),
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f),
             state = listState,
             verticalArrangement = Arrangement.Bottom
         ) {
-            items(chatAIMessages) { message ->
-                if (message.role == "user") {
-                    ChatTextView(
-                        text = message.content,
-                        isMine = true,
+            val groupedMessages = chatMessages.groupBy { message ->
+                // Assuming `timestamp` is in a parsable date format
+                message.timestamp?.substring(0, 10) // Extract the date part (e.g., "YYYY-MM-DD")
+            }
+
+            groupedMessages.forEach { (date, messages) ->
+                item {
+                    Text(
+                        text = date ?: "Unknown Date",
+                        style = TextStyle(
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight(500),
+                            color = Grey30,
+                            textAlign = TextAlign.Center
+                        ),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 8.dp)
                     )
-                } else {
-                    ChatTextView(
-                        text = message.content,
-                        isMine = false,
-                    )
+                }
+
+                items(messages) { message ->
+                    if (message.is_me == "true") {
+                        ChatTextView(
+                            text = message.content.toString(),
+                            isMine = true,
+                            time = message.timestamp?.substring(11, 16) ?: "00:00" // Extract time part (e.g., "HH:MM"
+                        )
+                    } else {
+                        ChatTextView(
+                            text = message.content.toString(),
+                            isMine = false,
+                            time = message.timestamp?.substring(11, 16) ?: "00:00" // Extract time part (e.g., "HH:MM"
+                        )
+                    }
                 }
             }
         }
 
-        LaunchedEffect(chatAIMessages.size) {
-            if (chatAIMessages.isNotEmpty()) {
-                listState.scrollToItem(chatAIMessages.size - 1)
+        LaunchedEffect(chatMessages.size) {
+            if (chatMessages.isNotEmpty()) {
+                listState.scrollToItem(chatMessages.size - 1)
             }
         }
 
@@ -155,12 +212,16 @@ fun ChatPage(
             Box(
                 modifier = Modifier
                     .clip(shape = RoundedCornerShape(100.dp))
-                    .background(Green50)
+                    .background(Green30)
                     .padding(16.dp)
                     .clickable(onClick = {
                         if (userInput.isNotEmpty()) {
-                            chatAIMessages.add(AIMessage(role = "user", content = userInput))
-                            viewModel.sendMessage(userInput)
+                            val message = ChatRequest(
+                                to = 8,
+                                content = userInput,
+                                type = "message"
+                            )
+                            chatService.sendMessage(message.to!!, message.content!!)
                             userInput = ""
                         }
                         userInput = ""

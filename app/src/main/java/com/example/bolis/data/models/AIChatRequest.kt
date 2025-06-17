@@ -20,3 +20,22 @@ data class AIChoice(
     val AIMessage: AIMessage
 )
 
+data class ChatRequest(
+    val to: Int? = 0,
+    val content: String? = "null",
+    val type: String? = "text",
+)
+
+data class ChatResponse(
+    val from: Int? = 0,
+    val to: Int? = 0,
+    val content: String? = "null",
+    val timestamp: String? = "null",
+    val is_me: String? = "null",
+    val is_read: Boolean? = false
+)
+
+data class ChatListResponse(
+    val messages: List<ChatResponse>
+)
+

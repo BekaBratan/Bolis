@@ -44,7 +44,7 @@ fun ChatsListPage(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = "Bolis consultant",
+            text = "Chats list",
             fontSize = 17.sp,
             fontWeight = FontWeight(700),
             textAlign = TextAlign.Center,
@@ -88,7 +88,7 @@ fun ChatsListPage(
 
             ChatsListItem(
                 iconId = R.drawable.ic_chat_budget,
-                chatName = "Budget",
+                chatName = "Badges",
                 chatClicked = { chatOpen(3) },
                 noteCount = 0
             )

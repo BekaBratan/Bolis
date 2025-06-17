@@ -63,14 +63,14 @@ fun ChatPage(
 
     Box(
         modifier = Modifier
-            .padding(top = 28.dp, start = 24.dp)
+            .padding(top = 28.dp, start = 24.dp, end = 24.dp)
             .fillMaxWidth(),
     ) {
         CustomBackButton(
             name = "Back"
         ) { backButtonClicked() }
         Text(
-            text = "Bolis consultant",
+            text = "Chat",
             fontSize = 17.sp,
             fontWeight = FontWeight(700),
             textAlign = TextAlign.Center,

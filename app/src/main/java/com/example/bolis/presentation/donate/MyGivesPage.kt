@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.scrollable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -21,6 +22,7 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
@@ -99,10 +101,9 @@ fun MyGivesPage(
                 orientation = Orientation.Vertical,
                 enabled = true
             )
-            .padding(start = 24.dp, end = 24.dp),
+            .padding(horizontal = 24.dp, vertical = 28.dp),
     ) {
         item {
-            Spacer(Modifier.size(78.dp))
             Text(
                 text = "My gives",
                 fontSize = 20.sp,
@@ -139,13 +140,20 @@ fun MyGivesPage(
         }
 
         item {
-            Spacer(Modifier.size(28.dp))
-            CustomButton(
-                "Add product",
-                onClick = { addButtonClick() }
-            )
-            Spacer(Modifier.size(28.dp))
+            Spacer(Modifier.size(48.dp))
         }
+    }
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = 24.dp, vertical = 28.dp),
+        contentAlignment = Alignment.BottomCenter
+    ) {
+        CustomButton(
+            "Add product",
+            onClick = { addButtonClick() }
+        )
     }
 
     if (isDelete) {

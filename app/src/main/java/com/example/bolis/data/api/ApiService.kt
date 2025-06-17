@@ -12,6 +12,7 @@ import com.example.bolis.data.models.LogInRequest
 import com.example.bolis.data.models.LogInResponse
 import com.example.bolis.data.models.MessageResponse
 import com.example.bolis.data.models.MyGivesResponse
+import com.example.bolis.data.models.NewsResponse
 import com.example.bolis.data.models.ProfileResponse
 import com.example.bolis.data.models.ProfileUpdateResponse
 import com.example.bolis.data.models.SearchResponse
@@ -154,4 +155,10 @@ interface ApiService {
     suspend fun getMyGives(
         @Header("Authorization") token: String
     ): MyGivesResponse
+
+    @Headers("Accept: application/json")
+    @GET("stories")
+    suspend fun getNews(
+        @Header("Authorization") token: String
+    ): NewsResponse
 }

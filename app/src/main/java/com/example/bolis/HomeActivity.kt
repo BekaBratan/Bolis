@@ -34,6 +34,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.example.bolis.GiveDestination.AddItemScreen
 import com.example.bolis.HomeDestination.FavoriteScreen
+import com.example.bolis.HomeDestination.NewsScreen
 import com.example.bolis.HomeDestination.SearchScreen
 import com.example.bolis.NavDestination.BadgesScreen
 import com.example.bolis.NavDestination.ChatsListScreen
@@ -62,6 +63,8 @@ import com.example.bolis.presentation.home.ItemDetailsPage
 import com.example.bolis.presentation.home.MarketPage
 import com.example.bolis.presentation.home.SearchPage
 import com.example.bolis.presentation.home.ZoomPage
+import com.example.bolis.presentation.news.NewsDetailsPage
+import com.example.bolis.presentation.news.NewsPage
 import com.example.bolis.presentation.profile.ChangeLanguagePage
 import com.example.bolis.presentation.profile.ChangePasswordPage
 import com.example.bolis.presentation.profile.ConfirmedPage
@@ -177,6 +180,18 @@ class HomeActivity : ComponentActivity() {
                                         launchSingleTop = true
                                     }
                                 },
+                                onNewsClick = {
+                                    navController.navigate(NewsScreen) {
+                                        popUpTo(navController.graph.startDestinationId)
+                                        launchSingleTop = true
+                                    }
+                                },
+                                onNewsItemClick = { newsId ->
+                                    navController.navigate(NewsDetailsScreen(newsId)) {
+                                        popUpTo(navController.graph.startDestinationId)
+                                        launchSingleTop = true
+                                    }
+                                },
                                 onFavoriteClick = {
                                     navController.navigate(FavoriteScreen) {
                                         popUpTo(navController.graph.startDestinationId)
@@ -249,6 +264,24 @@ class HomeActivity : ComponentActivity() {
                                         launchSingleTop = true
                                     }
                                 }
+                            )
+                        }
+                        composable<NewsScreen> { backStackEntry ->
+                            NewsPage(
+                                backButtonClicked = { navController.popBackStack() },
+                                onItemClick = { newsId ->
+                                    navController.navigate(NewsDetailsScreen(newsId)) {
+                                        popUpTo(navController.graph.startDestinationId)
+                                        launchSingleTop = true
+                                    }
+                                }
+                            )
+                        }
+                        composable<NewsDetailsScreen>{ backStackEntry ->
+                            val args = backStackEntry.toRoute<NewsDetailsScreen>()
+                            NewsDetailsPage(
+                                newsID = args.newsID,
+                                backButtonClicked = { navController.popBackStack() },
                             )
                         }
                         composable<ItemDetailsScreen>{ backStackEntry ->
@@ -478,6 +511,8 @@ sealed class HomeDestination() {
     object SearchScreen : HomeDestination()
     @Serializable
     object FavoriteScreen : HomeDestination()
+    @Serializable
+    object NewsScreen : HomeDestination()
 }
 
 @Serializable
@@ -494,6 +529,11 @@ data class ChatScreen(
 @Serializable
 data class ItemDetailsScreen(
     val itemID: Int
+)
+
+@Serializable
+data class NewsDetailsScreen(
+    val newsID: Int
 )
 
 @Serializable

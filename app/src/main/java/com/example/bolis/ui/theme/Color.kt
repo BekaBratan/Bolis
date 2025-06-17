@@ -39,7 +39,7 @@ val Grey20 = Color(0xFFA6A6A6)
 val Grey15 = Color(0xFFE6E6E6)
 val Grey10 = Color(0xFFF2F2F2)
 
-
+val Transp50 = Color(0xB3000000)
 
 val Blur = Color(0xF7FFFFFF)
 val Blur10 = Color(0xD0A8A8A8)

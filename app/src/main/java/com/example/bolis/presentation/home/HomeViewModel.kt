@@ -13,6 +13,7 @@ import com.example.bolis.data.models.LikedItemsListResponse
 import com.example.bolis.data.models.LogInRequest
 import com.example.bolis.data.models.LogInResponse
 import com.example.bolis.data.models.MessageResponse
+import com.example.bolis.data.models.NewsResponse
 import com.example.bolis.data.models.ProfileResponse
 import com.example.bolis.data.models.SearchResponse
 import com.example.bolis.data.models.SignUpRequest
@@ -44,6 +45,9 @@ class HomeViewModel(): ViewModel() {
 
     private var _itemDetailsResponse: MutableLiveData<ItemDetailsResponse?> = MutableLiveData()
     val itemDetailsResponse: LiveData<ItemDetailsResponse?> = _itemDetailsResponse
+
+    private var _newsResponse: MutableLiveData<NewsResponse?> = MutableLiveData()
+    val newsResponse: LiveData<NewsResponse?> = _newsResponse
 
     private var _errorResponse: MutableLiveData<String?> = MutableLiveData()
     val errorResponse: LiveData<String?> = _errorResponse
@@ -84,6 +88,32 @@ class HomeViewModel(): ViewModel() {
             }.fold(
                 onSuccess = {
                     _suggestionsResponse.postValue(it)
+                },
+                onFailure = { throwable ->
+                    val errorMessage = if (throwable is HttpException) {
+                        val errorBody = throwable.response()?.errorBody()?.string()
+                        try {
+                            val json = JSONObject(errorBody ?: "")
+                            json.getString("message")
+                        } catch (e: Exception) {
+                            "Something went wrong."
+                        }
+                    } else {
+                        throwable.message ?: "An unknown error occurred."
+                    }
+                    _errorMessageResponse.postValue(ErrorResponse(errorMessage))
+                }
+            )
+        }
+    }
+
+    fun getNews(token: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            runCatching {
+                ServiceBuilder.api.getNews(token = token)
+            }.fold(
+                onSuccess = {
+                    _newsResponse.postValue(it)
                 },
                 onFailure = { throwable ->
                     val errorMessage = if (throwable is HttpException) {

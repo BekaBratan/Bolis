@@ -28,6 +28,7 @@ import com.example.bolis.ui.Elements.CustomTextField
 import com.example.bolis.ui.Elements.Logo
 import com.example.bolis.ui.Elements.CustomPasswordTextField
 import com.example.bolis.ui.theme.Black20
+import com.example.bolis.ui.theme.Red40
 import com.example.bolis.ui.theme.fontFamily
 import com.example.bolis.utils.SharedProvider
 
@@ -44,6 +45,7 @@ fun SignUpPage(
     var lastName by remember { mutableStateOf("") }
     var phoneNumber by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    var errorMessage by remember { mutableStateOf("") }
 
     CustomBackButton(
         modifier = Modifier
@@ -67,6 +69,7 @@ fun SignUpPage(
             fontFamily = fontFamily,
             color = Black20
         )
+
         Spacer(Modifier.size(80.dp))
 
         CustomTextField(name = "First name", isRequired = true, text = firstName, setText = { firstName = it })
@@ -79,14 +82,28 @@ fun SignUpPage(
         Spacer(Modifier.size(16.dp))
 
         CustomPasswordTextField(name = "Password", isRequired = true, text = password, setText = { password = it })
-        Spacer(Modifier.size(32.dp))
+        
+        if (errorMessage.isNotEmpty()) {
+            Text(
+                text = errorMessage,
+                fontSize = 14.sp,
+                fontWeight = FontWeight(600),
+                fontFamily = fontFamily,
+                color = Red40,
+                modifier = Modifier.padding(vertical = 14.dp)
+            )
+        } else {
+            Spacer(Modifier.size(32.dp))
+        }
 
         CustomButton(
             name = "Register now",
             onClick = {
                 if (firstName.isEmpty() || lastName.isEmpty() || phoneNumber.isEmpty() || password.isEmpty()) {
                     Toast.makeText(context, "Fill in all fields", Toast.LENGTH_SHORT).show()
+                    errorMessage = "Fill in all fields"
                 } else {
+                    errorMessage = ""
                     viewModel.signUp(SignUpRequest(phoneNumber.trim(), password.trim()))
                 }
             }
@@ -97,8 +114,9 @@ fun SignUpPage(
             nextButtonClicked()
         }
 
-        viewModel.errorResponse.observeForever {
-            Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+        viewModel.errorMessageResponse.observeForever {
+            Toast.makeText(context, it.toString(), Toast.LENGTH_SHORT).show()
+            errorMessage = it?.error ?: "Error with server"
         }
     }
 }

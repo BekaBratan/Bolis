@@ -3,6 +3,7 @@ package com.example.bolis.presentation.home
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -45,11 +46,15 @@ import com.example.bolis.data.models.CatalogResponse
 import com.example.bolis.data.models.Item
 import com.example.bolis.data.models.LikedItem
 import com.example.bolis.data.models.LikedItemsListResponse
+import com.example.bolis.data.models.NewsResponse
+import com.example.bolis.data.models.Post
 import com.example.bolis.data.models.SuggestionsResponse
 import com.example.bolis.ui.Elements.CatalogItem
+import com.example.bolis.ui.Elements.NewsItem
 import com.example.bolis.ui.Elements.SearchBar
 import com.example.bolis.ui.theme.Black50
 import com.example.bolis.ui.theme.Green20
+import com.example.bolis.ui.theme.Green40
 import com.example.bolis.ui.theme.Green50
 import com.example.bolis.ui.theme.White50
 import com.example.bolis.ui.theme.fontFamily
@@ -62,6 +67,8 @@ fun MarketPage(
     onSearchClick: () -> Unit = {},
     onChatClick: () -> Unit = {},
     onFavoriteClick: () -> Unit = {},
+    onNewsClick: () -> Unit = {},
+    onNewsItemClick: (id: Int) -> Unit = {},
     onCatalogClick: (catalogName: String, catalogId: Int) -> Unit = {catalogName, catalogId ->},
     onItemClick: (id: Int) -> Unit = {},
 ) {
@@ -75,6 +82,8 @@ fun MarketPage(
         suggestions = ""
     )) }
 
+    var listPosts: NewsResponse by remember { mutableStateOf(NewsResponse()) }
+
     var suggestionsBody by remember { mutableStateOf(SuggestionsResponse(
         suggestions = List(10) { Item() }
     )) }
@@ -86,6 +95,7 @@ fun MarketPage(
     LaunchedEffect(Unit) {
         viewModel.getCatalog(sharedProvider.getToken())
         viewModel.getSuggestions(sharedProvider.getToken())
+        viewModel.getNews(sharedProvider.getToken())
         viewModel.getLikedItems(sharedProvider.getToken())
         Log.d("Catalog", viewModel.catalogResponse.value.toString())
         Log.d("Suggestions", viewModel.suggestionsResponse.value.toString())
@@ -106,6 +116,15 @@ fun MarketPage(
             Log.d("Catalog", response.toString())
         } else {
             Log.d("Catalog", "Response is null")
+        }
+    }
+
+    viewModel.newsResponse.observeForever { response ->
+        if (response != null) {
+            listPosts = response
+            Log.d("News", response.toString())
+        } else {
+            Log.d("News", "Response is null")
         }
     }
 
@@ -180,17 +199,57 @@ fun MarketPage(
                 }
             }
 
-//            Text(
-//                text = "News",
-//                fontSize = 18.sp,
-//                fontWeight = FontWeight(600),
-//                overflow = TextOverflow.Ellipsis,
-//                maxLines = 1,
-//                fontFamily = fontFamily,
-//                color = Black50,
-//                modifier = Modifier
-//                    .padding(top = 24.dp, start = 24.dp, end = 24.dp, bottom = 0.dp)
-//            )
+            Row (
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 24.dp, start = 24.dp, end = 24.dp, bottom = 0.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+            ) {
+                Text(
+                    text = "News",
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight(600),
+                    overflow = TextOverflow.Ellipsis,
+                    maxLines = 1,
+                    fontFamily = fontFamily,
+                    color = Black50,
+                )
+                Text(
+                    text = "more",
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight(500),
+                    overflow = TextOverflow.Ellipsis,
+                    maxLines = 1,
+                    fontFamily = fontFamily,
+                    color = Green40,
+                    modifier = Modifier
+                        .clickable(onClick = onNewsClick)
+                )
+            }
+
+            LazyRow(
+                horizontalArrangement = Arrangement.spacedBy(16.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .padding(vertical = 20.dp)
+                    .fillMaxWidth()
+            ) {
+                item {
+                    Spacer(Modifier.size(4.dp))
+                }
+                items(listPosts.posts?: List(10) { Post() }) { item ->
+
+                    NewsItem(
+                        name = item?.title.toString(),
+                        imageUrl = item?.author?.avatar.toString(),
+                        onClick = { onNewsItemClick(item?.id ?: 0) },
+                    )
+
+                }
+                item {
+                    Spacer(Modifier.size(4.dp))
+                }
+            }
 //
 //            LazyRow(
 //                horizontalArrangement = Arrangement.spacedBy(16.dp),

@@ -202,7 +202,8 @@ fun MarketPage(
             Row (
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 24.dp, start = 24.dp, end = 24.dp, bottom = 0.dp),
+                    .padding(top = 24.dp, start = 24.dp, end = 24.dp, bottom = 0.dp)
+                    .clickable(onClick = onNewsClick),
                 horizontalArrangement = Arrangement.SpaceBetween,
             ) {
                 Text(
@@ -221,9 +222,7 @@ fun MarketPage(
                     overflow = TextOverflow.Ellipsis,
                     maxLines = 1,
                     fontFamily = fontFamily,
-                    color = Green40,
-                    modifier = Modifier
-                        .clickable(onClick = onNewsClick)
+                    color = Green40
                 )
             }
 
@@ -241,7 +240,7 @@ fun MarketPage(
 
                     NewsItem(
                         name = item?.title.toString(),
-                        imageUrl = item?.author?.avatar.toString(),
+                        imageUrl = item?.imageUrl.toString(),
                         onClick = { onNewsItemClick(item?.id ?: 0) },
                     )
 

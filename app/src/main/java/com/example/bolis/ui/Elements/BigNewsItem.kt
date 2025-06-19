@@ -11,7 +11,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -36,11 +38,16 @@ import com.example.bolis.data.models.Product
 import com.example.bolis.ui.theme.Black40
 import com.example.bolis.ui.theme.Black50
 import com.example.bolis.ui.theme.Blue50
+import com.example.bolis.ui.theme.Green50
+import com.example.bolis.ui.theme.Grey30
 import com.example.bolis.ui.theme.Red40
 import com.example.bolis.ui.theme.White50
 import com.example.bolis.ui.theme.fontFamily
+import com.example.bolis.utils.Constants.Companion.BASE_URL
 import com.example.bolis.utils.Constants.Companion.IMAGE_URL
+import java.time.LocalDateTime
 import java.time.OffsetDateTime
+import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 
 @Preview
@@ -53,7 +60,7 @@ fun BigNewsItem(
             lastName = "Doe",
         ),
         content = "This is a sample content for the post.",
-        createdAt = "2025-05-08 25:55:55",
+        createdAt = "2025-05-08 25:55",
         id = 0,
         title = "Sample Post Title",
         userId = 0
@@ -61,99 +68,109 @@ fun BigNewsItem(
     onItemClick: (int: Int) -> Unit = {},
 ) {
 
-    Row(
-        modifier = Modifier.clickable(onClick = {
-            onItemClick(post.id ?: 0)
-        }),
-        verticalAlignment = Alignment.CenterVertically
+    Column(
+        modifier = Modifier
+            .clickable(onClick = {
+                onItemClick(post.id ?: 0)
+            })
     ) {
-        Column (
+        Row (
             modifier = Modifier
-                .width(170.dp)
-                .shadow(12.dp, shape = RoundedCornerShape(24.dp), spotColor = Black50)
-                .clip(shape = RoundedCornerShape(24.dp))
-                .background(White50)
-                .padding(top = 12.dp, start = 20.dp, end = 20.dp, bottom = 5.dp)
+                .fillMaxWidth()
+                .padding(8.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
             AsyncImage(
-                model = IMAGE_URL + post.author?.avatar, // Replace with your image URL
+                model = IMAGE_URL + post.author?.avatar,
                 contentDescription = "Profile Image",
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .height(125.dp)
-                    .clip(RoundedCornerShape(12.dp))
+                    .width(50.dp)
+                    .height(50.dp)
+                    .clip(CircleShape)
+                    .background(White50)
             )
-            Spacer(Modifier.size(6.dp))
+            Spacer(Modifier.width(8.dp))
+            Text(
+                text = "${post.author?.lastName?.trim()} ${post.author?.firstName?.trim()}",
+                fontSize = 14.sp,
+                maxLines = 2,
+                fontWeight = FontWeight(500),
+                fontFamily = fontFamily,
+                overflow = TextOverflow.Ellipsis,
+                color = Black40,
+                modifier = Modifier.weight(1f)
+            )
+            Spacer(Modifier.width(8.dp))
+            Text(
+                text = timeAgo(post.createdAt ?: ""),
+                fontSize = 13.sp,
+                maxLines = 1,
+                fontWeight = FontWeight(400),
+                fontFamily = fontFamily,
+                overflow = TextOverflow.Ellipsis,
+                color = Grey30,
+            )
         }
-        Spacer(Modifier.size(16.dp))
+        AsyncImage(
+            model = IMAGE_URL + post.imageUrl,
+            contentDescription = "Profile Image",
+            contentScale = ContentScale.Crop,
+            modifier = Modifier
+                .fillMaxWidth()
+//                .clip(RoundedCornerShape(12.dp))
+                .background(White50)
+        )
+        Spacer(Modifier.size(8.dp))
         Column (
             modifier = Modifier
                 .fillMaxWidth()
+                .padding(horizontal = 8.dp)
         ) {
             Text(
-                text = post.title ?: "",
-                fontSize = 16.sp,
+                text = post.title?.trim() ?: "",
+                fontSize = 14.sp,
                 maxLines = 2,
-                fontWeight = FontWeight(500),
+                fontWeight = FontWeight(600),
                 fontFamily = fontFamily,
                 overflow = TextOverflow.Ellipsis,
                 color = Black40,
                 modifier = Modifier.fillMaxWidth()
             )
-            Spacer(Modifier.size(14.dp))
+            Spacer(Modifier.size(2.dp))
             Text(
-                text = post.createdAt.toString(),
-                fontSize = 16.sp,
-                maxLines = 2,
-                fontWeight = FontWeight(500),
+                text = post.content.toString().trim(),
+                fontSize = 14.sp,
+                maxLines = 3,
+                fontWeight = FontWeight(400),
                 fontFamily = fontFamily,
                 overflow = TextOverflow.Ellipsis,
                 color = Black40,
                 modifier = Modifier.fillMaxWidth()
             )
-//            if (product.status == "") {
-//                CustomButton(
-//                    name = "Edit",
-//                    onClick = {
-//                        onEditButtonClick()
-//                    },
-//                    cornerSize = 12.dp
-//                )
-//                Spacer(Modifier.size(14.dp))
-//                CustomButton(
-//                    name = "Delete",
-//                    onClick = {
-//                        onDeleteButtonClick()
-//                    },
-//                    cornerSize = 12.dp,
-//                    strokeColor = Black40,
-//                    backgroundColor = Color.Transparent,
-//                    textColor = Red40
-//                )
-//            } else if (product.status == 1) {
-//                CustomButton(
-//                    name = "Reason for cancellation",
-//                    onClick = {
-//                        onReasonButtonClick()
-//                    },
-//                    cornerSize = 12.dp,
-//                    strokeColor = Red40,
-//                    backgroundColor = Color.Transparent,
-//                    textColor = Red40
-//                )
-//            } else {
-//                CustomButton(
-//                    name = "Reason for cancellation",
-//                    onClick = {
-//                        onReasonButtonClick()
-//                    },
-//                    cornerSize = 12.dp,
-//                    strokeColor = Red40,
-//                    backgroundColor = Color.Transparent,
-//                    textColor = Red40
-//                )
-//            }
         }
     }
+}
+
+fun timeAgo(dateString: String): String {
+    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
+    val dateTime = LocalDateTime.parse(dateString, formatter)
+    val now = LocalDateTime.now()
+
+    val years = ChronoUnit.YEARS.between(dateTime, now)
+    if (years > 0) return "$years year"
+
+    val months = ChronoUnit.MONTHS.between(dateTime, now)
+    if (months > 0) return "$months month"
+
+    val days = ChronoUnit.DAYS.between(dateTime, now)
+    if (days > 0) return "$days day"
+
+    val hours = ChronoUnit.HOURS.between(dateTime, now)
+    if (hours > 0) return "$hours hour"
+
+    val minutes = ChronoUnit.MINUTES.between(dateTime, now)
+    if (minutes > 0) return "$minutes min"
+
+    return "just now"
 }

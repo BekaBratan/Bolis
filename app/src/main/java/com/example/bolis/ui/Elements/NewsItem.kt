@@ -82,15 +82,16 @@ fun NewsItem(
             fontSize = 13.sp,
             fontWeight = FontWeight(600),
             overflow = TextOverflow.Ellipsis,
-            minLines = 1,
+            minLines = 2,
             maxLines = 2,
+            lineHeight = 16.sp,
             textAlign = TextAlign.Start,
             fontFamily = fontFamily,
             color = White50,
             modifier = Modifier
                 .background(Transp50)
                 .fillMaxWidth()
-                .padding(vertical = 6.dp, horizontal = 12.dp)
+                .padding(vertical = 4.dp, horizontal = 8.dp)
         )
     }
 }

@@ -14,9 +14,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -55,8 +57,10 @@ import com.example.bolis.ui.theme.Black50
 import com.example.bolis.ui.theme.Green50
 import com.example.bolis.ui.theme.Grey20
 import com.example.bolis.ui.theme.Grey30
+import com.example.bolis.ui.theme.Grey40
 import com.example.bolis.ui.theme.White50
 import com.example.bolis.ui.theme.fontFamily
+import com.example.bolis.utils.Constants.Companion.BASE_URL
 import com.example.bolis.utils.Constants.Companion.IMAGE_URL
 import com.example.bolis.utils.SharedProvider
 import java.time.OffsetDateTime
@@ -120,12 +124,30 @@ fun NewsDetailsPage(
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         item {
-            CustomBackButton(
+            Row(
                 modifier = Modifier
-                    .padding(top = 28.dp, start = 24.dp),
-                name = stringResource(R.string.back)
-            ) { backButtonClicked() }
+                    .fillMaxWidth()
+                    .padding(top = 28.dp, start = 24.dp, end = 24.dp),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                CustomBackButton(
+                    name = stringResource(R.string.back)
+                ) { backButtonClicked() }
 
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_share),
+                    contentDescription = "favorite",
+                    tint = Green50,
+                    modifier = Modifier
+                        .size(24.dp)
+                        .clickable(onClick = {
+                            val shareIntent = android.content.Intent(android.content.Intent.ACTION_SEND)
+                            shareIntent.type = "text/plain"
+                            shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, "Check out this post: ${post?.title} \n ${post?.content} \n ${BASE_URL}stories")
+                            context.startActivity(android.content.Intent.createChooser(shareIntent, "Share item via..."))
+                        })
+                )
+            }
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -136,13 +158,13 @@ fun NewsDetailsPage(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     AsyncImage(
-                        model = IMAGE_URL + post?.author?.avatar, // Replace with your image URL
+                        model = IMAGE_URL + post?.imageUrl,
                         contentDescription = "Profile Image",
                         contentScale = ContentScale.Crop,
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(300.dp)
-                            .clip(RoundedCornerShape(12.dp))
+//                            .clip(RoundedCornerShape(12.dp))
                     )
                 }
             }
@@ -155,7 +177,7 @@ fun NewsDetailsPage(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 24.dp),
+                    .padding(horizontal = 12.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Column(
@@ -171,46 +193,15 @@ fun NewsDetailsPage(
                         color = Black40,
                     )
 
-                    Column (
-                        Modifier.padding(top = 6.dp),
-                    ) {
-                        Row {
-                            Text(
-                                text = "Author: ",
-                                fontSize = 12.sp,
-                                fontWeight = FontWeight(500),
-                                fontFamily = fontFamily,
-                                color = Black40,
-                            )
-                            Text(
-                                text = "${post?.author?.lastName} ${post?.author?.firstName}" ?: "Author name",
-                                fontSize = 12.sp,
-                                fontWeight = FontWeight(500),
-                                fontFamily = fontFamily,
-                                color = Green50,
-                            )
-                        }
-
-                        Row (
-                            Modifier
-                                .padding(top = 10.dp)
-                        ) {
-                            Text(
-                                text = "Date: ",
-                                fontSize = 12.sp,
-                                fontWeight = FontWeight(500),
-                                fontFamily = fontFamily,
-                                color = Black40,
-                            )
-                            Text(
-                                text = "${post?.createdAt ?: "Date"}",
-                                fontSize = 12.sp,
-                                fontWeight = FontWeight(500),
-                                fontFamily = fontFamily,
-                                color = Grey30,
-                            )
-                        }
-                    }
+                    Text(
+                        text = "${post?.createdAt ?: "Date"}",
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight(500),
+                        fontFamily = fontFamily,
+                        color = Grey30,
+                        modifier = Modifier
+                            .padding(top = 6.dp)
+                    )
                 }
             }
 
@@ -222,11 +213,11 @@ fun NewsDetailsPage(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 24.dp, vertical = 12.dp),
+                    .padding(12.dp),
             ) {
                 Text(
                     text = "Content",
-                    fontSize = 15.sp,
+                    fontSize = 16.sp,
                     fontWeight = FontWeight(600),
                     fontFamily = fontFamily,
                     color = Black40,
@@ -234,11 +225,41 @@ fun NewsDetailsPage(
 
                 Text(
                     text = post?.content ?: "Post content goes here",
-                    fontSize = 12.sp,
+                    fontSize = 14.sp,
                     fontWeight = FontWeight(400),
                     fontFamily = fontFamily,
-                    color = Grey30,
+                    color = Grey40,
                     modifier = Modifier.padding(top = 6.dp)
+                )
+            }
+
+            Spacer(Modifier
+                .fillMaxWidth()
+                .height(1.dp)
+                .background(Grey20))
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(12.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                AsyncImage(
+                    model = IMAGE_URL + post?.author?.avatar,
+                    contentDescription = "Profile Image",
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .width(50.dp)
+                        .height(50.dp)
+                        .clip(CircleShape)
+                )
+                Text(
+                    text = "${post?.author?.lastName} ${post?.author?.firstName}" ?: "Author name",
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight(500),
+                    fontFamily = fontFamily,
+                    color = Green50,
                 )
             }
         }

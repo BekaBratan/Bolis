@@ -60,25 +60,17 @@ fun MyGivesItem(
         }),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Column (
+        AsyncImage(
+            model = IMAGE_URL + product.images?.firstOrNull()?.imagePath, // Replace with your image URL
+            contentDescription = "Profile Image",
+            contentScale = ContentScale.Crop,
             modifier = Modifier
+                .height(125.dp)
                 .width(170.dp)
-                .shadow(12.dp, shape = RoundedCornerShape(24.dp), spotColor = Black50)
-                .clip(shape = RoundedCornerShape(24.dp))
+                .clip(RoundedCornerShape(12.dp))
+                .shadow(12.dp, shape = RoundedCornerShape(12.dp), spotColor = Black50)
                 .background(White50)
-                .padding(top = 12.dp, start = 20.dp, end = 20.dp, bottom = 5.dp)
-        ) {
-            AsyncImage(
-                model = IMAGE_URL + product.images?.firstOrNull()?.imagePath, // Replace with your image URL
-                contentDescription = "Profile Image",
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(125.dp)
-                    .clip(RoundedCornerShape(12.dp))
-            )
-            Spacer(Modifier.size(6.dp))
-        }
+        )
         Spacer(Modifier.size(16.dp))
         Column (
             modifier = Modifier

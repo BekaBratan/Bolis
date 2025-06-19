@@ -12,6 +12,8 @@ data class Post(
     val createdAt: String? = "null",
     @SerializedName("id")
     val id: Int? = 0,
+    @SerializedName("image_url")
+    val imageUrl: String? = "",
     @SerializedName("title")
     val title: String? = "null",
     @SerializedName("user_id")

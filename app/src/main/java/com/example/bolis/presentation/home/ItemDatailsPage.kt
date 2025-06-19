@@ -73,6 +73,7 @@ import com.example.bolis.ui.theme.Grey40
 import com.example.bolis.ui.theme.Red40
 import com.example.bolis.ui.theme.White50
 import com.example.bolis.ui.theme.fontFamily
+import com.example.bolis.utils.Constants.Companion.BASE_URL
 import com.example.bolis.utils.Constants.Companion.IMAGE_URL
 import com.example.bolis.utils.SharedProvider
 import kotlinx.coroutines.launch
@@ -148,11 +149,31 @@ fun ItemDetailsPage(
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         item {
-            CustomBackButton(
+            Row(
                 modifier = Modifier
-                    .padding(top = 28.dp, start = 24.dp),
-                name = stringResource(R.string.back)
-            ) { backButtonClicked() }
+                    .fillMaxWidth()
+                    .padding(top = 28.dp, start = 24.dp, end = 24.dp),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                CustomBackButton(
+                    name = stringResource(R.string.back)
+                ) { backButtonClicked() }
+
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_share),
+                    contentDescription = "favorite",
+                    tint = Green50,
+                    modifier = Modifier
+                        .size(24.dp)
+                        .clickable(onClick = {
+                            val shareIntent = android.content.Intent(android.content.Intent.ACTION_SEND)
+                            shareIntent.type = "text/plain"
+                            shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, "Check out this item: ${item?.name} \n ${item?.description} \n ${BASE_URL}item/${item?.iD}")
+                            context.startActivity(android.content.Intent.createChooser(shareIntent, "Share item via..."))
+                        })
+                )
+            }
+
 
             Box(
                 modifier = Modifier

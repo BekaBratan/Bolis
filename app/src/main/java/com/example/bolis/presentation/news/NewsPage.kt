@@ -36,7 +36,9 @@ import com.example.bolis.data.models.Post
 import com.example.bolis.ui.Elements.BigNewsItem
 import com.example.bolis.ui.Elements.CustomBackButton
 import com.example.bolis.ui.theme.Black50
+import com.example.bolis.ui.theme.Grey15
 import com.example.bolis.ui.theme.Grey30
+import com.example.bolis.ui.theme.White50
 import com.example.bolis.ui.theme.fontFamily
 import com.example.bolis.utils.SharedProvider
 
@@ -73,7 +75,7 @@ fun NewsPage(
                 orientation = Orientation.Vertical,
                 enabled = true
             )
-            .padding(horizontal = 24.dp, vertical = 28.dp),
+            .padding(top = 28.dp),
     ) {
         item {
             Spacer(Modifier.size(48.dp))
@@ -89,15 +91,16 @@ fun NewsPage(
                     .padding(vertical = 16.dp)
                     .fillMaxWidth()
                     .height(1.dp)
-                    .background(Grey30)
+                    .background(Grey15)
             )
         }
     }
 
     Box(
         modifier = Modifier
-            .padding(top = 28.dp, start = 24.dp, end = 24.dp)
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .background(White50)
+            .padding(top = 28.dp, end = 24.dp, start = 24.dp, bottom = 16.dp)
     ) {
         CustomBackButton(
             name = "Back"

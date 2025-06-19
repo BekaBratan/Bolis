@@ -88,7 +88,7 @@ fun ConfirmationCodePage(
             name = if (codeState == CodeState.PASSWORD) "Recover password" else "Log In"
         ) {
             Toast.makeText(context, text, Toast.LENGTH_SHORT).show()
-            viewModel.verify(VerificationRequest(code = text, email = sharedProvider.getEmail(), flow = flow))
+            viewModel.verify(VerificationRequest(code = text, email = sharedProvider.getEmail(), flow = flow, firstName = sharedProvider.getFirstName(), lastName = sharedProvider.getLastName()))
         }
 
         viewModel.verifyResponse.observeForever {

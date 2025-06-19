@@ -11,6 +11,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
@@ -80,7 +82,8 @@ fun ChatTextView(
                     else
                         White40,
                 )
-                .padding(horizontal = 22.dp, vertical = 6.dp),
+                .widthIn(max = 320.dp)
+                .padding(horizontal = 14.dp, vertical = 6.dp),
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.Bottom
         ) {
@@ -91,7 +94,10 @@ fun ChatTextView(
                     fontWeight = FontWeight(500),
                     fontFamily = fontFamily,
                     color = if (isMine) White50 else Black40,
-                )
+                ),
+                modifier = Modifier
+                    .wrapContentWidth()
+                    .weight(1f, fill = false),
             )
             if (time.isNotEmpty()) {
                 Spacer(modifier = Modifier.width(8.dp))
@@ -102,7 +108,7 @@ fun ChatTextView(
                         fontWeight = FontWeight(400),
                         color = if (isMine) Grey25 else Grey30,
                         textAlign = TextAlign.Center
-                    )
+                    ),
                 )
             }
         }
